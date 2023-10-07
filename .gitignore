@@ -1,0 +1,12 @@
+# R files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# macos
+.DS_Store
+**/*.DS_Store
+
+# vscode
+.history
