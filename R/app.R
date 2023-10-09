@@ -99,13 +99,15 @@ hotel_tab <- tabItem(
       title = "Airbnb Listings in Melbourne City",
       status = "primary",
       solidHeader = TRUE,
-      leafletOutput("hotel_map", height = "calc(100vh - 550px)"),
+      leafletOutput("hotel_map", height = "calc(100vh - 350px)"), #330
     ),
     box(
-      style = "height: calc(100vh - 530px); overflow-y: scroll;",
+      style = "height: calc(100vh - 600px); overflow-y: scroll;",
       width = 4,
       title = "Filter",
+      status = "primary",
       solidHeader = TRUE,
+      collapsible = TRUE,
       sliderInput(
         "hotel_price", "Select price range:",
         min = min_hotel_price, max = max_hotel_price,
@@ -142,11 +144,20 @@ hotel_tab <- tabItem(
         choices = c("All" = "All", sort(unique(hotels$number_of_baths))),
       ),
     ),
-    box(
-      width = 12,
-      title = "Legend",
-      solidHeader = TRUE,
-    )
+    tabBox(
+      title = "Statistics",
+      width = 4,
+      height = "250px",
+      # The id lets us use input$tabset1 on the server to find the current tab
+      id = "hotel_statistics_tabset",
+      tabPanel("Neaby",
+        HTML(paste0(
+          "Transport: There are 4 bus stops nearby. <br>",
+          "Restaurant: There are 3 restaurants nearby."
+        ))
+      ),
+      tabPanel("Restaurant", "Tab content 2")
+    ),
   )
 )
 
