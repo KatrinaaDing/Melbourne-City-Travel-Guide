@@ -14,6 +14,7 @@ library(sf)
 ###################
 
 SIDEBAR_WIDTH <- 260
+ICON_SIZE <- 20
 DEFAULT_NA_HINT <- "NA"
 
 ########
@@ -28,6 +29,36 @@ hotels <- read.csv("data/airbnb/listings-clean.csv")
 # reference: https://r-spatial.github.io/sf/reference/geos_binary_pred.html
 hotels_sf <- st_as_sf(hotels, coords = c("longitude", "latitude"), crs = 4326)
 hotels <- hotels_sf[st_within(hotels_sf, city_boundary, sparse = FALSE), ]
+
+# remove those with price 0
+hotels <- hotels[hotels$price != 0, ]
+
+# calculate price quantiles
+# reference: https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/quantile
+quantiles <- quantile(hotels$price, probs = c(0.33, 0.66), na.rm = TRUE)
+cheap_threshold <- quantiles[1]
+medium_threshold <- quantiles[2]
+
+# add icon type based on interval of happiness score
+# reference: https://www.statology.org/cut-function-in-r/
+hotels$price_class <- cut(hotels$price,
+  breaks = c(-Inf, cheap_threshold, medium_threshold, Inf),
+  labels = c("cheap", "medium", "expensive"),
+  right = FALSE
+)
+
+#########
+# ICONS #
+#########
+
+# create icons
+# reference: https://stackoverflow.com/questions/61512228/leaflet-in-r-how-to-generate-multiple-icons
+dollar_icons <- iconList(
+  cheap = makeIcon("www/icons/cheap.svg", "www/icons/cheap.svg", ICON_SIZE, ICON_SIZE),
+  medium = makeIcon("www/icons/medium-price.svg", "www/icons/medium-price.svg", ICON_SIZE, ICON_SIZE),
+  expensive = makeIcon("www/icons/expensive.svg", "www/icons/expensive.svg", ICON_SIZE, ICON_SIZE)
+)
+
 
 ##################
 # USER INTERFACE #
@@ -116,7 +147,7 @@ ui <- dashboardPage(
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
     tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css")
     ),
     tabItems(
       intro_tab,
@@ -150,9 +181,10 @@ server <- function(input, output, session) {
         color = "#000000",
         fillOpacity = 0.5
       ) %>%
-      addCircleMarkers(
+      addMarkers(
         data = getFilteredHotels(),
-        clusterOptions = markerClusterOptions(maxClusterRadius = 80),
+        clusterOptions = markerClusterOptions(maxClusterRadius = 20),
+        icon = ~ dollar_icons[price_class],
         popup = ~ paste0(
           # listing name, can navigate to Airbnb listing site
           "Name: <a href='https://www.airbnb.com.au/rooms/",
