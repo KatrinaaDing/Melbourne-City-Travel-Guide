@@ -153,13 +153,13 @@ hotel_tab <- tabItem(
       # The id lets us use input$tabset1 on the server to find the current tab
       id = "hotel_statistics_tabset",
       tabPanel(
-        "Neaby",
+        "Nearby",
         HTML(paste0(
           "Transport: There are 4 bus stops nearby. <br>",
           "Restaurant: There are 3 restaurants nearby."
         ))
       ),
-      tabPanel("Restaurant", "Tab content 2")
+      tabPanel("Compare", "Tab content 2")
     ),
   )
 )
