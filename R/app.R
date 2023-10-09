@@ -251,7 +251,7 @@ server <- function(input, output, session) {
     # filter price class
     filtered_hotels <- hotels[hotels$price_class %in% input$price_class_select, ]
     # filter price range
-    filtered_hotels <- filtered_hotels[filtered_hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2], ]
+    filtered_hotels <- filtered_hotels[filtered_hotels$price >= input$hotel_price[1] & filtered_hotels$price <= input$hotel_price[2], ]
     # filter rating range
     filtered_hotels <- filtered_hotels[filtered_hotels$rating >= input$rating_range[1] &
       filtered_hotels$rating <= input$rating_range[2], ]
