@@ -6,7 +6,6 @@ library(leaflet)
 library(sf)
 library(htmlwidgets)
 library(shinyWidgets)
-
 # library(shinyjs)
 
 # common references
@@ -50,7 +49,6 @@ hotels$price_class <- cut(hotels$price,
   labels = c("cheap", "medium", "expensive"),
   right = FALSE
 )
-
 # calculate some statistics
 min_hotel_price <- min(hotels$price, na.rm = TRUE)
 max_hotel_price <- max(hotels$price, na.rm = TRUE)
@@ -69,7 +67,6 @@ dollar_icons <- iconList(
   expensive = makeIcon("www/icons/expensive.svg", "www/icons/expensive.svg", ICON_SIZE, ICON_SIZE)
 )
 
-
 ##################
 # USER INTERFACE #
 ##################
@@ -77,6 +74,11 @@ dollar_icons <- iconList(
 intro_tab <- tabItem(
   tabName = "intro",
   h1("Introduction"),
+  actionButton("explore_restaurant", "Explore Restaurant ->", class = "btn btn-primary"),
+  actionButton("explor_airbnb", "Explore Airbnb ->", class = "btn btn-primary"),
+  actionButton("explore_attraction", "Explore Attraction ->", class = "btn btn-primary"),
+  actionButton("explore_transport", "Explore Transport ->", class = "btn btn-primary"),
+  actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
 
 restaurant_tab <- tabItem(
@@ -99,7 +101,7 @@ hotel_tab <- tabItem(
       title = "Airbnb Listings in Melbourne City",
       status = "primary",
       solidHeader = TRUE,
-      leafletOutput("hotel_map", height = "calc(100vh - 350px)"), #330
+      leafletOutput("hotel_map", height = "calc(100vh - 350px)"), # 330
     ),
     box(
       style = "height: calc(100vh - 600px); overflow-y: scroll;",
@@ -150,7 +152,8 @@ hotel_tab <- tabItem(
       height = "250px",
       # The id lets us use input$tabset1 on the server to find the current tab
       id = "hotel_statistics_tabset",
-      tabPanel("Neaby",
+      tabPanel(
+        "Neaby",
         HTML(paste0(
           "Transport: There are 4 bus stops nearby. <br>",
           "Restaurant: There are 3 restaurants nearby."
@@ -186,6 +189,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     width = SIDEBAR_WIDTH,
     sidebarMenu(
+      id = "tabs",
       menuItem("Introduction", tabName = "intro", icon = icon("info-circle")),
       menuItem("Restaurant", tabName = "restaurant", icon = icon("cutlery")),
       menuItem("Airbnb", tabName = "airbnb", icon = icon("bed")),
@@ -200,7 +204,9 @@ ui <- dashboardPage(
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
     tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
+      # bootstrap theme reference: https://bootswatch.com/3/
+      tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css")
     ),
     tabItems(
       intro_tab,
@@ -218,12 +224,34 @@ ui <- dashboardPage(
 ################
 
 server <- function(input, output, session) {
+  ################### Observers ##################
+  # start explore button at introduction page
+  # reference: https://www.rdocumentation.org/packages/shinydashboard/versions/0.7.2/topics/updateTabItems
+  observeEvent(input$explore_restaurant, {
+    updateTabItems(session, "tabs", "restaurant")
+  })
+  # start explore button at airbnb page
+  observeEvent(input$explor_airbnb, {
+    updateTabItems(session, "tabs", "airbnb")
+  })
+  # start explore button at attraction page
+  observeEvent(input$explore_attraction, {
+    updateTabItems(session, "tabs", "attraction")
+  })
+  # start explore button at transport page
+  observeEvent(input$explore_transport, {
+    updateTabItems(session, "tabs", "transport")
+  })
+  # start explore button at data source page
+  observeEvent(input$explore_data_source, {
+    updateTabItems(session, "tabs", "data_source")
+  })
   ############# reactive functions #############
   getFilteredHotels <- reactive({
-    # filter price range
-    filtered_hotels <- hotels[hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2], ]
     # filter price class
-    filtered_hotels <- filtered_hotels[filtered_hotels$price_class %in% input$price_class_select, ]
+    filtered_hotels <- hotels[hotels$price_class %in% input$price_class_select, ]
+    # filter price range
+    filtered_hotels <- filtered_hotels[filtered_hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2], ]
     # filter rating range
     filtered_hotels <- filtered_hotels[filtered_hotels$rating >= input$rating_range[1] &
       filtered_hotels$rating <= input$rating_range[2], ]
@@ -262,7 +290,7 @@ server <- function(input, output, session) {
         data = filtered_hotels,
         clusterOptions = markerClusterOptions(maxClusterRadius = 50),
         icon = ~ dollar_icons[price_class],
-        options = leaflet::markerOptions(price = filtered_hotels$price),
+        options = markerOptions(price = filtered_hotels$price),
         popup = ~ paste0(
           # listing name, can navigate to Airbnb listing site
           "Name: <a href='https://www.airbnb.com.au/rooms/",
@@ -271,13 +299,14 @@ server <- function(input, output, session) {
           "Host:  <a href='https://www.airbnb.com.au/users/show/",
           hotels$host_id, "'><strong>", hotels$host_name, "</strong></a><br>",
           "Price: <strong>$", hotels$price, "/night</strong><br>",
+          "Price class: <strong>", hotels$price_class, "</strong><br>",
           "Minimum nights: <strong>", hotels$minimum_nights, "</strong><br>",
           "Rating: <strong>", hotels$rating, "</strong><br>",
           "Last Review: <strong>", hotels$last_review, "</strong><br>"
         ),
         label = ~ paste(hotels$name),
         labelOptions = labelOptions(direction = "top")
-      ) %>% 
+      ) %>%
       # add legend
       addControl(
         html = paste0(
