@@ -4,6 +4,8 @@ library(shinydashboard)
 library(maps)
 library(leaflet)
 library(sf)
+library(htmlwidgets)
+# library(shinyjs)
 
 # common references
 # icons: https://fontawesome.com/v4/icons/
@@ -144,6 +146,8 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
+    # useShinyjs(),
+    # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
     tags$head(
@@ -173,7 +177,8 @@ server <- function(input, output, session) {
   ################### outputs ##################
   # map
   output$hotel_map <- renderLeaflet({
-    leaflet(city_boundary) %>%
+    filtered_hotels <- getFilteredHotels()
+    leaflet_map <- leaflet(city_boundary) %>%
       addProviderTiles(providers$CartoDB.Positron) %>%
       addPolygons(
         fillColor = "transparent",
@@ -182,9 +187,10 @@ server <- function(input, output, session) {
         fillOpacity = 0.5
       ) %>%
       addMarkers(
-        data = getFilteredHotels(),
-        clusterOptions = markerClusterOptions(maxClusterRadius = 20),
+        data = filtered_hotels,
+        clusterOptions = markerClusterOptions(maxClusterRadius = 50),
         icon = ~ dollar_icons[price_class],
+        options = leaflet::markerOptions(price = filtered_hotels$price),
         popup = ~ paste0(
           # listing name, can navigate to Airbnb listing site
           "Name: <a href='https://www.airbnb.com.au/rooms/",
@@ -200,6 +206,55 @@ server <- function(input, output, session) {
         label = ~ paste(hotels$name),
         labelOptions = labelOptions(direction = "top")
       )
+    # render custom clustered icons
+    # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
+    # note: custom js code is in www/js/onRenderAirbnb.js
+    leaflet_map %>% onRender("
+      function(el, x) {
+        // data from constant defined earlier
+        const CHEAP_THRESHOLD = 124;
+        const MEDIUM_THRESHOLD = 180;
+        // get average price of markers in a cluster
+        const getAvgPrice = (markers) =>
+          (markers.reduce((a, b) => a + parseFloat(b.options.price), 0) / markers.length).toFixed(3)
+        let map = this;
+        map.eachLayer(function (layer) {
+          if (layer instanceof L.MarkerClusterGroup) {
+            // create cluster icon
+            layer.options.iconCreateFunction = function (cluster) {
+              const averagePrice = getAvgPrice(cluster.getAllChildMarkers());
+              // cluster icon background style (used to be gradient but found that transparent background is better)
+              iconHtml = '<div style=\"background: radial-gradient(circle at center, transparent, transparent); width: 40px; height: 40px; border-radius: 50%;\"></div>';
+              // icon style
+              iconStyle = 'style=\"width: 26px; height: 26px; position: relative; top: -32px; left: 8px;\"';
+              if (averagePrice > MEDIUM_THRESHOLD) {
+                iconHtml += '<img src=\"icons/expensive.svg\" ' + iconStyle + ' />';
+              } else if (averagePrice > CHEAP_THRESHOLD) {
+                iconHtml += '<img src=\"icons/medium-price.svg\" ' + iconStyle + ' />';
+              } else {
+                iconHtml += '<img src=\"icons/cheap.svg\" ' + iconStyle + ' />';
+              }
+              // cluster label (num of childern markers)
+              iconHtml += '<div style=\"position: relative; top: -35px; font-size: 12px; text-align: center; font-weight: 700;\">' + cluster.getAllChildMarkers().length + '</div>';
+
+              return L.divIcon({ html: iconHtml, className: 'my-cluster-icon', iconSize: L.point(40, 40) });
+            };
+            // create hover popup
+            layer.on('clustermouseover', function (a) {
+              let cluster = a.layer;
+              const averagePrice = getAvgPrice(cluster.getAllChildMarkers());
+              let popup = L.popup()
+                .setLatLng(cluster.getLatLng())
+                .setContent(`Numbers of Airbnb: ${cluster.getChildCount()} <br>Average price: $${averagePrice} per night`)
+                .openOn(map);
+            });
+            layer.on('clustermouseout', function (a) {
+              map.closePopup();
+            });
+          }
+        });
+      }
+    ")
   })
 
   ################### value boxes ##################
