@@ -5,6 +5,8 @@ library(maps)
 library(leaflet)
 library(sf)
 library(htmlwidgets)
+library(shinyWidgets)
+
 # library(shinyjs)
 
 # common references
@@ -49,6 +51,12 @@ hotels$price_class <- cut(hotels$price,
   right = FALSE
 )
 
+# calculate some statistics
+min_hotel_price <- min(hotels$price, na.rm = TRUE)
+max_hotel_price <- max(hotels$price, na.rm = TRUE)
+min_min_nights <- min(hotels$minimum_nights, na.rm = TRUE)
+max_min_nights <- max(hotels$minimum_nights, na.rm = TRUE)
+
 #########
 # ICONS #
 #########
@@ -91,23 +99,53 @@ hotel_tab <- tabItem(
       title = "Airbnb Listings in Melbourne City",
       status = "primary",
       solidHeader = TRUE,
-      leafletOutput("hotel_map", height = "calc(100vh - 350px)")
+      leafletOutput("hotel_map", height = "calc(100vh - 550px)"),
     ),
-    # TODO: add filter controls here
     box(
+      style = "height: calc(100vh - 530px); overflow-y: scroll;",
       width = 4,
       title = "Filter",
       solidHeader = TRUE,
-      HTML(paste0(
-        "TODO <br>",
-        "select suburb <br>",
-        "select price range <br>",
-        "select rating range <br>",
-        "select minimum nights <br>",
-        "select range of number of bedrooms <br>",
-        "select range of number of beds <br>",
-        "select range of number of bathrooms <br>"
-      ))
+      sliderInput(
+        "hotel_price", "Select price range:",
+        min = min_hotel_price, max = max_hotel_price,
+        value = c(min_hotel_price, max_hotel_price),
+        step = 1
+      ),
+      pickerInput(
+        "price_class_select", "Select price class:",
+        choices = c("cheap", "medium", "expensive"),
+        selected = c("cheap", "medium", "expensive"),
+        multiple = TRUE
+      ),
+      sliderInput(
+        "rating_range", "Select rating range:",
+        min = 0, max = 5, value = c(0, 5),
+        step = 0.1
+      ),
+      numericInput(
+        "min_nights", "Select minimum nights range:",
+        min = min_min_nights, max = max_min_nights,
+        value = 1,
+        step = 1
+      ),
+      selectInput(
+        "num_bedrooms", "Select number of bedrooms:",
+        choices = c("All" = "All", sort(unique(hotels$number_of_bedrooms))),
+      ),
+      selectInput(
+        "num_beds", "Select number of beds:",
+        choices = c("All" = "All", sort(unique(hotels$number_of_beds))),
+      ),
+      selectInput(
+        "num_baths", "Select number of baths:",
+        choices = c("All" = "All", sort(unique(hotels$number_of_baths))),
+      ),
+    ),
+    box(
+      width = 12,
+      title = "Legend",
+      solidHeader = TRUE,
     )
   )
 )
@@ -171,16 +209,39 @@ ui <- dashboardPage(
 server <- function(input, output, session) {
   ############# reactive functions #############
   getFilteredHotels <- reactive({
-    # TODO: filter hotels data here
-    hotels
+    # filter price range
+    filtered_hotels <- hotels[hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2], ]
+    # filter price class
+    filtered_hotels <- filtered_hotels[filtered_hotels$price_class %in% input$price_class_select, ]
+    # filter rating range
+    filtered_hotels <- filtered_hotels[filtered_hotels$rating >= input$rating_range[1] &
+      filtered_hotels$rating <= input$rating_range[2], ]
+    # filter minimum nights range
+    if (!is.na(input$min_nights) && input$min_nights >= min_min_nights && input$min_nights <= max_min_nights) {
+      filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
+    }
+    # filter number of bedrooms
+    if (input$num_bedrooms != "All") {
+      filtered_hotels <- filtered_hotels[filtered_hotels$number_of_bedrooms == input$num_bedrooms, ]
+    }
+    # filter number of beds
+    if (input$num_beds != "All") {
+      filtered_hotels <- filtered_hotels[filtered_hotels$number_of_beds == input$num_beds, ]
+    }
+    # filter number of baths
+    if (input$num_baths != "All") {
+      filtered_hotels <- filtered_hotels[filtered_hotels$number_of_baths == input$num_baths, ]
+    }
+    filtered_hotels
   })
   ################### outputs ##################
   # map
   output$hotel_map <- renderLeaflet({
     filtered_hotels <- getFilteredHotels()
-    leaflet_map <- leaflet(city_boundary) %>%
+    leaflet_map <- leaflet() %>%
       addProviderTiles(providers$CartoDB.Positron) %>%
       addPolygons(
+        data = city_boundary,
         fillColor = "transparent",
         weight = 2,
         color = "#000000",
@@ -205,6 +266,18 @@ server <- function(input, output, session) {
         ),
         label = ~ paste(hotels$name),
         labelOptions = labelOptions(direction = "top")
+      ) %>% 
+      # add legend
+      addControl(
+        html = paste0(
+          "<div style='padding: 5px; background-color: white;'>",
+          "<h5>Price Level</h5>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap </div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium </div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive </div>",
+          "</div>"
+        ),
+        position = "bottomleft"
       )
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
@@ -216,7 +289,7 @@ server <- function(input, output, session) {
         const MEDIUM_THRESHOLD = 180;
         // get average price of markers in a cluster
         const getAvgPrice = (markers) =>
-          (markers.reduce((a, b) => a + parseFloat(b.options.price), 0) / markers.length).toFixed(3)
+          (markers.reduce((a, b) => a + parseFloat(b.options.price), 0) / markers.length).toFixed(2)
         let map = this;
         map.eachLayer(function (layer) {
           if (layer instanceof L.MarkerClusterGroup) {
