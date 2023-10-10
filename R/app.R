@@ -7,6 +7,8 @@ library(sf)
 library(htmlwidgets)
 library(shinyWidgets)
 # library(shinyjs)
+library(geojsonsf)
+
 
 # common references
 # icons: https://fontawesome.com/v4/icons/
@@ -19,7 +21,11 @@ library(shinyWidgets)
 SIDEBAR_WIDTH <- 260
 ICON_SIZE <- 20
 DEFAULT_NA_HINT <- "NA"
-
+CITY_SUBURBS <- c(
+  "Carlton", "Carlton North - Princes Hill", "Docklands", "East Melbourne", "Kensington (Vic.)", 
+  "Melbourne", "North Melbourne", "Parkville", "Southbank", "South Yarra - West", "West Melbourne",
+  "Flemington Racecourse", "Port Melbourne Industrial"
+)
 ########
 # DATA #
 ########
@@ -28,6 +34,16 @@ DEFAULT_NA_HINT <- "NA"
 city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
 hotels <- read.csv("data/airbnb/listings-clean.csv")
 
+### get melbourne suburb boundaries
+# reference: https://rdrr.io/cran/geojsonsf/man/geo_melbourne.html
+melbourne_surburbs_data <- geo_melbourne
+# Convert to sf object and Filter for specific suburbs
+melbourne_surburbs_sf <- geojson_sf(melbourne_surburbs_data)
+suburb_boundaries <- melbourne_surburbs_sf[melbourne_surburbs_sf$SA2_NAME %in% CITY_SUBURBS, ]
+suburb_boundaries <- st_make_valid(suburb_boundaries)
+# only keep the suburb polygon that are within the city boundary
+# reference: https://stackoverflow.com/questions/62442150/why-use-st-intersection-rather-than-st-intersects
+suburb_boundaries <- st_intersection(suburb_boundaries, city_boundary)
 # filter data with city boundary
 # reference: https://r-spatial.github.io/sf/reference/geos_binary_pred.html
 hotels_sf <- st_as_sf(hotels, coords = c("longitude", "latitude"), crs = 4326)
@@ -36,19 +52,20 @@ hotels <- na.omit(hotels)
 # remove those with price 0
 hotels <- hotels[hotels$price != 0, ]
 
-# calculate price quantiles
+### calculate price quantiles
 # reference: https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/quantile
 quantiles <- quantile(hotels$price, probs = c(0.33, 0.66), na.rm = TRUE)
 cheap_threshold <- as.numeric(quantiles[1])
 medium_threshold <- as.numeric(quantiles[2])
 
-# add icon type based on interval of happiness score
+### add icon type based on interval of happiness score
 # reference: https://www.statology.org/cut-function-in-r/
 hotels$price_class <- cut(hotels$price,
   breaks = c(-Inf, cheap_threshold, medium_threshold, Inf),
   labels = c("cheap", "medium", "expensive"),
   right = FALSE
 )
+
 # calculate some statistics
 min_hotel_price <- min(hotels$price, na.rm = TRUE)
 max_hotel_price <- max(hotels$price, na.rm = TRUE)
@@ -91,7 +108,7 @@ hotel_tab <- tabItem(
   tags$head(
     tags$style(HTML("
       .leaflet-bottom.leaflet-left {
-        width: 75%;
+        width: 65%;
       }
       .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
@@ -108,11 +125,21 @@ hotel_tab <- tabItem(
         margin-bottom: 10px;
       }
       .small-box .inner {
-        transform: scale(0.9) translate(-10px, -5px)；    
+        transform: scale(0.9) translate(-10px, -5px)；
       }
       .small-box .icon-large {
         font-size: 60px;
         right: 10px;
+      }
+      .row {
+        width: 100%;
+      }
+      .row .col-sm-6 {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      #average_hotels_rating.shiny-html-output.col-sm-6.shiny-bound-output {
+        padding-right: 10px;
       }
     ")),
     tags$script(HTML("
@@ -139,7 +166,7 @@ hotel_tab <- tabItem(
       ),
       tabPanel(
         "Map",
-        leafletOutput("hotel_map", height = "calc(100vh - 230px)"), # 330
+        leafletOutput("hotel_map", height = "calc(100vh - 240px)"), # 330
       )
     )
   ),
@@ -148,15 +175,24 @@ hotel_tab <- tabItem(
     div(
       style = "display: flex; flex-direction: column; align-items: center; padding-left: 10px;",
       valueBoxOutput("total_hotels_num", width = 12),
-      valueBoxOutput("average_hotels_rating", width = 12),
-      valueBoxOutput("average_hotels_price", width = 12),
+      fluidRow(
+        width = 12,
+        valueBoxOutput("average_hotels_rating", width = 6),
+        valueBoxOutput("average_hotels_price", width = 6),
+      ),
       box(
         width = 12,
-        style = "height: calc(100vh - 505px); overflow-y: scroll;",
+        style = "height: calc(100vh - 415px); overflow-y: scroll;",
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
         collapsible = TRUE,
+        pickerInput(
+          "suburb_select", "Select suburb:",
+          choices = CITY_SUBURBS,
+          selected = CITY_SUBURBS,
+          multiple = TRUE,
+        ),
         sliderInput(
           "hotel_price", "Select price (per night) range:",
           min = min_hotel_price, max = max_hotel_price,
@@ -194,7 +230,7 @@ hotel_tab <- tabItem(
         ),
       ),
     ),
-   
+
     # tabBox(
     #   title = "Statistics",
     #   width = 4,
@@ -304,7 +340,7 @@ server <- function(input, output, session) {
     new_min <- if ("cheap" %in% selected_classes) {
       min_hotel_price
     } else if ("medium" %in% selected_classes) {
-      medium_threshold
+      cheap_threshold
     } else {
       max(hotels[hotels$price_class == "medium", ]$price)
     }
@@ -324,17 +360,39 @@ server <- function(input, output, session) {
     )
   })
 
-
   ############# reactive functions #############
+  # get the geometry shape of selected suburbs
+  getSelectedHotelsSuburbs <- reactive({
+    selected_suburbs <- suburb_boundaries[suburb_boundaries$SA2_NAME %in% input$suburb_select, ]
+    return(selected_suburbs)
+  })
   getFilteredHotels <- reactive({
-    filtered_hotels <- hotels[
+    # Initialize an empty list to collect filtered hotels
+    filtered_hotels_list <- list()
+    selected_suburbs <- getSelectedHotelsSuburbs()
+    # Loop through each suburb
+    # reference: https://www.w3schools.com/r/r_for_loop.asp
+    for (i in 1:nrow(selected_suburbs)) {
+      single_suburb <- selected_suburbs[i, ]
+      # Filter hotels within the single suburb
+      # reference: https://cran.r-project.org/web/packages/sf/vignettes/sf3.html
+      hotels_in_suburb <- hotels[st_intersects(hotels, single_suburb, sparse = FALSE), ]
+      # Append to the list
+      filtered_hotels_list[[i]] <- hotels_in_suburb
+    }
+    # Combine all filtered hotels into one dataset
+    filtered_hotels <- do.call(rbind, filtered_hotels_list)
+    filtered_hotels <- na.omit(filtered_hotels)
+
+    # filter price and ratings
+    filtered_hotels <- filtered_hotels[
       # filter price class
-      hotels$price_class %in% input$price_class_select &
-      # filter price range
-      (hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2]) &
-      # filter rating range
-      (hotels$rating >= input$rating_range[1] & hotels$rating <= input$rating_range[2]) 
-    , ]
+      filtered_hotels$price_class %in% input$price_class_select &
+        # filter price range
+        (filtered_hotels$price >= input$hotel_price[1] & filtered_hotels$price <= input$hotel_price[2]) &
+        # filter rating range
+        (filtered_hotels$rating >= input$rating_range[1] & filtered_hotels$rating <= input$rating_range[2]),
+    ]
     # filter minimum nights range
     if (!is.na(input$min_nights) && input$min_nights >= min_min_nights && input$min_nights <= max_min_nights) {
       filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
@@ -358,13 +416,22 @@ server <- function(input, output, session) {
   output$hotel_map <- renderLeaflet({
     filtered_hotels <- getFilteredHotels()
     leaflet_map <- leaflet() %>%
-      addProviderTiles(providers$CartoDB.Positron) %>%
+      addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
       addPolygons(
         data = city_boundary,
         fillColor = "transparent",
         weight = 2,
         color = "#000000",
-        fillOpacity = 0.5
+        fillOpacity = 0.5,
+      ) %>%
+      addPolygons(
+        data = getSelectedHotelsSuburbs(),
+        fillColor = ~ fillColor,
+        stroke = TRUE,
+        weight = 1,
+        color = "#000000",
+        fillOpacity = 0.15,
+        popup = ~ SA2_NAME,
       ) %>%
       addMarkers(
         data = filtered_hotels,
@@ -393,9 +460,9 @@ server <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap </div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive </div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
           "</div>"
         ),
         position = "bottomright"
@@ -463,7 +530,6 @@ server <- function(input, output, session) {
     hotel_data <- filtered_hotels[as.numeric(filtered_hotels$id) == as.numeric(click$id), ]
     # Remove NA values
     print(hotel_data)
-    text <- paste("Lattitude ", click$lat, "Longtitude ", click$lng)
     leafletProxy("hotel_map") %>%
       clearControls() %>%
       addControl(
@@ -481,9 +547,9 @@ server <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap </div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive </div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
           "</div>"
         ),
         position = "bottomright"
@@ -529,7 +595,7 @@ server <- function(input, output, session) {
     avg_price <- format(round(avg_price, 2))
     valueBox(
       ifelse(is.na(avg_price), DEFAULT_NA_HINT, paste0("$", avg_price)),
-      "Average Price per Night",
+      "Average Price/Night",
       width = 3,
       icon = icon("dollar"),
       color = "green"
