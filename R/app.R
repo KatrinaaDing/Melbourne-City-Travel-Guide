@@ -32,7 +32,7 @@ hotels <- read.csv("data/airbnb/listings-clean.csv")
 # reference: https://r-spatial.github.io/sf/reference/geos_binary_pred.html
 hotels_sf <- st_as_sf(hotels, coords = c("longitude", "latitude"), crs = 4326)
 hotels <- hotels_sf[st_within(hotels_sf, city_boundary, sparse = FALSE), ]
-
+hotels <- na.omit(hotels)
 # remove those with price 0
 hotels <- hotels[hotels$price != 0, ]
 
@@ -88,6 +88,25 @@ restaurant_tab <- tabItem(
 
 hotel_tab <- tabItem(
   tabName = "airbnb",
+  tags$head(
+    tags$style(HTML("
+      .leaflet-bottom.leaflet-left {
+        width: 75%;
+      }
+      .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
+        width: 100%;
+      }
+    ")),
+    tags$script(HTML("
+      $(document).on('click', '#closeButton', function(){
+        //Shiny.setInputValue('closeControl', true, {priority: 'event'});
+        $('#hotel_info_popup').parent().addClass('fade').removeClass('show');
+        setTimeout(function() {
+          $('#controlToRemove').parent().remove();
+        }, 150); // The animation duration in milliseconds
+      });
+    ")),
+  ),
   h1("Airbnb"),
   fluidRow(
     valueBoxOutput("total_hotels_num", width = 4),
@@ -96,12 +115,19 @@ hotel_tab <- tabItem(
   ),
   fluidRow(
     # map box
-    box(
+    tabBox(
       width = 8,
       title = "Airbnb Listings in Melbourne City",
-      status = "primary",
-      solidHeader = TRUE,
-      leafletOutput("hotel_map", height = "calc(100vh - 350px)"), # 330
+      # The id lets us use input$tabset1 on the server to find the current tab
+      id = "hotel_statistics_tabset",
+      tabPanel(
+        "Map",
+        leafletOutput("hotel_map", height = "calc(100vh - 350px)"), # 330
+      ),
+      tabPanel(
+        "Chart",
+        "Tab content 2"
+      )
     ),
     box(
       style = "height: calc(100vh - 600px); overflow-y: scroll;",
@@ -156,7 +182,8 @@ hotel_tab <- tabItem(
         "Nearby",
         HTML(paste0(
           "Transport: There are 4 bus stops nearby. <br>",
-          "Restaurant: There are 3 restaurants nearby."
+          "Restaurant: There are 3 restaurants nearby.",
+          verbatimTextOutput("Click_text")
         ))
       ),
       tabPanel("Compare", "Tab content 2")
@@ -246,6 +273,8 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
+
+
   ############# reactive functions #############
   getFilteredHotels <- reactive({
     # filter price class
@@ -290,6 +319,7 @@ server <- function(input, output, session) {
         data = filtered_hotels,
         clusterOptions = markerClusterOptions(maxClusterRadius = 50),
         icon = ~ dollar_icons[price_class],
+        layerId = ~id,
         options = markerOptions(price = filtered_hotels$price),
         popup = ~ paste0(
           # listing name, can navigate to Airbnb listing site
@@ -317,7 +347,7 @@ server <- function(input, output, session) {
           "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive </div>",
           "</div>"
         ),
-        position = "bottomleft"
+        position = "bottomright"
       )
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
@@ -370,6 +400,53 @@ server <- function(input, output, session) {
     ")
   })
 
+  # leaflet map marker click event observer
+  # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
+  observe({
+    click <- input$hotel_map_marker_click
+    if (is.null(click)) {
+      return()
+    }
+    filtered_hotels <- getFilteredHotels()
+    # get hotel data
+    hotel_data <- filtered_hotels[as.numeric(filtered_hotels$id) == as.numeric(click$id), ]
+    # Remove NA values
+    print(hotel_data)
+    text <- paste("Lattitude ", click$lat, "Longtitude ", click$lng)
+    leafletProxy("hotel_map") %>%
+      clearControls() %>%
+      addControl(
+        html = paste0(
+          "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
+          "<h5>", hotel_data$name, "</h5>",
+          "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
+          "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
+          "</div>"
+        ),
+        position = "bottomleft"
+      ) %>%
+      # add legend
+      addControl(
+        html = paste0(
+          "<div style='padding: 5px; background-color: white;'>",
+          "<h5>Price Level</h5>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap </div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium </div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive </div>",
+          "</div>"
+        ),
+        position = "bottomright"
+      )
+    output$Click_text <- renderText({
+      hotel_data$name
+    })
+  })
+  # # close control box when clicking the button
+  # observe({
+  #   if (isTRUE(input$closeControl)) {
+  #     leafletProxy("hotel_map") %>% clearControls()
+  #   }
+  # })
   ################### value boxes ##################
 
   # value box that render total number of hotels
