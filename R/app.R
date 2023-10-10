@@ -39,8 +39,8 @@ hotels <- hotels[hotels$price != 0, ]
 # calculate price quantiles
 # reference: https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/quantile
 quantiles <- quantile(hotels$price, probs = c(0.33, 0.66), na.rm = TRUE)
-cheap_threshold <- quantiles[1]
-medium_threshold <- quantiles[2]
+cheap_threshold <- as.numeric(quantiles[1])
+medium_threshold <- as.numeric(quantiles[2])
 
 # add icon type based on interval of happiness score
 # reference: https://www.statology.org/cut-function-in-r/
@@ -96,6 +96,24 @@ hotel_tab <- tabItem(
       .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
       }
+      [class^='col-sm-'] {
+        padding: 0;
+      }
+      .shiny-html-output.col-sm-12.shiny-bound-output {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .small-box {
+        height: 89px;
+        margin-bottom: 10px;
+      }
+      .small-box .inner {
+        transform: scale(0.9) translate(-10px, -5px)；    
+      }
+      .small-box .icon-large {
+        font-size: 60px;
+        right: 10px;
+      }
     ")),
     tags$script(HTML("
       $(document).on('click', '#closeButton', function(){
@@ -108,86 +126,91 @@ hotel_tab <- tabItem(
     ")),
   ),
   h1("Airbnb"),
-  fluidRow(
-    valueBoxOutput("total_hotels_num", width = 4),
-    valueBoxOutput("average_hotels_rating", width = 4),
-    valueBoxOutput("average_hotels_price", width = 4),
-  ),
-  fluidRow(
-    # map box
+  column(
+    width = 8,
     tabBox(
-      width = 8,
+      width = 12,
       title = "Airbnb Listings in Melbourne City",
       # The id lets us use input$tabset1 on the server to find the current tab
       id = "hotel_statistics_tabset",
       tabPanel(
-        "Map",
-        leafletOutput("hotel_map", height = "calc(100vh - 350px)"), # 330
-      ),
-      tabPanel(
         "Chart",
         "Tab content 2"
-      )
-    ),
-    box(
-      style = "height: calc(100vh - 600px); overflow-y: scroll;",
-      width = 4,
-      title = "Filter",
-      status = "primary",
-      solidHeader = TRUE,
-      collapsible = TRUE,
-      sliderInput(
-        "hotel_price", "Select price range:",
-        min = min_hotel_price, max = max_hotel_price,
-        value = c(min_hotel_price, max_hotel_price),
-        step = 1
       ),
-      pickerInput(
-        "price_class_select", "Select price class:",
-        choices = c("cheap", "medium", "expensive"),
-        selected = c("cheap", "medium", "expensive"),
-        multiple = TRUE
-      ),
-      sliderInput(
-        "rating_range", "Select rating range:",
-        min = 0, max = 5, value = c(0, 5),
-        step = 0.1
-      ),
-      numericInput(
-        "min_nights", "Select minimum nights range:",
-        min = min_min_nights, max = max_min_nights,
-        value = 1,
-        step = 1
-      ),
-      selectInput(
-        "num_bedrooms", "Select number of bedrooms:",
-        choices = c("All" = "All", sort(unique(hotels$number_of_bedrooms))),
-      ),
-      selectInput(
-        "num_beds", "Select number of beds:",
-        choices = c("All" = "All", sort(unique(hotels$number_of_beds))),
-      ),
-      selectInput(
-        "num_baths", "Select number of baths:",
-        choices = c("All" = "All", sort(unique(hotels$number_of_baths))),
-      ),
-    ),
-    tabBox(
-      title = "Statistics",
-      width = 4,
-      height = "250px",
-      # The id lets us use input$tabset1 on the server to find the current tab
-      id = "hotel_statistics_tabset",
       tabPanel(
-        "Nearby",
-        HTML(paste0(
-          "Transport: There are 4 bus stops nearby. <br>",
-          "Restaurant: There are 3 restaurants nearby.",
-          verbatimTextOutput("Click_text")
-        ))
+        "Map",
+        leafletOutput("hotel_map", height = "calc(100vh - 230px)"), # 330
+      )
+    )
+  ),
+  column(
+    width = 4,
+    div(
+      style = "display: flex; flex-direction: column; align-items: center; padding-left: 10px;",
+      valueBoxOutput("total_hotels_num", width = 12),
+      valueBoxOutput("average_hotels_rating", width = 12),
+      valueBoxOutput("average_hotels_price", width = 12),
+      box(
+        width = 12,
+        style = "height: calc(100vh - 505px); overflow-y: scroll;",
+        title = "Filter",
+        status = "primary",
+        solidHeader = TRUE,
+        collapsible = TRUE,
+        sliderInput(
+          "hotel_price", "Select price (per night) range:",
+          min = min_hotel_price, max = max_hotel_price,
+          value = c(min_hotel_price, max_hotel_price),
+          step = 1, pre = "$"
+        ),
+        pickerInput(
+          "price_class_select", "Select price class:",
+          choices = c("cheap", "medium", "expensive"),
+          selected = c("cheap", "medium", "expensive"),
+          multiple = TRUE
+        ),
+        sliderInput(
+          "rating_range", "Select rating range:",
+          min = 0, max = 5, value = c(0, 5),
+          step = 0.1
+        ),
+        numericInput(
+          "min_nights", "Select minimum nights range:",
+          min = min_min_nights, max = max_min_nights,
+          value = 1,
+          step = 1
+        ),
+        selectInput(
+          "num_bedrooms", "Select number of bedrooms:",
+          choices = c("All" = "All", sort(unique(hotels$number_of_bedrooms))),
+        ),
+        selectInput(
+          "num_beds", "Select number of beds:",
+          choices = c("All" = "All", sort(unique(hotels$number_of_beds))),
+        ),
+        selectInput(
+          "num_baths", "Select number of baths:",
+          choices = c("All" = "All", sort(unique(hotels$number_of_baths))),
+        ),
       ),
-      tabPanel("Compare", "Tab content 2")
     ),
+   
+    # tabBox(
+    #   title = "Statistics",
+    #   width = 4,
+    #   height = "250px",
+    #   # The id lets us use input$tabset1 on the server to find the current tab
+    #   id = "hotel_statistics_tabset",
+    #   tabPanel(
+    #     "Nearby",
+    #     HTML(paste0(
+    #       "Transport: There are 4 bus stops nearby. <br>",
+    #       "Restaurant: There are 3 restaurants nearby.",
+    #       verbatimTextOutput("Click_text")
+    #     ))
+    #   ),
+    #   tabPanel("Compare", "Tab content 2")
+    # ),
   )
 )
 
@@ -273,17 +296,45 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
+  # update hotel price range min and max value based on price class selection
+  observeEvent(input$price_class_select, {
+    selected_classes <- input$price_class_select
+
+    # setting new min and max value based on selected classes
+    new_min <- if ("cheap" %in% selected_classes) {
+      min_hotel_price
+    } else if ("medium" %in% selected_classes) {
+      medium_threshold
+    } else {
+      max(hotels[hotels$price_class == "medium", ]$price)
+    }
+    new_max <- if ("expensive" %in% selected_classes) {
+      max_hotel_price
+    } else if ("medium" %in% selected_classes) {
+      medium_threshold
+    } else {
+      min(hotels[hotels$price_class == "medium", ]$price)
+    }
+    updateSliderInput(
+      session,
+      "hotel_price",
+      min = new_min,
+      max = new_max,
+      value = c(new_min, new_max)
+    )
+  })
 
 
   ############# reactive functions #############
   getFilteredHotels <- reactive({
-    # filter price class
-    filtered_hotels <- hotels[hotels$price_class %in% input$price_class_select, ]
-    # filter price range
-    filtered_hotels <- filtered_hotels[filtered_hotels$price >= input$hotel_price[1] & filtered_hotels$price <= input$hotel_price[2], ]
-    # filter rating range
-    filtered_hotels <- filtered_hotels[filtered_hotels$rating >= input$rating_range[1] &
-      filtered_hotels$rating <= input$rating_range[2], ]
+    filtered_hotels <- hotels[
+      # filter price class
+      hotels$price_class %in% input$price_class_select &
+      # filter price range
+      (hotels$price >= input$hotel_price[1] & hotels$price <= input$hotel_price[2]) &
+      # filter rating range
+      (hotels$rating >= input$rating_range[1] & hotels$rating <= input$rating_range[2]) 
+    , ]
     # filter minimum nights range
     if (!is.na(input$min_nights) && input$min_nights >= min_min_nights && input$min_nights <= max_min_nights) {
       filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
@@ -300,7 +351,7 @@ server <- function(input, output, session) {
     if (input$num_baths != "All") {
       filtered_hotels <- filtered_hotels[filtered_hotels$number_of_baths == input$num_baths, ]
     }
-    filtered_hotels
+    return(filtered_hotels)
   })
   ################### outputs ##################
   # map
@@ -324,17 +375,17 @@ server <- function(input, output, session) {
         popup = ~ paste0(
           # listing name, can navigate to Airbnb listing site
           "Name: <a href='https://www.airbnb.com.au/rooms/",
-          hotels$id, "'><strong>", hotels$name, "</strong></a><br>",
+          filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
           # host name, can navigate to host site
           "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          hotels$host_id, "'><strong>", hotels$host_name, "</strong></a><br>",
-          "Price: <strong>$", hotels$price, "/night</strong><br>",
-          "Price class: <strong>", hotels$price_class, "</strong><br>",
-          "Minimum nights: <strong>", hotels$minimum_nights, "</strong><br>",
-          "Rating: <strong>", hotels$rating, "</strong><br>",
-          "Last Review: <strong>", hotels$last_review, "</strong><br>"
+          filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
+          "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
+          "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
+          "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
+          "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
+          "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
         ),
-        label = ~ paste(hotels$name),
+        label = ~ paste(filtered_hotels$name),
         labelOptions = labelOptions(direction = "top")
       ) %>%
       # add legend
@@ -355,7 +406,7 @@ server <- function(input, output, session) {
     leaflet_map %>% onRender("
       function(el, x) {
         // data from constant defined earlier
-        const CHEAP_THRESHOLD = 124;
+        const CHEAP_THRESHOLD = 129;
         const MEDIUM_THRESHOLD = 180;
         // get average price of markers in a cluster
         const getAvgPrice = (markers) =>
