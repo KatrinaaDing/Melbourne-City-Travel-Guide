@@ -39,8 +39,6 @@ data_source_tab <- tabItem(
   h1("Data Source"),
 )
 
-# setUpTableauInShiny()
-
 # create a shiny dashboard
 # reference: http://rstudio.github.io/shinydashboard/get_started.html
 ui <- dashboardPage(
@@ -94,37 +92,6 @@ server <- function(input, output, session) {
     updateTabItems(session, "tabs", "restaurant")
   })
 
-  ################### outputs ##################
-  # map
-  output$hotel_map <- renderLeaflet({
-    leaflet(city_boundary) %>%
-      addProviderTiles(providers$CartoDB.Positron) %>%
-      addPolygons(
-        fillColor = "transparent",
-        weight = 2,
-        color = "#000000",
-        fillOpacity = 0.5
-      ) %>%
-      addCircleMarkers(
-        data = getFilteredHotels(),
-        clusterOptions = markerClusterOptions(maxClusterRadius = 80),
-        popup = ~ paste0(
-          # listing name, can navigate to Airbnb listing site
-          "Name: <a href='https://www.airbnb.com.au/rooms/",
-          hotels$id, "'><strong>", hotels$name, "</strong></a><br>",
-          # host name, can navigate to host site
-          "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          hotels$host_id, "'><strong>", hotels$host_name, "</strong></a><br>",
-          "Price: <strong>$", hotels$price, "/night</strong><br>",
-          "Minimum nights: <strong>", hotels$minimum_nights, "</strong><br>",
-          "Rating: <strong>", hotels$rating, "</strong><br>",
-          "Last Review: <strong>", hotels$last_review, "</strong><br>"
-        ),
-        label = ~ paste(hotels$name),
-        labelOptions = labelOptions(direction = "top")
-      )
-  })
-  
   # start explore button at airbnb page
   observeEvent(input$explor_airbnb, {
     updateTabItems(session, "tabs", "airbnb")
