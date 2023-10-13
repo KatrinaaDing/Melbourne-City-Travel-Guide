@@ -1,3 +1,16 @@
+# Restaurant - Filter Variables
+review_amount_step_size <- 100
+min_review_amount <- min(restaurants$num_reviews)
+max_review_amount <- max(restaurants$num_reviews)
+upper_review_amount <- 1000
+upper_review_amount_plus <- paste0(upper_review_amount, "+")
+rounded_review_amounts <- seq(ceiling(min_review_amount / upper_review_amount) * review_amount_step_size, 
+                              floor(upper_review_amount / review_amount_step_size) * review_amount_step_size, by = review_amount_step_size)
+review_amounts <- c(rounded_review_amounts, upper_review_amount_plus)
+ratings <- seq(0, 5)
+price_levels <- sort(unique(restaurants$price_level))
+price_levels_dollar <- c('All', "$", "$$ - $$$", "$$$$")
+
 # UI - configurations
 chart_box_height <- 575
 res_cuisine_chart_id <- "res_cuisine"

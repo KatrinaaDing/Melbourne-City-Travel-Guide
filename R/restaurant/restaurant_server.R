@@ -1,5 +1,3 @@
-source('tableau-in-shiny-v1.0.R')
-
 # Events
 suburb_filter_click_event <- paste0(res_suburb_filter_id, "_click")
 suburb_filter_shape_click_event <- paste0(res_suburb_filter_id, "_shape_click")
@@ -15,7 +13,11 @@ generate_filtering_script <- function(type, value, action) {
     if(value == 'All') {
       script <- 'sheet.clearFilterAsync("Price Level");'
     } else {
-      script <- sprintf('sheet.applyFilterAsync("Price Level", ["%s"], FilterUpdateType.Replace);', ifelse(value == 'All', 'All', nchar(value)))
+      if(value == "$$ - $$$") {
+        script <- 'sheet.applyFilterAsync("Price Level", ["2", "3"], FilterUpdateType.Replace);'
+      } else {
+        script <- sprintf('sheet.applyFilterAsync("Price Level", ["%s"], FilterUpdateType.Replace);', nchar(value))
+      }
     }
   }else if(type == 'num_review'){
     script <- sprintf('sheet.applyRangeFilterAsync("Num Reviews", {min: %s, max: %s}, FilterUpdateType.Replace)', value[1], ifelse(value[2] == upper_review_amount_plus, max_review_amount, value[2]))
@@ -43,8 +45,13 @@ update_tableau_charts <- function(filter_type, filter_value, filter_action = NUL
 
 apply_filter_to_data <- function(res_data, sub, p_level, num_reviews_range, special_options) {
   if(sub != 'All') res_data <- res_data %>% filter(suburb == sub)
-  if(p_level != 'All') res_data <- res_data %>% filter(price_level  == nchar(p_level))
-  # upper_amount <-ifelse(num_reviews_range[2] == upper_review_amount_plus, max_review_amount, as.numeric(num_reviews_range[2]))
+  if(p_level != 'All') {
+    if(p_level == '$$ - $$$') {
+      res_data <- res_data %>% filter(price_level %in% c(2, 3))  
+    } else {
+      res_data <- res_data %>% filter(price_level == nchar(p_level))
+    }
+  }
   res_data <- res_data %>% filter(num_reviews >= as.numeric(num_reviews_range[1]) & num_reviews <= ifelse(num_reviews_range[2] == upper_review_amount_plus, max_review_amount, as.numeric(num_reviews_range[2])))
   for(sp in special_options) {
     col <- res_special_options[[sp]]
