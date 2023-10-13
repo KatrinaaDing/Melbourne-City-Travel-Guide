@@ -5,12 +5,14 @@ restaurants <- read_csv("data/restaurant/melbourne_restaurants.csv")
 suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 
 # Filter Variables
-review_amount_step_size <- 1000
+review_amount_step_size <- 100
 min_review_amount <- min(restaurants$num_reviews)
 max_review_amount <- max(restaurants$num_reviews)
-rounded_review_amounts <- seq(ceiling(min_review_amount / max_review_amount) * review_amount_step_size, 
-                              floor(max_review_amount / review_amount_step_size) * review_amount_step_size, by = review_amount_step_size)
-review_amounts <- c(rounded_review_amounts, max_review_amount)
+upper_review_amount <- 1000
+upper_review_amount_plus <- paste0(upper_review_amount, "+")
+rounded_review_amounts <- seq(ceiling(min_review_amount / upper_review_amount) * review_amount_step_size, 
+                              floor(upper_review_amount / review_amount_step_size) * review_amount_step_size, by = review_amount_step_size)
+review_amounts <- c(rounded_review_amounts, upper_review_amount_plus)
 ratings <- seq(0, 5)
 price_levels <- sort(unique(restaurants$price_level))
 price_levels_dollar <- c('All', strrep("$", price_levels))
@@ -21,6 +23,7 @@ res_cuisine_chart_id <- "res_cuisine"
 res_topn_chart_id <- "res_topn_rating"
 res_suburb_filter_id <- "res_suburb"
 res_special_options <- list("Vegetarian" = "serves_vegetarian_food", "Wine" = "serves_wine", "Delivery" = "delivery", "Reservable" = "reservable")
+res_special_options_tableau <- list("Vegetarian" = "Serves Vegetarian Food", "Wine" = "Serves Wine", "Delivery" = "Delivery", "Reservable" = "Reservable")
 
 restaurant_tab <- tabItem(
   tabName = "restaurant",
@@ -49,7 +52,7 @@ restaurant_tab <- tabItem(
         leafletOutput(res_suburb_filter_id, width = "100%", height = "300px"),
         pickerInput(inputId = "res_price_level",label = "Price Level", choices = price_levels_dollar), 
         sliderTextInput(inputId = "res_num_review", label = "Number of Reviews", 
-                        choices = review_amounts, selected = c(min_review_amount, max_review_amount),
+                        choices = review_amounts, selected = c(min_review_amount, upper_review_amount_plus),
                         grid = TRUE),
         awesomeCheckboxGroup(inputId = "res_special_options", label = "Special Options", choices = names(res_special_options))
     )
@@ -80,24 +83,37 @@ suburb_filter_click_event <- paste0(res_suburb_filter_id, "_click")
 suburb_filter_shape_click_event <- paste0(res_suburb_filter_id, "_shape_click")
 
 # Update Tableau Chart
-generate_filtering_script <- function(type, value) {
+generate_filtering_script <- function(type, value, action) {
   if(type == 'suburb'){
-    script <- sprintf('sheet.applyFilterAsync("Suburb", ["%s"], FilterUpdateType.Replace);', value)
+    if(value == 'All') {
+      script <- 'sheet.clearFilterAsync("Suburb");'
+    } else {
+      script <- sprintf('sheet.applyFilterAsync("Suburb", ["%s"], FilterUpdateType.Replace);', value)
+    }
   }else if(type == 'price_level'){
-    script <- sprintf('sheet.applyFilterAsync("Price Level", ["%s"], FilterUpdateType.Replace);', ifelse(value == 'All', 'All', nchar(value)))
+    if(value == 'All') {
+      script <- 'sheet.clearFilterAsync("Price Level");'
+    } else {
+      script <- sprintf('sheet.applyFilterAsync("Price Level", ["%s"], FilterUpdateType.Replace);', ifelse(value == 'All', 'All', nchar(value)))
+    }
   }else if(type == 'num_review'){
-    script <- sprintf('sheet.applyRangeFilterAsync("Num Reviews", {min: %s, max: %s}, FilterUpdateType.Replace)', value[1], value[2])
+    script <- sprintf('sheet.applyRangeFilterAsync("Num Reviews", {min: %s, max: %s}, FilterUpdateType.Replace)', value[1], ifelse(value[2] == upper_review_amount_plus, max_review_amount, value[2]))
   }else if(type == 'special_options'){
-    script <- paste0(sapply(value, function(x) {sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', res_special_options[[x]], TRUE)}), collapse = "\n")
+    if(action == 'remove') {
+      script <- sprintf('sheet.clearFilterAsync("%s");', res_special_options_tableau[[value]])
+    } else if (action == 'add'){
+      script <- sprintf('sheet.applyFilterAsync("%s", ["True"], FilterUpdateType.Replace);', res_special_options_tableau[[value]])
+    } else {
+      stop(action, " not supported.")
+    }
   } else {
     stop(type, ' is not supported.')
   }
   return(script)
 }
 
-update_tableau_charts <- function(filter_type, filter_value) {
-  filter_script <- generate_filtering_script(filter_type, filter_value)
-  browser()
+update_tableau_charts <- function(filter_type, filter_value, filter_action = NULl) {
+  filter_script <- generate_filtering_script(filter_type, filter_value, filter_action)
   # Update Cuisine Pie Chart
   runjs(sprintf('let viz = document.getElementById("%s"); let sheet = viz.workbook.activeSheet;%s', res_cuisine_chart_id, filter_script))
   # Update Top N Chart
@@ -107,7 +123,8 @@ update_tableau_charts <- function(filter_type, filter_value) {
 apply_filter_to_data <- function(res_data, sub, p_level, num_reviews_range, special_options) {
   if(sub != 'All') res_data <- res_data %>% filter(suburb == sub)
   if(p_level != 'All') res_data <- res_data %>% filter(price_level  == nchar(p_level))
-  res_data <- res_data %>% filter(num_reviews >= num_reviews_range[1] & num_reviews <= num_reviews_range[2])
+  # upper_amount <-ifelse(num_reviews_range[2] == upper_review_amount_plus, max_review_amount, as.numeric(num_reviews_range[2]))
+  res_data <- res_data %>% filter(num_reviews >= as.numeric(num_reviews_range[1]) & num_reviews <= ifelse(num_reviews_range[2] == upper_review_amount_plus, max_review_amount, as.numeric(num_reviews_range[2])))
   for(sp in special_options) {
     col <- res_special_options[[sp]]
     res_data <- res_data %>% filter(!!as.symbol(col) == TRUE)

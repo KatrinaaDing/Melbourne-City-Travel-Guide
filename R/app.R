@@ -166,7 +166,7 @@ server <- function(input, output, session) {
   
   # Restaurant
   
-  reactive_values <- reactiveValues(res_suburb = 'All')
+  reactive_values <- reactiveValues(res_suburb = 'All', old_special_options = NULL)
   output[[res_suburb_filter_id]] <-  renderLeaflet({render_res_suburb_filter_unselected()})
   
   observeEvent(input[[suburb_filter_click_event]], {
@@ -185,15 +185,20 @@ server <- function(input, output, session) {
   
   observeEvent(input$res_price_level, {
     update_tableau_charts('price_level', input$res_price_level)
-  })
+  }, ignoreInit = TRUE)
 
   observeEvent(input$res_num_review, {
     update_tableau_charts('num_review', input$res_num_review)
-  })
-
+  }, ignoreInit = TRUE)
+  
   observeEvent(input$res_special_options, {
-    update_tableau_charts('special_options', input$res_price_level)
-  })
+    if(length(input$res_special_options) > length(reactive_values$old_special_options)) {
+      update_tableau_charts('special_options', setdiff(input$res_special_options, reactive_values$old_special_options), "add")
+    } else {
+      update_tableau_charts('special_options', setdiff(reactive_values$old_special_options, input$res_special_options), "remove")
+    }
+    reactive_values$old_special_options <- isolate(input$res_special_options)
+  },ignoreNULL = FALSE, ignoreInit = TRUE)
 
   # output$hotel_map <- renderLeaflet({
   #   leaflet(test[test$LOC_NAME == "West Melbourne", ]) %>%
