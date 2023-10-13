@@ -69,7 +69,8 @@ ui <- dashboardPage(
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       # bootstrap theme reference: https://bootswatch.com/3/
-      tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css")
+      tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css"),
+      tags$head(setUpTableauInShiny()[[2]])
     ),
     tabItems(
       intro_tab,
@@ -92,10 +93,7 @@ server <- function(input, output, session) {
   observeEvent(input$explore_restaurant, {
     updateTabItems(session, "tabs", "restaurant")
   })
-  
-  reactive_res_sum_data <- reactive({
-    return(apply_filter_to_data(restaurants, reactive_values$res_suburb, input$res_price_level, input$res_num_review, input$res_special_options))
-  })
+
   ################### outputs ##################
   # map
   output$hotel_map <- renderLeaflet({
@@ -143,52 +141,6 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
-  
-  output$res_total_amount <- renderInfoBox({
-    infoBox("Number of Restaurants", reactive_res_sum_data()[1], width = 4, color = "yellow", fill = TRUE, icon = icon("hashtag"))
-  })
-  
-  output$res_best_cuisine <- renderInfoBox({
-    infoBox("Most Popular Cuisine", reactive_res_sum_data()[3], width = 4, color = "purple", fill = TRUE, icon = icon("utensils"))  
-  })
-  
-  output$res_best_restaurant <- renderInfoBox({
-    infoBox("Best Rated Restaurant", reactive_res_sum_data()[2], width = 4, color = "green", fill = TRUE, icon = icon("house"))  
-  })
-  
-  reactive_values <- reactiveValues(res_suburb = 'All', old_special_options = NULL)
-  output[[res_suburb_filter_id]] <-  renderLeaflet({render_res_suburb_filter_unselected()})
-  
-  observeEvent(input[[suburb_filter_click_event]], {
-    suburb_filter_shape_click_info <- input[[suburb_filter_shape_click_event]]
-    suburb_filter_click_info <- input[[suburb_filter_click_event]]
-    if(all(unlist(suburb_filter_shape_click_info[c('lat', 'lng')]) == unlist(suburb_filter_click_info[c('lat', 'lng')]))) {
-      render_res_suburb_filter_selected(suburb_filter_shape_click_info$id)
-      reactive_values$res_suburb <- suburb_filter_shape_click_info$id
-      update_tableau_charts('suburb', suburb_filter_shape_click_info$id)
-    } else {
-      render_res_suburb_filter_selected(NULL)
-      reactive_values$res_suburb <- 'All'
-      update_tableau_charts('suburb', 'All')
-    }
-  })
-  
-  observeEvent(input$res_price_level, {
-    update_tableau_charts('price_level', input$res_price_level)
-  }, ignoreInit = TRUE)
-
-  observeEvent(input$res_num_review, {
-    update_tableau_charts('num_review', input$res_num_review)
-  }, ignoreInit = TRUE)
-  
-  observeEvent(input$res_special_options, {
-    if(length(input$res_special_options) > length(reactive_values$old_special_options)) {
-      update_tableau_charts('special_options', setdiff(input$res_special_options, reactive_values$old_special_options), "add")
-    } else {
-      update_tableau_charts('special_options', setdiff(reactive_values$old_special_options, input$res_special_options), "remove")
-    }
-    reactive_values$old_special_options <- isolate(input$res_special_options)
-  },ignoreNULL = FALSE, ignoreInit = TRUE)
 
   # servers
   hotelServer(input, output, session)
