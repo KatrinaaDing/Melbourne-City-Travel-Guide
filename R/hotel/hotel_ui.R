@@ -2,34 +2,38 @@ hotel_tab <- tabItem(
   tabName = "airbnb",
   tags$head(
     tags$style(HTML("
-      .leaflet-bottom.leaflet-left {
+      #shiny-tab-airbnb .leaflet-bottom.leaflet-left {
         width: 65%;
       }
-      .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
+      #shiny-tab-airbnb .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
       }
-      [class^='col-sm-'] {
+      #shiny-tab-airbnb [class^='col-sm-'] {
         padding: 0;
       }
-      .shiny-html-output.col-sm-12.shiny-bound-output {
+      #shiny-tab-airbnb .shiny-html-output.col-sm-12.shiny-bound-output {
         padding-left: 0;
         padding-right: 0;
       }
-      .small-box {
+      #shiny-tab-airbnb .small-box {
         height: 89px;
         margin-bottom: 10px;
       }
-      .small-box .inner {
+      #shiny-tab-airbnb .small-box .inner {
         transform: scale(0.9) translate(-10px, -5px)；
       }
-      .small-box .icon-large {
+      #shiny-tab-airbnb .small-box .icon-large {
         font-size: 60px;
         right: 10px;
       }
-      .row {
+      #shiny-tab-airbnb .row {
         width: 100%;
       }
-      .row .col-sm-6 {
+      #average_hotels_rating {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      #average_hotels_price {
         padding-left: 0;
         padding-right: 0;
       }

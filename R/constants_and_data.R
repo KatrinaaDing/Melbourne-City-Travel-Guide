@@ -56,6 +56,12 @@ max_hotel_price <- max(hotels$price, na.rm = TRUE)
 min_min_nights <- min(hotels$minimum_nights, na.rm = TRUE)
 max_min_nights <- max(hotels$minimum_nights, na.rm = TRUE)
 
+
+# Restaurant - Import Data
+restaurants <- read_csv("data/restaurant/melbourne_restaurants.csv")
+suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
+
+
 #########
 # ICONS #
 #########
@@ -67,3 +73,4 @@ dollar_icons <- iconList(
   medium = makeIcon("www/icons/medium-price.svg", "www/icons/medium-price.svg", ICON_SIZE, ICON_SIZE),
   expensive = makeIcon("www/icons/expensive.svg", "www/icons/expensive.svg", ICON_SIZE, ICON_SIZE)
 )
+
