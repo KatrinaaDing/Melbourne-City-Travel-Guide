@@ -10,11 +10,12 @@ CITY_SUBURBS <- c(
   "Melbourne", "North Melbourne", "Parkville", "Southbank", "South Yarra - West", "West Melbourne",
   "Flemington Racecourse", "Port Melbourne Industrial"
 )
-########
-# DATA #
-########
 
-### Import data
+##############
+# HOTEL DATA #
+##############
+
+### Hotels (Airbnb) - Import data
 city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
 hotels <- read.csv("data/airbnb/listings-clean.csv")
 
@@ -36,6 +37,23 @@ hotels <- na.omit(hotels)
 # remove those with price 0
 hotels <- hotels[hotels$price != 0, ]
 
+### add suburb to each airbnb listing
+# Initialize a column to store suburb names
+hotels$suburb <- NA
+# Loop through each suburb
+# reference: https://www.w3schools.com/r/r_for_loop.asp
+for (i in 1:nrow(suburb_boundaries)) {
+  single_suburb <- suburb_boundaries[i, ]
+  # Find hotels within the single suburb
+  # reference: https://cran.r-project.org/web/packages/sf/vignettes/sf3.html
+  hotels_in_suburb <- st_intersects(hotels, single_suburb, sparse = FALSE)
+  # Update suburb column for those hotels
+  hotels$suburb[which(hotels_in_suburb)] <- as.character(single_suburb$SA2_NAME)
+}
+
+# To ensure no NA values are present after the loop
+hotels <- na.omit(hotels)
+
 ### calculate price quantiles
 # reference: https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/quantile
 quantiles <- quantile(hotels$price, probs = c(0.33, 0.66), na.rm = TRUE)
@@ -56,6 +74,9 @@ max_hotel_price <- max(hotels$price, na.rm = TRUE)
 min_min_nights <- min(hotels$minimum_nights, na.rm = TRUE)
 max_min_nights <- max(hotels$minimum_nights, na.rm = TRUE)
 
+###################
+# RESTAURANT DATA #
+###################
 
 # Restaurant - Import Data
 restaurants <- read_csv("data/restaurant/melbourne_restaurants.csv")

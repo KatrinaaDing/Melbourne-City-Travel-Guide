@@ -34,23 +34,11 @@ hotelServer <- function(input, output, session) {
     selected_suburbs <- suburb_boundaries[suburb_boundaries$SA2_NAME %in% input$suburb_select, ]
     return(selected_suburbs)
   })
+
+  # get filtered hotels listings
   getFilteredHotels <- reactive({
     # Initialize an empty list to collect filtered hotels
-    filtered_hotels_list <- list()
-    selected_suburbs <- getSelectedHotelsSuburbs()
-    # Loop through each suburb
-    # reference: https://www.w3schools.com/r/r_for_loop.asp
-    for (i in 1:nrow(selected_suburbs)) {
-      single_suburb <- selected_suburbs[i, ]
-      # Filter hotels within the single suburb
-      # reference: https://cran.r-project.org/web/packages/sf/vignettes/sf3.html
-      hotels_in_suburb <- hotels[st_intersects(hotels, single_suburb, sparse = FALSE), ]
-      # Append to the list
-      filtered_hotels_list[[i]] <- hotels_in_suburb
-    }
-    # Combine all filtered hotels into one dataset
-    filtered_hotels <- do.call(rbind, filtered_hotels_list)
-    filtered_hotels <- na.omit(filtered_hotels)
+    filtered_hotels <- hotels[hotels$suburb %in% input$suburb_select, ]
 
     # filter price and ratings
     filtered_hotels <- filtered_hotels[
