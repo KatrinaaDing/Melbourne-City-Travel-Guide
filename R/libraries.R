@@ -1,0 +1,12 @@
+## app.R ##
+library(shiny)
+library(shinydashboard)
+library(maps)
+library(leaflet)
+library(sf)
+library(htmlwidgets)
+library(shinyWidgets)
+# library(shinyjs)
+library(geojsonsf)
+library(tidyverse)
+source('tableau-in-shiny-v1.0.R')
