@@ -2,9 +2,14 @@ attractionServer <- function(input, output, session) {
 
   ################### reactive ##################
   # filter dynamically load data
-  poi_data_map <- reactive({
+  attractions_data_map <- reactive({
     attractions %>%
       filter(category %in% input$attraction_selected)
+  })
+
+  facilities_data_map <- reactive({
+    facilities %>%
+      filter(category %in% input$facility_selected)
   })
 
   ################### outputs ##################
@@ -26,7 +31,7 @@ attractionServer <- function(input, output, session) {
     #   "Seattle, WA 98138"
     # )
 
-    leaflet(poi_data_map()) %>% 
+    leaflet(attractions_data_map()) %>% 
       addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
       addPolygons(
         data = city_boundary,
@@ -38,7 +43,13 @@ attractionServer <- function(input, output, session) {
       addMarkers(
         ~longitude, ~latitude,
         clusterOptions = markerClusterOptions(),
-        icon = ~ attraction_icons[poi_data_map()$category],
+        icon = ~ attraction_icons[attractions_data_map()$category],
+        # popup = ~ content
+      ) %>%
+      addMarkers(
+        ~longitude, ~latitude,
+        clusterOptions = markerClusterOptions(),
+        icon = ~ attraction_icons[facilities_data_map()$category],
         # popup = ~ content
       )
   })

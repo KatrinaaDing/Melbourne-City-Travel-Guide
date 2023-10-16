@@ -15,6 +15,7 @@ POI_CHOICE_NAMES <- c("Artworks", "Music Venues", "Plaques", "Memorials", "Landm
 POI_CHOICE_VALUES <- c("artworks", "music_venues", "plaques", "memorials", "landmarks")
 
 FACILITY_CHOICE_NAMES <- c("Playgrounds", "Toilets", "Drinking Fountains")
+FACILITY_CHOICE_VALUES <- c("playgrounds", "toilets", "drinking_fountains")
 
 ########
 # DATA #
@@ -76,6 +77,7 @@ attraction_music <- read_csv("data/poi/poi-music-venues-clean.csv")
 attraction_plaques <- read_csv("data/poi/poi-plaques-clean.csv")
 
 attractions <- read_csv("data/poi/poi-clean.csv")
+facilities <- read_csv("data/poi/facility-clean.csv")
 
 
 #########
@@ -101,3 +103,4 @@ attraction_icons <- iconList(
   playgrounds = makeIcon("www/icons/playground.svg", "www/icons/playground.svg", ICON_SIZE, ICON_SIZE),
   toilets = makeIcon("www/icons/toilet.svg", "www/icons/toilet.svg", ICON_SIZE, ICON_SIZE)
 )
+

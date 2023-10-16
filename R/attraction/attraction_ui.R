@@ -35,23 +35,17 @@ attraction_tab <- tabItem(
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
-        # pickerInput(
-        #   "attraction_select", "Select attractions:",
-        #   choices = POI_FUNCTIONS,
-        #   selected = POI_FUNCTIONS,
-        #   multiple = TRUE,
-        # ),
-        # pickerInput(
-        #   "facility_select", "Select facilities:",
-        #   choices = FACILITY_FUNCTIONS,
-        #   selected = FACILITY_FUNCTIONS,
-        #   multiple = TRUE,
-        # ),
         checkboxGroupInput(
           "attraction_selected", "Attractions:",
           choiceNames = POI_CHOICE_NAMES,
           choiceValues = POI_CHOICE_VALUES,
           selected = POI_CHOICE_VALUES,
+        ),
+        checkboxGroupInput(
+          "facility_selected", "Facilities:",
+          choiceNames = FACILITY_CHOICE_NAMES,
+          choiceValues = FACILITY_CHOICE_VALUES,
+          selected = FACILITY_CHOICE_VALUES,
         )
       ),
     )
