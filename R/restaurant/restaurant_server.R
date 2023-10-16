@@ -86,7 +86,9 @@ restaurantServer <- function(input, output, session) {
   observeEvent(input[[suburb_filter_click_event]], {
     suburb_filter_shape_click_info <- input[[suburb_filter_shape_click_event]]
     suburb_filter_click_info <- input[[suburb_filter_click_event]]
-    if(all(unlist(suburb_filter_shape_click_info[c('lat', 'lng')]) == unlist(suburb_filter_click_info[c('lat', 'lng')]))) {
+    if(!is.null(suburb_filter_shape_click_info) &&
+       !is.null(suburb_filter_click_info) &&
+       all(unlist(suburb_filter_shape_click_info[c('lat', 'lng')]) == unlist(suburb_filter_click_info[c('lat', 'lng')]))) {
       render_res_suburb_filter_selected(suburb_filter_shape_click_info$id)
       reactive_values$res_suburb <- suburb_filter_shape_click_info$id
       update_tableau_charts('suburb', suburb_filter_shape_click_info$id)
