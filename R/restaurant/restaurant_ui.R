@@ -22,7 +22,7 @@ res_special_options_tableau <- list("Vegetarian" = "Serves Vegetarian Food", "Wi
 # UI - components
 restaurant_tab <- tabItem(
   tabName = "restaurant",
-  h1("Restaurant"),
+  h4("Restaurant"),
   fluidRow(
     column(9,
            fluidRow(
