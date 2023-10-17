@@ -26,17 +26,28 @@ source("transport/transport_server.R")
 
 intro_tab <- tabItem(
   tabName = "intro",
-  h1("Introduction"),
-  actionButton("explore_restaurant", "Explore Restaurant ->", class = "btn btn-primary"),
-  actionButton("explor_airbnb", "Explore Airbnb ->", class = "btn btn-primary"),
-  actionButton("explore_attraction", "Explore Attraction ->", class = "btn btn-primary"),
-  actionButton("explore_transport", "Explore Transport ->", class = "btn btn-primary"),
-  actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
+  h4("Introduction"),
+  fluidRow(
+    box(width = 6, height = "550px",
+        img(src='Melburnian_Skyline.jpg', width = "100%", height = "530px")),
+    box(width = 6, height = "550px", 
+        h4("Melbourne City Travel Guide"),
+        p("The tool provides 4 types of travel guide for tourists of City of Melbourne."),
+        h5("Restaurant",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
+        p("For users to look for the the best cuisine and restaurant filtered by suburb, price level, etc."),
+        h5("Airbnb", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
+        p("For users to have an overview of the distribution of airbnbs filtered by suburb, price, rating, etc."),
+        h5("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
+        p("For user to check the locations of places of interest such as museum, playground, toilet, etc."),
+        h5("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
+        p("To visualize the transport routes of bus and tram."),
+        )),
+  # actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
 
 data_source_tab <- tabItem(
   tabName = "data_source",
-  h1("Data Source"),
+  h4("Data Source"),
 )
 
 # create a shiny dashboard
@@ -89,6 +100,7 @@ server <- function(input, output, session) {
   # Navigation from introduction tab to other tabs
   # reference: https://www.rdocumentation.org/packages/shinydashboard/versions/0.7.2/topics/updateTabItems
   observeEvent(input$explore_restaurant, {
+    message(123)
     updateTabItems(session, "tabs", "restaurant")
   })
 

@@ -28,7 +28,7 @@ hotel_tab <- tabItem(
       });
     ")),
   ),
-  h1("Airbnb"),
+  h4("Airbnb"),
   column(
     width = 9,
       fluidRow(
