@@ -78,6 +78,7 @@ attraction_plaques <- read_csv("data/poi/poi-plaques-clean.csv")
 
 attractions <- read_csv("data/poi/poi-clean.csv")
 facilities <- read_csv("data/poi/facility-clean.csv")
+poi_data <- read_csv("data/poi/poi-faci-clean.csv")
 
 
 #########

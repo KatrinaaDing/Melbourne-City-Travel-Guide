@@ -4,7 +4,7 @@ attraction_tab <- tabItem(
   h4("Attraction"),
   column(
     width = 8,
-    tabBox(
+    div(
       width = 12,
       title = "Attraction Listings in Melbourne City",
       # The id lets us use input$tabset1 on the server to find the current tab
