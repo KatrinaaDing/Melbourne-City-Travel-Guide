@@ -50,7 +50,6 @@ for (i in 1:nrow(suburb_boundaries)) {
   # Update suburb column for those hotels
   hotels$suburb[which(hotels_in_suburb)] <- as.character(single_suburb$SA2_NAME)
 }
-
 # To ensure no NA values are present after the loop
 hotels <- na.omit(hotels)
 
@@ -67,6 +66,16 @@ hotels$price_class <- cut(hotels$price,
   labels = c("cheap", "medium", "expensive"),
   right = FALSE
 )
+# Extracting longitude and latitude
+hotels$Longitude <- sapply(strsplit(gsub("c\\(|\\)", "", hotels$geometry), ","), function(x) as.numeric(x[1]))
+hotels$Latitude <- sapply(strsplit(gsub("c\\(|\\)", "", hotels$geometry), ","), function(x) as.numeric(x[2]))
+
+# Removing the original geometry column
+hotels$geometry <- NULL
+
+# write the data for tableau
+# write.csv(hotels, "data/hotels_with_suburb.csv", row.names = FALSE)
+
 
 # calculate some statistics
 min_hotel_price <- min(hotels$price, na.rm = TRUE)

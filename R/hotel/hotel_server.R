@@ -1,4 +1,8 @@
 hotelServer <- function(input, output, session) {
+  observeEvent(input$hovered_suburb_option, {
+    # Your code here
+    print(paste("Hovered over option: ", input$hovered_suburb_option))
+  })
   ################### Observers ##################
   # update hotel price range min and max value based on price class selection
   observeEvent(input$price_class_select, {
@@ -95,19 +99,19 @@ hotelServer <- function(input, output, session) {
         icon = ~ dollar_icons[price_class],
         layerId = ~id,
         options = markerOptions(price = filtered_hotels$price),
-        popup = ~ paste0(
-          # listing name, can navigate to Airbnb listing site
-          "Name: <a href='https://www.airbnb.com.au/rooms/",
-          filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
-          # host name, can navigate to host site
-          "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
-          "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
-          "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
-          "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
-          "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
-          "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
-        ),
+        # popup = ~ paste0(
+        #   # listing name, can navigate to Airbnb listing site
+        #   "Name: <a href='https://www.airbnb.com.au/rooms/",
+        #   filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
+        #   # host name, can navigate to host site
+        #   "Host:  <a href='https://www.airbnb.com.au/users/show/",
+        #   filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
+        #   "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
+        #   "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
+        #   "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
+        #   "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
+        #   "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
+        # ),
         label = ~ paste(filtered_hotels$name),
         labelOptions = labelOptions(direction = "top")
       ) %>%
@@ -125,7 +129,6 @@ hotelServer <- function(input, output, session) {
       )
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
-    # note: custom js code is in www/js/onRenderAirbnb.js
     leaflet_map %>% onRender("
       function(el, x) {
         // data from constant defined earlier
@@ -174,6 +177,18 @@ hotelServer <- function(input, output, session) {
     ")
   })
 
+  # update tableau filter
+  observeEvent(input$suburb_select, {
+    # Filter Tableau viz according to the region that was clicked on the bar chart
+    suburbs <- input$suburb_select
+    suburb_string <- paste(sprintf('"%s"', suburbs), collapse = ", ")
+    script <- sprintf('let viz = document.getElementById("tableauAirbnb");
+      let sheet = viz.workbook.activeSheet;
+      console.log(viz.workbook)
+      sheet.applyFilterAsync("Suburb", [%s], FilterUpdateType.Replace);', suburb_string)
+    runjs(script)
+  })
+
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
   observe({
@@ -187,11 +202,27 @@ hotelServer <- function(input, output, session) {
     leafletProxy("hotel_map") %>%
       clearControls() %>%
       addControl(
+        # html = paste0(
+        #   "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
+        #   "<h5>", hotel_data$name, "</h5>",
+        #   "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
+        #   "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
+        #   "</div>"
+        # ),
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
-          "<h5>", hotel_data$name, "</h5>",
-          "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
-          "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
+          "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
+          # listing name, can navigate to Airbnb listing site
+          "<div style='font-size: 20px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+          hotel_data$id, "'>", hotel_data$name, "</a></strong></div><br>",
+          # host name, can navigate to host site
+          "Host:  <a href='https://www.airbnb.com.au/users/show/",
+          hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
+          "Price: <strong>$", hotel_data$price, "/night</strong><br>",
+          "Price class: <strong>", hotel_data$price_class, "</strong><br>",
+          "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
+          "Rating: <strong>", hotel_data$rating, "</strong><br>",
+          "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
           "</div>"
         ),
         position = "bottomleft"
@@ -237,7 +268,6 @@ hotelServer <- function(input, output, session) {
     valueBox(
       ifelse(is.na(avg_rating), DEFAULT_NA_HINT, avg_rating),
       "Average Rating",
-      width = 3,
       icon = icon("thumbs-up"),
       color = "yellow"
     )
@@ -250,7 +280,6 @@ hotelServer <- function(input, output, session) {
     valueBox(
       ifelse(is.na(avg_price), DEFAULT_NA_HINT, paste0("$", avg_price)),
       "Average Price/Night",
-      width = 3,
       icon = icon("dollar"),
       color = "green"
     )
