@@ -37,7 +37,8 @@ restaurant_tab <- tabItem(
                                                                   height = paste0(chart_box_height + 34, "px"))),
              box(width = 6, status = 'primary',
                  height = chart_box_height + 20, tableauPublicViz(id = res_topn_chart_id, 
-                                                                  url = "https://public.tableau.com/views/Top10RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
+                                                                  # url = "https://public.tableau.com/views/Top10RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
+                                                                  url = "https://public.tableau.com/views/Top20RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
                                                                   height = paste0(chart_box_height + 34, "px"))  
              )
            )),
