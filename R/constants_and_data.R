@@ -100,7 +100,7 @@ attraction_icons <- iconList(
   plaques = makeIcon("www/icons/plaque.svg", "www/icons/plaque.svg", ICON_SIZE, ICON_SIZE),
   memorials = makeIcon("www/icons/memorial.svg", "www/icons/memorial.svg", ICON_SIZE, ICON_SIZE),
   landmarks =  makeIcon("www/icons/landmark.svg", "www/icons/landmark.svg", ICON_SIZE, ICON_SIZE),
-  drink_fountains = makeIcon("www/icons/drink.svg", "www/icons/drink.svg", ICON_SIZE, ICON_SIZE),
+  drinking_fountains = makeIcon("www/icons/drink.svg", "www/icons/drink.svg", ICON_SIZE, ICON_SIZE),
   playgrounds = makeIcon("www/icons/playground.svg", "www/icons/playground.svg", ICON_SIZE, ICON_SIZE),
   toilets = makeIcon("www/icons/toilet.svg", "www/icons/toilet.svg", ICON_SIZE, ICON_SIZE)
 )
