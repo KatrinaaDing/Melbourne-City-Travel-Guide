@@ -31,7 +31,7 @@ attraction_tab <- tabItem(
       ),
       box(
         width = 12,
-        style = "height: calc(100vh - 415px); overflow-y: scroll;",
+        style = "height: calc(100vh - 210px); overflow-y: scroll;",
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
@@ -40,6 +40,7 @@ attraction_tab <- tabItem(
           choiceNames = POI_CHOICE_NAMES,
           choiceValues = POI_CHOICE_VALUES,
           selected = POI_CHOICE_VALUES,
+
         ),
         checkboxGroupInput(
           "facility_selected", "Facilities:",
