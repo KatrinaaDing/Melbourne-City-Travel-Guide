@@ -79,8 +79,8 @@ ui <- dashboardPage(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       # bootstrap theme reference: https://bootswatch.com/3/
       tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css"),
-      tags$head(setUpTableauInShiny()[[2]])
     ),
+    tags$head(setUpTableauInShiny()[[2]]),
     tabItems(
       intro_tab,
       restaurant_tab,
@@ -119,6 +119,9 @@ server <- function(input, output, session) {
   # start explore button at data source page
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
+  })
+  observeEvent(input$tabs, {
+    runjs('dispatchEvent(new Event("resize"))')
   })
 
   # servers

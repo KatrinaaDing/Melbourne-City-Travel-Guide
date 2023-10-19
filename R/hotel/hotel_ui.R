@@ -12,7 +12,6 @@ hotel_tab <- tabItem(
       #shiny-tab-airbnb .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
       }
-     
     ")),
     tags$script(HTML("
       $(document).on('click', '#closeButton', function(){
@@ -48,11 +47,11 @@ hotel_tab <- tabItem(
       ),
       tabPanel(
         "Chart",
-        style = "height: ",
+        style = "height: calc(100vh - 370px)",
         tableauPublicViz(
           id='tableauAirbnb',
           url = "https://public.tableau.com/views/MelbourneCityAirbnbListings/MelbourneCityAirbnbPriceDistributionDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-          height = "calc(100vh - 370px)",
+          height = "100%",
           width = "100%"
         ),
       ),
@@ -92,7 +91,7 @@ hotel_tab <- tabItem(
           step = 0.1
         ),
         numericInput(
-          "min_nights", "Select minimum nights range:",
+          "min_nights", "Select minimum nights:",
           min = min_min_nights, max = max_min_nights,
           value = 1,
           step = 1

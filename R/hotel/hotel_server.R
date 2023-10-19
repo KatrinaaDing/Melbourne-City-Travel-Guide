@@ -1,3 +1,23 @@
+script_head <- paste0('let viz = document.getElementById("tableauAirbnb");
+      let sheet = viz.workbook.activeSheet; ')
+
+single_select_filter_script <- function(filter_name, filter_value) {
+  sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
+}
+
+multi_select_filter_script <- function(filter_name, filter_values) {
+  filter_values_string <- paste(sprintf('"%s"', filter_values), collapse = ", ")
+  sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', filter_name, filter_values_string)
+}
+
+range_filter_script <- function(filter_name, filter_min, filter_max) {
+  sprintf('sheet.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+}
+
+create_filter_script <- function(script_body) {
+  paste0(script_head, script_body)
+}
+
 hotelServer <- function(input, output, session) {
   observeEvent(input$hovered_suburb_option, {
     # Your code here
@@ -31,6 +51,58 @@ hotelServer <- function(input, output, session) {
       value = c(new_min, new_max)
     )
   })
+
+  # update tableau onclick suburb filter
+  observeEvent(input$suburb_select, {
+    suburbs <- input$suburb_select
+    script_body <- multi_select_filter_script("Suburb", suburbs)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau onclick price range filter
+  observeEvent(input$hotel_price, {
+      min <- input$hotel_price[1]
+      max <- input$hotel_price[2]
+      script_body <- sprintf('sheet.applyRangeFilterAsync("Price", {min: %s, max: %s}, FilterUpdateType.Replace);', min, max)
+      runjs(create_filter_script(script_body))
+  })
+
+  # update tableau onclick suburb filter
+  observeEvent(input$price_class_select, {
+    price_class <- input$price_class_select
+    script_body <- multi_select_filter_script("Price Class", price_class)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on select number of bathrooms
+  observeEvent(input$num_baths, {
+    if (input$num_baths == "All") {
+      script_body <- multi_select_filter_script("Number Of Baths", sort(unique(hotels$number_of_baths)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Baths", input$num_baths)
+    }
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on select number of beds
+  observeEvent(input$num_beds, {
+    if (input$num_beds == "All") {
+      script_body <- multi_select_filter_script("Number Of Beds", sort(unique(hotels$number_of_beds)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Beds", input$num_beds)
+    }
+    runjs(create_filter_script(script_body))
+  })
+
+    # update tableau on select number of bedrooms
+    observeEvent(input$num_bedrooms, {
+      if (input$num_bedrooms == "All") {
+        script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
+      } else {
+        script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
+      }
+      runjs(create_filter_script(script_body))
+    })
 
   ############# reactive functions #############
   # get the geometry shape of selected suburbs
@@ -177,17 +249,6 @@ hotelServer <- function(input, output, session) {
     ")
   })
 
-  # update tableau filter
-  observeEvent(input$suburb_select, {
-    # Filter Tableau viz according to the region that was clicked on the bar chart
-    suburbs <- input$suburb_select
-    suburb_string <- paste(sprintf('"%s"', suburbs), collapse = ", ")
-    script <- sprintf('let viz = document.getElementById("tableauAirbnb");
-      let sheet = viz.workbook.activeSheet;
-      console.log(viz.workbook)
-      sheet.applyFilterAsync("Suburb", [%s], FilterUpdateType.Replace);', suburb_string)
-    runjs(script)
-  })
 
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
@@ -214,7 +275,7 @@ hotelServer <- function(input, output, session) {
           "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
           # listing name, can navigate to Airbnb listing site
           "<div style='font-size: 20px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
-          hotel_data$id, "'>", hotel_data$name, "</a></strong></div><br>",
+          hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
           # host name, can navigate to host site
           "Host:  <a href='https://www.airbnb.com.au/users/show/",
           hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
