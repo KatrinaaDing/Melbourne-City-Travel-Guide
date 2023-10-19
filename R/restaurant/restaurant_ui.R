@@ -37,12 +37,13 @@ restaurant_tab <- tabItem(
                                                                   height = paste0(chart_box_height + 34, "px"))),
              box(width = 6, status = 'primary',
                  height = chart_box_height + 20, tableauPublicViz(id = res_topn_chart_id, 
-                                                                  url = "https://public.tableau.com/views/Top10RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
+                                                                  # url = "https://public.tableau.com/views/Top10RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
+                                                                  url = "https://public.tableau.com/views/Top20RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
                                                                   height = paste0(chart_box_height + 34, "px"))  
              )
            )),
     
-    box(width = 3, height = 700, status = "warning",title = "Filters",
+    box(width = 3, height = 700, status = "primary",title = "Filters", solidHeader = TRUE,
         HTML('<label class="control-label" id="res-suburb-filter-label" for="num_review">Suburbs</label>'),
         leafletOutput(res_suburb_filter_id, width = "100%", height = "300px"),
         pickerInput(inputId = "res_price_level",label = "Price Level", choices = price_levels_dollar), 
