@@ -70,7 +70,6 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    # useShinyjs(),
     # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
@@ -117,10 +116,6 @@ server <- function(input, output, session) {
   # start explore button at data source page
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
-  })
-
-   observeEvent(input$tabs, {
-    runjs('dispatchEvent(new Event("resize"))')
   })
 
   # servers
