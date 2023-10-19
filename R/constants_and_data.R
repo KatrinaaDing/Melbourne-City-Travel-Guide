@@ -68,18 +68,10 @@ max_min_nights <- max(hotels$minimum_nights, na.rm = TRUE)
 restaurants <- read_csv("data/restaurant/melbourne_restaurants.csv")
 suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 
-
 # Attractions - Import Data
-attraction_landmarks <- read_csv("data/poi/poi-landmarks-clean.csv")
-attraction_artworks <- read_csv("data/poi/poi-artworks-clean.csv")
-attraction_memorials <- read_csv("data/poi/poi-memorials-and-sculptures-clean.csv")
-attraction_music <- read_csv("data/poi/poi-music-venues-clean.csv")
-attraction_plaques <- read_csv("data/poi/poi-plaques-clean.csv")
-
 attractions <- read_csv("data/poi/poi-clean.csv")
 facilities <- read_csv("data/poi/facility-clean.csv")
-poi_data <- read_csv("data/poi/poi-faci-clean.csv")
-
+attr_faci_data <- bind_rows(attractions, facilities)
 
 #########
 # ICONS #
