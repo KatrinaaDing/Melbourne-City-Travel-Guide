@@ -25,6 +25,9 @@ hotel_tab <- tabItem(
         console.log('sdfsdf');
         Shiny.setInputValue('hovered_suburb_option', this.value);
       });
+      $(document).on('click', '#viewNearbyTramStopButton', function(){
+        console.log('sdfdsf')
+      });
     ")),
   ),
   h4("Airbnb"),

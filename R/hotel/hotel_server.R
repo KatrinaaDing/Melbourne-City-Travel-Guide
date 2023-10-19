@@ -1,3 +1,13 @@
+nearby_stop_hint <- function(number) {
+  if (number == 0) {
+    "There is no tram stop nearby"
+  } else if (number == 1) {
+    "There is <strong>1</strong> tram stop nearby"
+  } else {
+    paste0("There are <strong>", number, "</strong> tram stops nearby")
+  }
+}
+
 script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
 
 single_select_filter_script <- function(filter_name, filter_value) {
@@ -279,6 +289,11 @@ hotelServer <- function(input, output, session) {
     filtered_hotels <- getFilteredHotels()
     # get marker hotel data
     hotel_data <- filtered_hotels[as.numeric(filtered_hotels$id) == as.numeric(click$id), ]
+    # get nearby tram stops
+    nearby_stops_string <- hotel_nearby_tram_stops[hotel_nearby_tram_stops$id == hotel_data$id, ]$nearby_stops
+    nearby_stops <- strsplit(nearby_stops_string, ",")
+    num_stops <- length(unlist(nearby_stops))
+
     leafletProxy("hotel_map") %>%
       clearControls() %>%
       addControl(
@@ -293,7 +308,7 @@ hotelServer <- function(input, output, session) {
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
           "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
           # listing name, can navigate to Airbnb listing site
-          "<div style='font-size: 20px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+          "<div style='font-size: 20px; padding-bottom: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
           hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
           # host name, can navigate to host site
           "Host:  <a href='https://www.airbnb.com.au/users/show/",
@@ -303,6 +318,10 @@ hotelServer <- function(input, output, session) {
           "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
           "Rating: <strong>", hotel_data$rating, "</strong><br>",
           "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
+          "<div style='position: absolute; right: 10px; bottom: 10px;'>",
+            nearby_stop_hint(num_stops),
+            ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+          "</div>",
           "</div>"
         ),
         position = "bottomleft"
