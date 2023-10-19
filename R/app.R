@@ -98,7 +98,6 @@ server <- function(input, output, session) {
   # Navigation from introduction tab to other tabs
   # reference: https://www.rdocumentation.org/packages/shinydashboard/versions/0.7.2/topics/updateTabItems
   observeEvent(input$explore_restaurant, {
-    message(123)
     updateTabItems(session, "tabs", "restaurant")
   })
 
@@ -118,7 +117,6 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
- 
 
   # servers
   hotelServer(input, output, session)
