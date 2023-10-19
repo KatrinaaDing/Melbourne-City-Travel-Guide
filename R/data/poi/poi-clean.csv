@@ -1,4 +1,4 @@
-address,latitude,created date,longitude,organisation,classification,name,category,title,type,website,tree common name,tree scientific name,planted date,theme,sub theme
+address,latitude,created_date,longitude,organisation,classification,name,category,title,type,website,tree_common_name,tree_scientific_name,date_of_tree_planted,theme,sub_theme
 "Intersection of Swanston Street and Flinders Lane approximately 22m SW of Melbourne Metro Rail Authority, 214 Flinders Lane, Melbourne, 3000",-37.81642362550678,1993,144.96706152142454,City of Melbourne,Sculpture,Beyond the Ocean of Existence,artworks,,,,,,,,
 "Malthouse Plaza approximately 33m NW of CitiPower, Electres 4542PR, 75 Dodds Street, Southbank, 3006",-37.82607139191802,1980,144.96773271682704,City of Melbourne,Sculpture,Vault,artworks,,,,,,,,
 "Gordon Reserve approximately 44m West of Department of Treasury and Finance, 1 Macarthur Street, East Melbourne, 3002",-37.81243425403014,c1870,144.97395547173446,City of Melbourne,Sculpture,Stanford Fountain,artworks,,,,,,,,
