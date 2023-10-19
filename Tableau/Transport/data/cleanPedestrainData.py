@@ -40,7 +40,6 @@ tramStop_data_merged_SensorLocation.rename(columns={'latitude': 'sensor_latitude
                                                     'geometry_y': 'sensor_geometry',
                                                     'sensor_description': 'Sensor Name'}, inplace=True)
 
-print(tramStop_data_merged_SensorLocation)
 
 
 # clean the pedestrain data type
@@ -71,8 +70,8 @@ average_pedestrian_per_Hour_withLocation["sensor_geometry"].to_crs("EPSG:4326")
 
 
 # Output the dataset as csv file
-#average_pedestrian_per_Hour_withLocation.to_csv(
-#    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
+average_pedestrian_per_Hour_withLocation.to_csv(
+    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
 
 
 
