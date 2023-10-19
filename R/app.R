@@ -70,16 +70,14 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    # useShinyjs(),
     # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
-    useShinyjs(),
+    tags$head(setUpTableauInShiny()),
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       # bootstrap theme reference: https://bootswatch.com/3/
       tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css"),
-      tags$head(setUpTableauInShiny()[[2]])
     ),
     tabItems(
       intro_tab,
@@ -100,7 +98,6 @@ server <- function(input, output, session) {
   # Navigation from introduction tab to other tabs
   # reference: https://www.rdocumentation.org/packages/shinydashboard/versions/0.7.2/topics/updateTabItems
   observeEvent(input$explore_restaurant, {
-    message(123)
     updateTabItems(session, "tabs", "restaurant")
   })
 

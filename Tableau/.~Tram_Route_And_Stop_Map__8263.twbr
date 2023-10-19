@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 
 <!-- build 20232.23.0611.2007                               -->
-<workbook original-version='18.1' source-build='2023.2.0 (20232.23.0611.2007)' source-platform='mac' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+<workbook locale='en_GB' original-version='18.1' source-build='2023.2.0 (20232.23.0611.2007)' source-platform='mac' version='18.1' xml:base='https://public.tableau.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <document-format-change-manifest>
     <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
     <_.fcp.Layers.true...Layers />
@@ -15,9 +15,9 @@
     <SheetIdentifierTracking />
     <SpatialFileLayer />
     <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
-    <VizInTooltipHideWorksheet />
     <WindowsPersistSimpleIdentifiers />
   </document-format-change-manifest>
+  <repository-location id='ThePedestrianCountbyHours' path='/workbooks' revision='1.3' />
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
     <preference name='ui.shelf.height' value='26' />
@@ -28,6 +28,361 @@
     </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
   </_.fcp.AnimationOnByDefault.false...style>
   <datasources>
+    <datasource caption='municipal-boundary' inline='true' name='federated.0uehixf0ncming18q6nle0k7l033' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='municipal-boundary' name='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez'>
+            <connection class='ogrdirect' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
+          <columns>
+            <column datatype='string' name='geo_point_2d' ordinal='0' />
+            <column datatype='integer' name='mccid_gis' ordinal='1' />
+            <column datatype='string' name='maplabel' ordinal='2' />
+            <column datatype='string' name='name' ordinal='3' />
+            <column datatype='string' name='xorg' ordinal='4' />
+            <column datatype='string' name='mccid_str' ordinal='5' />
+            <column datatype='string' name='xsource' ordinal='6' />
+            <column datatype='date' name='xdate' ordinal='7' />
+            <column datatype='string' name='mccid_int' ordinal='8' />
+            <column datatype='spatial' name='Geometry' ordinal='9' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
+          <columns>
+            <column datatype='string' name='geo_point_2d' ordinal='0' />
+            <column datatype='integer' name='mccid_gis' ordinal='1' />
+            <column datatype='string' name='maplabel' ordinal='2' />
+            <column datatype='string' name='name' ordinal='3' />
+            <column datatype='string' name='xorg' ordinal='4' />
+            <column datatype='string' name='mccid_str' ordinal='5' />
+            <column datatype='string' name='xsource' ordinal='6' />
+            <column datatype='date' name='xdate' ordinal='7' />
+            <column datatype='string' name='mccid_int' ordinal='8' />
+            <column datatype='spatial' name='Geometry' ordinal='9' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <refresh increment-key='' incremental-updates='false' />
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>geo_point_2d</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[geo_point_2d]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>geo_point_2d</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>mccid_gis</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[mccid_gis]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>mccid_gis</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>maplabel</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[maplabel]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>maplabel</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[name]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>name</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>xorg</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[xorg]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>xorg</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>mccid_str</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[mccid_str]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>mccid_str</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>xsource</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[xsource]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>xsource</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>xdate</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[xdate]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>xdate</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>mccid_int</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[mccid_int]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>mccid_int</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Geometry</remote-name>
+            <remote-type>8</remote-type>
+            <local-name>[Geometry]</local-name>
+            <parent-name>[municipal-boundary.geojson]</parent-name>
+            <remote-alias>Geometry</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>spatial</local-type>
+            <aggregation>Collect</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Shade_Area' datatype='real' name='[Calculation_38562082045169664]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='IF [Geometry]' />
+      </column>
+      <_.fcp.ObjectModelTableType.true...column caption='municipal-boundary.geojson' datatype='table' name='[__tableau_internal_object_id__].[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]' role='measure' type='quantitative' />
+      <column caption='Geo Point 2D' datatype='string' name='[geo_point_2d]' role='dimension' type='nominal' />
+      <column caption='Maplabel' datatype='string' name='[maplabel]' role='dimension' type='nominal' />
+      <column caption='Mccid Gis' datatype='integer' name='[mccid_gis]' role='measure' type='quantitative' />
+      <column caption='Mccid Int' datatype='string' name='[mccid_int]' role='dimension' type='nominal' />
+      <column caption='Mccid Str' datatype='string' name='[mccid_str]' role='dimension' type='nominal' />
+      <column caption='Name' datatype='string' name='[name]' role='dimension' type='nominal' />
+      <column caption='Xdate' datatype='date' name='[xdate]' role='dimension' type='ordinal' />
+      <column caption='Xorg' datatype='string' name='[xorg]' role='dimension' type='nominal' />
+      <column caption='Xsource' datatype='string' name='[xsource]' role='dimension' type='nominal' />
+      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' authentication='auth-none' author-locale='en_GB' class='hyper' dbname='Data/Tram_Route_And_Stop_Map.twb Files/municipal-boundary.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='' username='tableau_internal_user'>
+          <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <_.fcp.ObjectModelEncapsulateLegacy.true...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>geo_point_2d</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[geo_point_2d]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>geo_point_2d</remote-alias>
+              <ordinal>0</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>mccid_gis</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[mccid_gis]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>mccid_gis</remote-alias>
+              <ordinal>1</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>maplabel</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[maplabel]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>maplabel</remote-alias>
+              <ordinal>2</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>name</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[name]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>name</remote-alias>
+              <ordinal>3</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>xorg</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[xorg]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>xorg</remote-alias>
+              <ordinal>4</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>mccid_str</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[mccid_str]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>mccid_str</remote-alias>
+              <ordinal>5</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>xsource</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[xsource]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>xsource</remote-alias>
+              <ordinal>6</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>xdate</remote-name>
+              <remote-type>133</remote-type>
+              <local-name>[xdate]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>xdate</remote-alias>
+              <ordinal>7</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>date</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>mccid_int</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[mccid_int]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>mccid_int</remote-alias>
+              <ordinal>8</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='binary' />
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>Geometry</remote-name>
+              <remote-type>128</remote-type>
+              <local-name>[Geometry]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>Geometry</remote-alias>
+              <ordinal>9</ordinal>
+              <family>municipal-boundary.geojson</family>
+              <local-type>spatial</local-type>
+              <aggregation>Collect</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;China&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='municipal-boundary.geojson' id='municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8'>
+            <properties context=''>
+              <relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
+                <columns>
+                  <column datatype='string' name='geo_point_2d' ordinal='0' />
+                  <column datatype='integer' name='mccid_gis' ordinal='1' />
+                  <column datatype='string' name='maplabel' ordinal='2' />
+                  <column datatype='string' name='name' ordinal='3' />
+                  <column datatype='string' name='xorg' ordinal='4' />
+                  <column datatype='string' name='mccid_str' ordinal='5' />
+                  <column datatype='string' name='xsource' ordinal='6' />
+                  <column datatype='date' name='xdate' ordinal='7' />
+                  <column datatype='string' name='mccid_int' ordinal='8' />
+                  <column datatype='spatial' name='Geometry' ordinal='9' />
+                </columns>
+              </relation>
+            </properties>
+            <properties context='extract'>
+              <relation name='Extract' table='[Extract].[Extract]' type='table' />
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
     <datasource caption='PTV_METRO_TRAM_ROUTE.shp+ (Multiple Connections)' inline='true' name='federated.0vowws40obuv7y1bj5ht91ynd3dy' version='18.1'>
       <connection class='federated'>
         <named-connections>
@@ -488,8 +843,8 @@
       <column caption='IsSensorAttahced' datatype='string' name='[Calculation_38562084453564420]' role='dimension' type='nominal'>
         <calculation class='tableau' formula='IF ISNULL([Sensor Name])&#10;    THEN &quot;The Pedestrain Sensor is too far from this Tram Station&quot;&#10;    ELSE &quot;YES&quot;&#10;END' />
       </column>
-      <column caption='Is Data Available' datatype='string' name='[Calculation_38562084477349895]' role='dimension' type='nominal'>
-        <calculation class='tableau' formula='IF ISNULL([Value])&#10;    THEN &quot;Do not have Data on this Sensor&quot;&#10;    ELSE &quot;Has Data&quot;&#10;END' />
+      <column caption='Is Data Available' datatype='boolean' name='[Calculation_38562084477349895]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='IF ISNULL([Value])&#10;    THEN TRUE&#10;    ELSE FALSE&#10;END' />
       </column>
       <column caption='Firstspid' datatype='string' name='[FIRSTSPID]' role='dimension' type='nominal' />
       <column caption='Firststnam' datatype='string' name='[FIRSTSTNAM]' role='dimension' type='nominal' />
@@ -501,14 +856,14 @@
       <column caption='Numofstops' datatype='integer' name='[NUMOFSTOPS]' role='measure' type='quantitative' />
       <column caption='Operator' datatype='string' name='[OPERATOR]' role='dimension' type='nominal' />
       <column caption='Routelongn' datatype='string' name='[ROUTELONGN]' role='dimension' type='nominal' />
-      <column caption='Routeshtnm' datatype='string' name='[ROUTESHTNM]' role='dimension' type='nominal' />
+      <column caption='Route Name' datatype='string' name='[ROUTESHTNM]' role='dimension' type='nominal' />
       <column caption='Route ID' datatype='string' name='[ROUTE_ID]' role='dimension' type='nominal' />
       <column caption='Route Km' datatype='real' name='[ROUTE_KM]' role='measure' type='quantitative' />
       <column caption='Shape Id' datatype='string' name='[SHAPE_ID]' role='dimension' type='nominal' />
       <column datatype='string' name='[STOP_NAME]' role='dimension' type='nominal' />
       <column datatype='string' name='[Sensor Name]' role='dimension' type='nominal' />
       <column caption='Triphdsign' datatype='string' name='[TRIPHDSIGN]' role='dimension' type='nominal' />
-      <column datatype='real' name='[Value]' role='measure' type='quantitative' />
+      <column caption='Pedestrian Count' datatype='real' name='[Value]' role='measure' type='quantitative' />
       <_.fcp.ObjectModelTableType.true...column caption='PTV_METRO_TRAM_ROUTE.shp' datatype='table' hidden='true' name='[__tableau_internal_object_id__].[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]' role='measure' type='quantitative' />
       <_.fcp.ObjectModelTableType.true...column caption='average_pedestrian_per_Hour_WithLocation.csv' datatype='table' name='[__tableau_internal_object_id__].[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]' role='measure' type='quantitative' />
       <column aggregation='CountD' datatype='string' name='[geometry_x]' role='dimension' semantic-role='[City].[Name]' type='nominal' />
@@ -529,6 +884,20 @@
       <group caption='Tooltip (Route Id,STOP_NAME,Sensor Name)' hidden='true' name='[Tooltip (Route Id,STOP_NAME,Sensor Name)]' name-style='unqualified' user:auto-column='sheet_link' user:ui-vit-column='true'>
         <groupfilter function='crossjoin'>
           <groupfilter function='level-members' level='[ROUTE_ID]' />
+          <groupfilter function='level-members' level='[STOP_NAME]' />
+          <groupfilter function='level-members' level='[Sensor Name]' />
+        </groupfilter>
+      </group>
+      <group caption='Tooltip (Route Name,STOP_NAME,Sensor Name)' hidden='true' name='[Tooltip (Route Name,STOP_NAME,Sensor Name)]' name-style='unqualified' user:auto-column='sheet_link' user:ui-vit-column='true'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[ROUTESHTNM]' />
+          <groupfilter function='level-members' level='[STOP_NAME]' />
+          <groupfilter function='level-members' level='[Sensor Name]' />
+        </groupfilter>
+      </group>
+      <group caption='Tooltip (Routeshtnm,STOP_NAME,Sensor Name)' hidden='true' name='[Tooltip (Routeshtnm,STOP_NAME,Sensor Name)]' name-style='unqualified' user:auto-column='sheet_link' user:ui-vit-column='true'>
+        <groupfilter function='crossjoin'>
+          <groupfilter function='level-members' level='[ROUTESHTNM]' />
           <groupfilter function='level-members' level='[STOP_NAME]' />
           <groupfilter function='level-members' level='[Sensor Name]' />
         </groupfilter>
@@ -554,7 +923,6 @@
               <approx-count>115</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTE_ID</remote-name>
@@ -569,7 +937,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTESHTNM</remote-name>
@@ -584,7 +951,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>TRIPHDSIGN</remote-name>
@@ -599,7 +965,6 @@
               <approx-count>48</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTE_KM</remote-name>
@@ -613,7 +978,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>105</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTELONGN</remote-name>
@@ -628,7 +992,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>FIRSTSTNAM</remote-name>
@@ -643,7 +1006,6 @@
               <approx-count>67</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LASTSPNAME</remote-name>
@@ -658,7 +1020,6 @@
               <approx-count>59</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>FIRSTSPID</remote-name>
@@ -673,7 +1034,6 @@
               <approx-count>68</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LASTSTID</remote-name>
@@ -688,7 +1048,6 @@
               <approx-count>62</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>NUMOFSTOPS</remote-name>
@@ -702,7 +1061,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>51</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>OPERATOR</remote-name>
@@ -717,7 +1075,6 @@
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Geometry</remote-name>
@@ -731,7 +1088,6 @@
               <aggregation>Collect</aggregation>
               <approx-count>115</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>F1</remote-name>
@@ -745,7 +1101,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>12640</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>STOP_ID</remote-name>
@@ -759,7 +1114,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>738</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LATITUDE</remote-name>
@@ -773,7 +1127,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>737</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>STOP_NAME</remote-name>
@@ -788,7 +1141,6 @@
               <approx-count>635</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LONGITUDE</remote-name>
@@ -802,7 +1154,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>737</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>TICKETZONE</remote-name>
@@ -817,7 +1168,6 @@
               <approx-count>2</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTEUSSP</remote-name>
@@ -832,7 +1182,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>geometry_x</remote-name>
@@ -847,7 +1196,6 @@
               <approx-count>738</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>location_id</remote-name>
@@ -861,7 +1209,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Sensor Name</remote-name>
@@ -876,7 +1223,6 @@
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_latitude</remote-name>
@@ -890,7 +1236,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_longitude</remote-name>
@@ -904,7 +1249,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_geometry</remote-name>
@@ -919,7 +1263,6 @@
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Hour</remote-name>
@@ -933,7 +1276,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>25</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Value</remote-name>
@@ -947,7 +1289,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>1261</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
           </metadata-records>
         </connection>
@@ -1386,367 +1727,19 @@
         </relationships>
       </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
     </datasource>
-    <datasource caption='municipal-boundary' inline='true' name='federated.0uehixf0ncming18q6nle0k7l033' version='18.1'>
-      <connection class='federated'>
-        <named-connections>
-          <named-connection caption='municipal-boundary' name='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez'>
-            <connection class='ogrdirect' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
-          </named-connection>
-        </named-connections>
-        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
-          <columns>
-            <column datatype='string' name='geo_point_2d' ordinal='0' />
-            <column datatype='integer' name='mccid_gis' ordinal='1' />
-            <column datatype='string' name='maplabel' ordinal='2' />
-            <column datatype='string' name='name' ordinal='3' />
-            <column datatype='string' name='xorg' ordinal='4' />
-            <column datatype='string' name='mccid_str' ordinal='5' />
-            <column datatype='string' name='xsource' ordinal='6' />
-            <column datatype='date' name='xdate' ordinal='7' />
-            <column datatype='string' name='mccid_int' ordinal='8' />
-            <column datatype='spatial' name='Geometry' ordinal='9' />
-          </columns>
-        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
-        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
-          <columns>
-            <column datatype='string' name='geo_point_2d' ordinal='0' />
-            <column datatype='integer' name='mccid_gis' ordinal='1' />
-            <column datatype='string' name='maplabel' ordinal='2' />
-            <column datatype='string' name='name' ordinal='3' />
-            <column datatype='string' name='xorg' ordinal='4' />
-            <column datatype='string' name='mccid_str' ordinal='5' />
-            <column datatype='string' name='xsource' ordinal='6' />
-            <column datatype='date' name='xdate' ordinal='7' />
-            <column datatype='string' name='mccid_int' ordinal='8' />
-            <column datatype='spatial' name='Geometry' ordinal='9' />
-          </columns>
-        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
-        <refresh increment-key='' incremental-updates='false' />
-        <metadata-records>
-          <metadata-record class='column'>
-            <remote-name>geo_point_2d</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[geo_point_2d]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>geo_point_2d</remote-alias>
-            <ordinal>0</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>mccid_gis</remote-name>
-            <remote-type>20</remote-type>
-            <local-name>[mccid_gis]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>mccid_gis</remote-alias>
-            <ordinal>1</ordinal>
-            <local-type>integer</local-type>
-            <aggregation>Sum</aggregation>
-            <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>maplabel</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[maplabel]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>maplabel</remote-alias>
-            <ordinal>2</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>name</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[name]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>name</remote-alias>
-            <ordinal>3</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>xorg</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[xorg]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>xorg</remote-alias>
-            <ordinal>4</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>mccid_str</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[mccid_str]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>mccid_str</remote-alias>
-            <ordinal>5</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>xsource</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[xsource]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>xsource</remote-alias>
-            <ordinal>6</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>xdate</remote-name>
-            <remote-type>133</remote-type>
-            <local-name>[xdate]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>xdate</remote-alias>
-            <ordinal>7</ordinal>
-            <local-type>date</local-type>
-            <aggregation>Year</aggregation>
-            <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>mccid_int</remote-name>
-            <remote-type>129</remote-type>
-            <local-name>[mccid_int]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>mccid_int</remote-alias>
-            <ordinal>8</ordinal>
-            <local-type>string</local-type>
-            <aggregation>Count</aggregation>
-            <contains-null>true</contains-null>
-            <collation flag='0' name='binary' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-          <metadata-record class='column'>
-            <remote-name>Geometry</remote-name>
-            <remote-type>8</remote-type>
-            <local-name>[Geometry]</local-name>
-            <parent-name>[municipal-boundary.geojson]</parent-name>
-            <remote-alias>Geometry</remote-alias>
-            <ordinal>9</ordinal>
-            <local-type>spatial</local-type>
-            <aggregation>Collect</aggregation>
-            <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
-          </metadata-record>
-        </metadata-records>
-      </connection>
-      <aliases enabled='yes' />
-      <column caption='Shade_Area' datatype='real' name='[Calculation_38562082045169664]' role='measure' type='quantitative'>
-        <calculation class='tableau' formula='IF [Geometry]' />
-      </column>
-      <_.fcp.ObjectModelTableType.true...column caption='municipal-boundary.geojson' datatype='table' name='[__tableau_internal_object_id__].[municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8]' role='measure' type='quantitative' />
-      <column caption='Geo Point 2D' datatype='string' name='[geo_point_2d]' role='dimension' type='nominal' />
-      <column caption='Maplabel' datatype='string' name='[maplabel]' role='dimension' type='nominal' />
-      <column caption='Mccid Gis' datatype='integer' name='[mccid_gis]' role='measure' type='quantitative' />
-      <column caption='Mccid Int' datatype='string' name='[mccid_int]' role='dimension' type='nominal' />
-      <column caption='Mccid Str' datatype='string' name='[mccid_str]' role='dimension' type='nominal' />
-      <column caption='Name' datatype='string' name='[name]' role='dimension' type='nominal' />
-      <column caption='Xdate' datatype='date' name='[xdate]' role='dimension' type='ordinal' />
-      <column caption='Xorg' datatype='string' name='[xorg]' role='dimension' type='nominal' />
-      <column caption='Xsource' datatype='string' name='[xsource]' role='dimension' type='nominal' />
-      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' units='records'>
-        <connection access_mode='readonly' authentication='auth-none' author-locale='en_GB' class='hyper' dbname='Data/Tram_Route_And_Stop_Map.twb Files/municipal-boundary.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='' username='tableau_internal_user'>
-          <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='Extract' table='[Extract].[Extract]' type='table' />
-          <_.fcp.ObjectModelEncapsulateLegacy.true...relation name='Extract' table='[Extract].[Extract]' type='table' />
-          <metadata-records>
-            <metadata-record class='column'>
-              <remote-name>geo_point_2d</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[geo_point_2d]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>geo_point_2d</remote-alias>
-              <ordinal>0</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>mccid_gis</remote-name>
-              <remote-type>20</remote-type>
-              <local-name>[mccid_gis]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>mccid_gis</remote-alias>
-              <ordinal>1</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>integer</local-type>
-              <aggregation>Sum</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>maplabel</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[maplabel]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>maplabel</remote-alias>
-              <ordinal>2</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>name</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[name]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>name</remote-alias>
-              <ordinal>3</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>xorg</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[xorg]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>xorg</remote-alias>
-              <ordinal>4</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>mccid_str</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[mccid_str]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>mccid_str</remote-alias>
-              <ordinal>5</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>xsource</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[xsource]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>xsource</remote-alias>
-              <ordinal>6</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>xdate</remote-name>
-              <remote-type>133</remote-type>
-              <local-name>[xdate]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>xdate</remote-alias>
-              <ordinal>7</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>date</local-type>
-              <aggregation>Year</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>mccid_int</remote-name>
-              <remote-type>129</remote-type>
-              <local-name>[mccid_int]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>mccid_int</remote-alias>
-              <ordinal>8</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>string</local-type>
-              <aggregation>Count</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-              <collation flag='0' name='binary' />
-            </metadata-record>
-            <metadata-record class='column'>
-              <remote-name>Geometry</remote-name>
-              <remote-type>128</remote-type>
-              <local-name>[Geometry]</local-name>
-              <parent-name>[Extract]</parent-name>
-              <remote-alias>Geometry</remote-alias>
-              <ordinal>9</ordinal>
-              <family>municipal-boundary.geojson</family>
-              <local-type>spatial</local-type>
-              <aggregation>Collect</aggregation>
-              <approx-count>1</approx-count>
-              <contains-null>true</contains-null>
-            </metadata-record>
-          </metadata-records>
-        </connection>
-      </extract>
-      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
-      <semantic-values>
-        <semantic-value key='[Country].[Name]' value='&quot;China&quot;' />
-      </semantic-values>
-      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
-        <objects>
-          <object caption='municipal-boundary.geojson' id='municipal-boundary.geojson_3F7C1241CB484E2598AEB1AEED0197B8'>
-            <properties context=''>
-              <relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
-                <columns>
-                  <column datatype='string' name='geo_point_2d' ordinal='0' />
-                  <column datatype='integer' name='mccid_gis' ordinal='1' />
-                  <column datatype='string' name='maplabel' ordinal='2' />
-                  <column datatype='string' name='name' ordinal='3' />
-                  <column datatype='string' name='xorg' ordinal='4' />
-                  <column datatype='string' name='mccid_str' ordinal='5' />
-                  <column datatype='string' name='xsource' ordinal='6' />
-                  <column datatype='date' name='xdate' ordinal='7' />
-                  <column datatype='string' name='mccid_int' ordinal='8' />
-                  <column datatype='spatial' name='Geometry' ordinal='9' />
-                </columns>
-              </relation>
-            </properties>
-            <properties context='extract'>
-              <relation name='Extract' table='[Extract].[Extract]' type='table' />
-            </properties>
-          </object>
-        </objects>
-      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
-    </datasource>
   </datasources>
   <mapsources>
     <mapsource name='Tableau' />
   </mapsources>
   <worksheets>
     <worksheet name='Each Sensor Bar Chart'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>The Pedestrian Count by Hours&#10;</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
@@ -1754,59 +1747,41 @@
           </datasources>
           <datasource-dependencies datasource='federated.0vowws40obuv7y1bj5ht91ynd3dy'>
             <column datatype='integer' name='[Hour]' role='dimension' type='quantitative' />
-            <column caption='Route ID' datatype='string' name='[ROUTE_ID]' role='dimension' type='nominal' />
-            <column datatype='string' name='[STOP_NAME]' role='dimension' type='nominal' />
             <column datatype='string' name='[Sensor Name]' role='dimension' type='nominal' />
-            <column datatype='real' name='[Value]' role='measure' type='quantitative' />
+            <column caption='Pedestrian Count' datatype='real' name='[Value]' role='measure' type='quantitative' />
             <column-instance column='[Value]' derivation='Avg' name='[avg:Value:qk]' pivot='key' type='quantitative' />
             <column-instance column='[Hour]' derivation='None' name='[none:Hour:ok]' pivot='key' type='ordinal' />
             <column-instance column='[Sensor Name]' derivation='None' name='[none:Sensor Name:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
-          <filter class='categorical' column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Tooltip (Route ID,STOP_NAME,Sensor Name)]'>
-            <groupfilter function='crossjoin' user:ui-action-filter='[Action - Each Sensor Bar Chart]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate'>
-              <groupfilter function='member' level='[ROUTE_ID]' member='&quot;3-58-A-mjp-1&quot;' />
-              <groupfilter function='crossjoin'>
-                <groupfilter function='member' level='[STOP_NAME]' member='&quot;5-Bourke St/William St (Melbourne City)&quot;' />
-                <groupfilter function='member' level='[Sensor Name]' member='&quot;Queen St (West)&quot;' />
-              </groupfilter>
-            </groupfilter>
-          </filter>
-          <filter class='categorical' column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Tooltip (Route Id,STOP_NAME,Sensor Name)]'>
-            <groupfilter function='crossjoin' user:ui-action-filter='[Action - Sheet 4]' user:ui-enumeration='all' user:ui-marker='enumerate'>
-              <groupfilter function='level-members' level='[ROUTE_ID]' />
-              <groupfilter function='level-members' level='[STOP_NAME]' />
-              <groupfilter function='level-members' level='[Sensor Name]' />
-            </groupfilter>
-          </filter>
           <filter class='categorical' column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Sensor Name:nk]'>
-            <groupfilter function='level-members' level='[none:Sensor Name:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+            <groupfilter function='empty-level' member='[none:Sensor Name:nk]' user:ui-domain='database' user:ui-enumeration='inclusive' user:ui-marker='enumerate' />
           </filter>
           <slices>
-            <column>[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Tooltip (Route Id,STOP_NAME,Sensor Name)]</column>
             <column>[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Sensor Name:nk]</column>
-            <column>[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Tooltip (Route ID,STOP_NAME,Sensor Name)]</column>
           </slices>
           <aggregation value='true' />
         </view>
         <style>
           <style-rule element='axis'>
             <format attr='title' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' scope='rows' value='Average Pedestrain Count' />
-            <encoding attr='space' class='1' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' field-type='quantitative' fold='true' scope='rows' synchronized='true' type='space' />
-            <format attr='display' class='1' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' scope='rows' value='false' />
           </style-rule>
           <style-rule element='cell'>
             <format attr='color' data-class='subtotal' value='#000000' />
           </style-rule>
           <style-rule element='header'>
-            <format attr='border-width' data-class='total' value='1' />
-            <format attr='border-style' data-class='total' value='solid' />
+            <format attr='border-width' data-class='total' value='0' />
+            <format attr='border-style' data-class='total' value='none' />
           </style-rule>
           <style-rule element='mark'>
             <encoding attr='color' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' palette='blue_10_0' type='interpolated' />
           </style-rule>
           <style-rule element='pane'>
-            <format attr='border-width' data-class='total' value='1' />
-            <format attr='border-style' data-class='total' value='solid' />
+            <format attr='band-color' scope='rows' value='#000000' />
+            <format attr='border-width' data-class='total' value='0' />
+            <format attr='border-style' data-class='total' value='none' />
+          </style-rule>
+          <style-rule element='table'>
+            <format attr='band-size' scope='rows' value='1' />
           </style-rule>
           <style-rule element='worksheet'>
             <format attr='color' value='#000000' />
@@ -1829,31 +1804,34 @@
             <format attr='line-visibility' value='on' />
             <format attr='line-pattern-only' value='solid' />
           </style-rule>
+          <style-rule element='table-div'>
+            <format attr='stroke-size' scope='rows' value='0' />
+            <format attr='line-visibility' scope='rows' value='off' />
+            <format attr='line-visibility' scope='cols' value='on' />
+            <format attr='line-pattern-only' scope='cols' value='solid' />
+            <format attr='stroke-size' scope='cols' value='3' />
+            <format attr='stroke-color' scope='cols' value='#ffffff' />
+          </style-rule>
         </style>
         <panes>
-          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Automatic' />
-            <encodings>
-              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' />
-            </encodings>
-            <style>
-              <style-rule element='mark'>
-                <format attr='mark-labels-show' value='true' />
-                <format attr='mark-labels-cull' value='true' />
-              </style-rule>
-            </style>
-          </pane>
-          <pane id='2' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]'>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Bar' />
             <encodings>
               <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' />
+              <tooltip column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' />
             </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Hour:&#9;</run>
+                <run bold='true'><![CDATA[<[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Hour:ok]>]]></run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Pedestrian Count in Average: </run>
+                <run bold='true'><![CDATA[<[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]>]]></run>
+              </formatted-text>
+            </customized-tooltip>
             <style>
               <style-rule element='mark'>
                 <format attr='mark-labels-cull' value='true' />
@@ -1861,29 +1839,20 @@
               </style-rule>
             </style>
           </pane>
-          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' y-index='1'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Line' />
-            <encodings>
-              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' />
-            </encodings>
-            <style>
-              <style-rule element='mark'>
-                <format attr='mark-labels-show' value='true' />
-                <format attr='mark-labels-cull' value='true' />
-                <format attr='mark-markers-mode' value='auto' />
-              </style-rule>
-            </style>
-          </pane>
         </panes>
-        <rows>([federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk] + [federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk])</rows>
+        <rows>[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]</rows>
         <cols>[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Hour:ok]</cols>
       </table>
       <simple-id uuid='{2707AF5E-92EF-47DC-85BE-1A60989AC539}' />
     </worksheet>
     <worksheet name='Tram and sensor map'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Tram Map with Pedestrian Count</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
@@ -1901,24 +1870,16 @@
             <column caption='Tram Location' datatype='spatial' name='[Calculation_38562084187959299]' role='measure' type='nominal'>
               <calculation class='tableau' formula='MAKEPOINT([LATITUDE], [LONGITUDE])' />
             </column>
-            <column caption='IsSensorAttahced' datatype='string' name='[Calculation_38562084453564420]' role='dimension' type='nominal'>
-              <calculation class='tableau' formula='IF ISNULL([Sensor Name])&#10;    THEN &quot;The Pedestrain Sensor is too far from this Tram Station&quot;&#10;    ELSE &quot;YES&quot;&#10;END' />
-            </column>
-            <column caption='Is Data Available' datatype='string' name='[Calculation_38562084477349895]' role='dimension' type='nominal'>
-              <calculation class='tableau' formula='IF ISNULL([Value])&#10;    THEN &quot;Do not have Data on this Sensor&quot;&#10;    ELSE &quot;Has Data&quot;&#10;END' />
-            </column>
             <column datatype='spatial' name='[Geometry]' role='measure' type='nominal' />
             <column aggregation='Avg' datatype='real' name='[LATITUDE]' role='measure' semantic-role='[Geographical].[Latitude]' type='quantitative' />
             <column aggregation='Avg' datatype='real' name='[LONGITUDE]' role='measure' semantic-role='[Geographical].[Longitude]' type='quantitative' />
-            <column caption='Route ID' datatype='string' name='[ROUTE_ID]' role='dimension' type='nominal' />
+            <column caption='Route Name' datatype='string' name='[ROUTESHTNM]' role='dimension' type='nominal' />
             <column datatype='string' name='[STOP_NAME]' role='dimension' type='nominal' />
             <column datatype='string' name='[Sensor Name]' role='dimension' type='nominal' />
-            <column datatype='real' name='[Value]' role='measure' type='quantitative' />
-            <column-instance column='[Calculation_38562084453564420]' derivation='Attribute' name='[attr:Calculation_38562084453564420:nk]' pivot='key' type='nominal' />
-            <column-instance column='[Calculation_38562084477349895]' derivation='Attribute' name='[attr:Calculation_38562084477349895:nk]' pivot='key' type='nominal' />
+            <column-instance column='[ROUTESHTNM]' derivation='Attribute' name='[attr:ROUTESHTNM:nk]' pivot='key' type='nominal' />
             <column-instance column='[Calculation_38562084187959299]' derivation='Collect' name='[clct:Calculation_38562084187959299:nk]' pivot='key' type='nominal' />
             <column-instance column='[Geometry]' derivation='Collect' name='[clct:Geometry:nk]' pivot='key' type='nominal' />
-            <column-instance column='[ROUTE_ID]' derivation='None' name='[none:ROUTE_ID:nk]' pivot='key' type='nominal' />
+            <column-instance column='[ROUTESHTNM]' derivation='None' name='[none:ROUTESHTNM:nk]' pivot='key' type='nominal' />
             <column-instance column='[STOP_NAME]' derivation='None' name='[none:STOP_NAME:nk]' pivot='key' type='nominal' />
             <column-instance column='[Sensor Name]' derivation='None' name='[none:Sensor Name:nk]' pivot='key' type='nominal' />
           </datasource-dependencies>
@@ -1926,8 +1887,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16140551.840410007' min='16133958.516484639' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4551222.0695568686' min='-4556052.1867958531' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16139396.327750595' min='16132655.669439595' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4549452.673738094' min='-4554378.7490604967' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='table'>
             <format attr='omit-on-special' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' value='false' />
@@ -1945,46 +1906,45 @@
             </view>
             <mark class='Automatic' />
           </_.fcp.Layers.true...pane>
-          <pane _.fcp.Layers.true...generated-title='PTV_METRO_TRAM_ROUTE.shp' _.fcp.Layers.true...inert='true' id='2' selection-relaxation-option='selection-relaxation-allow'>
+          <pane _.fcp.Layers.true...generated-title='average_pedestrian_per_Hour_WithLocation.csv.Tram (2)' id='3' selection-relaxation-option='selection-relaxation-allow'>
             <view>
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
             <encodings>
-              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTE_ID:nk]' />
-              <lod column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Geometry:nk]' />
-              <geometry column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Geometry:nk]' />
-            </encodings>
-          </pane>
-          <_.fcp.Layers.true...pane generated-title='average_pedestrian_per_Hour_WithLocation.csv.Tram (2)' id='3' selection-relaxation-option='selection-relaxation-allow'>
-            <view>
-              <breakdown value='auto' />
-            </view>
-            <mark class='Automatic' />
-            <encodings>
-              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTE_ID:nk]' />
+              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTESHTNM:nk]' />
               <lod column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Calculation_38562084187959299:nk]' />
               <lod column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:STOP_NAME:nk]' />
               <lod column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Sensor Name:nk]' />
-              <tooltip column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[attr:Calculation_38562084453564420:nk]' />
-              <tooltip column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[attr:Calculation_38562084477349895:nk]' />
+              <tooltip column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[attr:ROUTESHTNM:nk]' />
               <geometry column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Calculation_38562084187959299:nk]' />
             </encodings>
             <customized-tooltip>
               <formatted-text>
-                <run fontcolor='#787878'>Route Id:&#9;</run>
-                <run bold='true'><![CDATA[<[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTE_ID:nk]>]]></run>
-                <run>Æ&#10;</run>
-                <run fontcolor='#787878'>STOP_NAME:&#9;</run>
+                <run fontcolor='#787878'>Stop Name: </run>
                 <run bold='true'><![CDATA[<[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:STOP_NAME:nk]>]]></run>
                 <run>Æ&#10;</run>
-                <run fontcolor='#787878'>IsValueNull:&#9;</run>
-                <run bold='true'><![CDATA[<[federated.0vowws40obuv7y1bj5ht91ynd3dy].[attr:Calculation_38562084477349895:nk]>]]></run>
-                <run>Æ&#10;</run>
-                <run bold='true'><![CDATA[<Sheet name="Each Sensor Bar Chart" maxwidth="300" maxheight="300" filter="<All Fields>">]]></run>
+                <run bold='true'><![CDATA[Route Number:  <[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTESHTNM:nk]>]]></run>
                 <run>Æ&#10;</run>
               </formatted-text>
             </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='false' />
+              </style-rule>
+            </style>
+          </pane>
+          <_.fcp.Layers.true...pane generated-title='PTV_METRO_TRAM_ROUTE.shp' id='2' inert='true' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTESHTNM:nk]' />
+              <lod column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Geometry:nk]' />
+              <geometry column='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[clct:Geometry:nk]' />
+            </encodings>
           </_.fcp.Layers.true...pane>
           <_.fcp.LayersPerPaneSpecPrimaryDS.true...pane generated-title='Geometry' id='4' inert='true' selection-relaxation-option='selection-relaxation-allow'>
             <view>
@@ -1998,7 +1958,7 @@
             <style>
               <style-rule element='mark'>
                 <format attr='mark-color' value='#f28e2b' />
-                <format attr='mark-transparency' value='88' />
+                <format attr='mark-transparency' value='24' />
               </style-rule>
             </style>
           </_.fcp.LayersPerPaneSpecPrimaryDS.true...pane>
@@ -2010,7 +1970,7 @@
     </worksheet>
   </worksheets>
   <windows source-height='51'>
-    <window class='worksheet' maximized='true' name='Tram and sensor map'>
+    <window class='worksheet' name='Tram and sensor map'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -2032,19 +1992,19 @@
         </edge>
         <edge name='right'>
           <strip size='160'>
-            <card pane-specification-id='2' param='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTE_ID:nk]' type='color' />
+            <card pane-specification-id='3' param='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:ROUTESHTNM:nk]' type='color' />
           </strip>
         </edge>
       </cards>
       <viewpoint>
-        <default-map-tool-selection tool='1' />
+        <default-map-tool-selection tool='2' />
       </viewpoint>
       <simple-id uuid='{C968520E-FC22-4A88-8951-A35890B4A75A}' />
     </window>
-    <window class='worksheet' name='Each Sensor Bar Chart'>
+    <window class='worksheet' maximized='true' name='Each Sensor Bar Chart'>
       <cards>
         <edge name='left'>
-          <strip size='160'>
+          <strip size='220'>
             <card type='pages' />
             <card type='filters' />
             <card type='marks' />
@@ -2057,18 +2017,10 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
-          <strip size='31'>
-            <card type='title' />
-          </strip>
-        </edge>
-        <edge name='right'>
-          <strip size='160'>
-            <card pane-specification-id='2' param='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[avg:Value:qk]' type='color' />
-          </strip>
         </edge>
       </cards>
       <viewpoint>
-        <zoom type='fit-width' />
+        <zoom type='entire-view' />
       </viewpoint>
       <simple-id uuid='{EB4759F6-0877-48D8-8881-D7E4CDBEB53B}' />
     </window>

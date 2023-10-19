@@ -5,40 +5,12 @@ hotel_tab <- tabItem(
       #shiny-tab-airbnb .leaflet-bottom.leaflet-left {
         width: 65%;
       }
+      #shiny-tab-airbnb .col-sm-12 {
+        padding-right: 0;
+        padding-left: 0;
+      }
       #shiny-tab-airbnb .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
-      }
-      #shiny-tab-airbnb [class^='col-sm-'] {
-        padding: 0;
-      }
-      #shiny-tab-airbnb .shiny-html-output.col-sm-12.shiny-bound-output {
-        padding-left: 0;
-        padding-right: 0;
-      }
-      #shiny-tab-airbnb .small-box {
-        height: 89px;
-        margin-bottom: 10px;
-      }
-      #shiny-tab-airbnb .small-box .inner {
-        transform: scale(0.9) translate(-10px, -5px)；
-      }
-      #shiny-tab-airbnb .small-box .icon-large {
-        font-size: 60px;
-        right: 10px;
-      }
-      #shiny-tab-airbnb .row {
-        width: 100%;
-      }
-      #average_hotels_rating {
-        padding-left: 0;
-        padding-right: 0;
-      }
-      #average_hotels_price {
-        padding-left: 0;
-        padding-right: 0;
-      }
-      #average_hotels_rating.shiny-html-output.col-sm-6.shiny-bound-output {
-        padding-right: 10px;
       }
     ")),
     tags$script(HTML("
@@ -49,39 +21,51 @@ hotel_tab <- tabItem(
           $('#controlToRemove').parent().remove();
         }, 150); // The animation duration in milliseconds
       });
+      $(document).on('mouseover', '#suburb_select .bootstrap-select .dropdown-menu.inner li', function(){
+        console.log('sdfsdf');
+        Shiny.setInputValue('hovered_suburb_option', this.value);
+      });
+      $(document).on('click', '#viewNearbyTramStopButton', function(){
+        console.log('sdfdsf')
+      });
     ")),
   ),
   h4("Airbnb"),
   column(
-    width = 8,
+    width = 9,
+      fluidRow(
+        width = 12,
+        valueBoxOutput("total_hotels_num", width = 4),
+        valueBoxOutput("average_hotels_rating", width = 4),
+        valueBoxOutput("average_hotels_price", width = 4),
+      ),
     tabBox(
       width = 12,
       title = "Airbnb Listings in Melbourne City",
       # The id lets us use input$tabset1 on the server to find the current tab
       id = "hotel_statistics_tabset",
       tabPanel(
-        "Chart",
-        "Tab content 2"
+        "Map",
+        leafletOutput("hotel_map", height = "calc(100vh - 370px)"), # 330
       ),
       tabPanel(
-        "Map",
-        leafletOutput("hotel_map", height = "calc(100vh - 240px)"), # 330
-      )
+        "Chart",
+        style = "height: calc(100vh - 370px)",
+        tableauPublicViz(
+          id='tableauAirbnb',
+          url = "https://public.tableau.com/views/MelbourneCityAirbnbListings/MelbourneCityAirbnbPriceDistributionDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+          height = "inherit",
+          width = "100%"
+        ),
+      ),
     )
   ),
   column(
-    width = 4,
+    width = 3,
     div(
-      style = "display: flex; flex-direction: column; align-items: center; padding-left: 10px;",
-      valueBoxOutput("total_hotels_num", width = 12),
-      fluidRow(
-        width = 12,
-        valueBoxOutput("average_hotels_rating", width = 6),
-        valueBoxOutput("average_hotels_price", width = 6),
-      ),
       box(
         width = 12,
-        style = "height: calc(100vh - 415px); overflow-y: scroll;",
+        style = "height: calc(100vh - 220px); overflow-y: scroll;",
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
@@ -109,11 +93,9 @@ hotel_tab <- tabItem(
           min = 0, max = 5, value = c(0, 5),
           step = 0.1
         ),
-        numericInput(
-          "min_nights", "Select minimum nights range:",
-          min = min_min_nights, max = max_min_nights,
-          value = 1,
-          step = 1
+        selectInput(
+          "min_nights", "Select minimum nights:",
+          choices = c(sort(unique(hotels$minimum_nights))),
         ),
         selectInput(
           "num_bedrooms", "Select number of bedrooms:",
