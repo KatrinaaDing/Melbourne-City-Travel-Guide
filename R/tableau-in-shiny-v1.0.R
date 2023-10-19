@@ -42,7 +42,7 @@ setUpTableauInShiny <- function() {
     useShinyjs(),
     HTML('<script type="module">
       // Import all Tableau objects into the global namespace
-      import * as T from "https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.js";
+      import * as T from "./tableau.embedding.3.latest.js";
       Object.assign(window, T);
 
       // Map a few common Tableau JS events to Shiny R events
@@ -50,10 +50,15 @@ setUpTableauInShiny <- function() {
         const viz = document.getElementById(id);
         viz.addEventListener(TableauEventType.MarkSelectionChanged, async e => {
           const marks = await e.detail.getMarksAsync();
+          console.log(marks)
           const columnNames = marks.data[0].columns.map(col => col.fieldName);
+          console.log(columnNames)
           const dataTable = marks.data[0].data.map(row => row.map(val => val.value));
+          console.log(dataTable)
+
           const dataForShiny = dataTable.map(row =>
             Object.fromEntries(columnNames.map((_, i) => [columnNames[i], row[i]])));
+          console.log(dataForShiny)
           Shiny.setInputValue(id + "_mark_selection_changed:tinsdf", JSON.stringify(dataForShiny));
         });
         viz.addEventListener(TableauEventType.FilterChanged, async e => {

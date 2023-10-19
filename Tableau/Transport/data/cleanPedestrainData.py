@@ -25,7 +25,6 @@ def find_nearest_sensor(tramStop_data, sensors_geoData_cleaned):
     limitedRange = distances[distances <= 500]
     if limitedRange.empty:
         return None
-    
     closest_sensor_index = limitedRange.idxmin()
     
     closest_sensor_id = sensors_geoData_cleaned.loc[closest_sensor_index, 'location_id']
@@ -72,8 +71,8 @@ average_pedestrian_per_Hour_withLocation["sensor_geometry"].to_crs("EPSG:4326")
 
 
 # Output the dataset as csv file
-average_pedestrian_per_Hour_withLocation.to_csv(
-    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
+#average_pedestrian_per_Hour_withLocation.to_csv(
+#    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
 
 
 
