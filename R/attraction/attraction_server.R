@@ -163,6 +163,7 @@ attractionServer <- function(input, output, session) {
   ################### outputs ##################
   # Leaflet map 
   output$attraction_map <- renderLeaflet({
+
     render_map(attractions_data_map())
   })
 
