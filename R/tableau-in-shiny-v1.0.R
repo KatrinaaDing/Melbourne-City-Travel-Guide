@@ -50,10 +50,15 @@ setUpTableauInShiny <- function() {
         const viz = document.getElementById(id);
         viz.addEventListener(TableauEventType.MarkSelectionChanged, async e => {
           const marks = await e.detail.getMarksAsync();
+          console.log(marks)
           const columnNames = marks.data[0].columns.map(col => col.fieldName);
+          console.log(columnNames)
           const dataTable = marks.data[0].data.map(row => row.map(val => val.value));
+          console.log(dataTable)
+
           const dataForShiny = dataTable.map(row =>
             Object.fromEntries(columnNames.map((_, i) => [columnNames[i], row[i]])));
+          console.log(dataForShiny)
           Shiny.setInputValue(id + "_mark_selection_changed:tinsdf", JSON.stringify(dataForShiny));
         });
         viz.addEventListener(TableauEventType.FilterChanged, async e => {

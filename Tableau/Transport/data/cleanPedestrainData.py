@@ -2,12 +2,14 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 
-pedestrain_Data = pd.read_csv('data/September_2023.csv')
-sensor_geoData = gpd.read_file('data/pedestrian-counting-system-sensor-locations.geojson')
+pedestrain_Data = pd.read_csv('Tableau/Transport/data/PedestrianData.csv')
+sensor_geoData = gpd.read_file(
+    'Tableau/Transport/data/pedestrian-counting-system-sensor-locations.geojson')
 tramStop_data = gpd.read_file(
-    'data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV/CLEANED_PTV_METRO_TRAM_STOP.shp')
+    'Tableau/Transport/data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV/PTV_METRO_TRAM_STOP.shp')
 
-print(len(tramStop_data))
+
+
 # clean the sensor dataset
 sensors_geoData_cleaned = sensor_geoData.drop(['installation_date', 'note','location_type',
                         'status', 'direction_1', 'direction_2','sensor_name'], axis=1)
@@ -16,13 +18,13 @@ sensors_geoData_cleaned = sensor_geoData.drop(['installation_date', 'note','loca
 sensors_geoData_cleaned = sensors_geoData_cleaned.to_crs("EPSG:28355")
 tramStop_data = tramStop_data.to_crs("EPSG:28355")
 
+
+# calculate the nearest sensor of each tramStop
 def find_nearest_sensor(tramStop_data, sensors_geoData_cleaned):
-    # 计算到所有传感器的距离
     distances = sensors_geoData_cleaned.geometry.distance(tramStop_data.geometry)
-    limitedRange = distances[distances <= 1000]
+    limitedRange = distances[distances <= 500]
     if limitedRange.empty:
         return None
-    
     closest_sensor_index = limitedRange.idxmin()
     
     closest_sensor_id = sensors_geoData_cleaned.loc[closest_sensor_index, 'location_id']
@@ -38,7 +40,6 @@ tramStop_data_merged_SensorLocation.rename(columns={'latitude': 'sensor_latitude
                                                     'geometry_y': 'sensor_geometry',
                                                     'sensor_description': 'Sensor Name'}, inplace=True)
 
-print(tramStop_data_merged_SensorLocation)
 
 
 # clean the pedestrain data type
@@ -69,6 +70,9 @@ average_pedestrian_per_Hour_withLocation["sensor_geometry"].to_crs("EPSG:4326")
 
 
 # Output the dataset as csv file
-average_pedestrian_per_Hour_withLocation.to_csv('data/average_pedestrian_per_Hour_WithLocation.csv')
+average_pedestrian_per_Hour_withLocation.to_csv(
+    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
+
+
 
 
