@@ -51,7 +51,7 @@ hotel_tab <- tabItem(
         tableauPublicViz(
           id='tableauAirbnb',
           url = "https://public.tableau.com/views/MelbourneCityAirbnbListings/MelbourneCityAirbnbPriceDistributionDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-          height = "100%",
+          height = "inherit",
           width = "100%"
         ),
       ),

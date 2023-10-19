@@ -42,7 +42,7 @@ setUpTableauInShiny <- function() {
     useShinyjs(),
     HTML('<script type="module">
       // Import all Tableau objects into the global namespace
-      import * as T from "https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.js";
+      import * as T from "./tableau.embedding.3.latest.js";
       Object.assign(window, T);
 
       // Map a few common Tableau JS events to Shiny R events
