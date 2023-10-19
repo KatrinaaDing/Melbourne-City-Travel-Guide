@@ -36,24 +36,23 @@ library(shinyjs)
 setUpTableauInShiny <- function() {
   registerInputHandler("tinsdf", function(x, session, inputname) {
     jsonlite::fromJSON(x)
-  }, force=TRUE)
-  
+  }, force = TRUE)
+
   list(
     useShinyjs(),
     HTML('<script type="module">
       // Import all Tableau objects into the global namespace
       import * as T from "./tableau.embedding.3.latest.js";
       Object.assign(window, T);
-      
+
       // Map a few common Tableau JS events to Shiny R events
       window.observeTableauEvents = id => {
         const viz = document.getElementById(id);
-        
         viz.addEventListener(TableauEventType.MarkSelectionChanged, async e => {
           const marks = await e.detail.getMarksAsync();
           const columnNames = marks.data[0].columns.map(col => col.fieldName);
           const dataTable = marks.data[0].data.map(row => row.map(val => val.value));
-          const dataForShiny = dataTable.map(row => 
+          const dataForShiny = dataTable.map(row =>
             Object.fromEntries(columnNames.map((_, i) => [columnNames[i], row[i]])));
           Shiny.setInputValue(id + "_mark_selection_changed:tinsdf", JSON.stringify(dataForShiny));
         });
@@ -80,13 +79,14 @@ setUpTableauInShiny <- function() {
 }
 
 # For inserting a viz into the Shiny UI
-tableauPublicViz <- function(id, url, height="500px", style=NA, ...) {
+tableauPublicViz <- function(id, url, height = "500px", style = NA, ...) {
   list(
-    tag('tableau-viz', list(id=id,
-                            src=url,
-                            toolbar="hidden",
-                            style=paste0('height: ', height, ';', if (is.na(style)) '' else style),
-                            ...)),
-    HTML(sprintf('<script>document.addEventListener("DOMContentLoaded", () => { observeTableauEvents("%s");} false);  const viz = document.getElementById("%s"); console.log(viz);</script>', id, id))
+    tag("tableau-viz", list(
+      id = id,
+      src = url,
+      style = paste0("height: ", height, ";", if (is.na(style)) "" else style),
+      ...
+    )),
+    HTML(sprintf('<script>document.addEventListener("DOMContentLoaded", () => { observeTableauEvents("%s"); }, false);</script>', id))
   )
 }

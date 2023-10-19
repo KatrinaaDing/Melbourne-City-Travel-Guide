@@ -1,4 +1,33 @@
+script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
+
+single_select_filter_script <- function(filter_name, filter_value) {
+  sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
+}
+
+multi_select_filter_script <- function(filter_name, filter_values) {
+  filter_values_string <- paste(sprintf('"%s"', filter_values), collapse = ", ")
+  sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', filter_name, filter_values_string)
+}
+
+range_filter_script_for_dashboard <- function(filter_name, filter_min, filter_max) {
+  range_filter <- sprintf('.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+  loop_script <- paste0(
+    'sheet.worksheets.forEach(w => {',
+     'w', range_filter,
+    '})'
+  )
+  loop_script
+}
+
+create_filter_script <- function(script_body) {
+  paste0(script_head, script_body)
+}
+
 hotelServer <- function(input, output, session) {
+  observeEvent(input$hovered_suburb_option, {
+    # Your code here
+    print(paste("Hovered over option: ", input$hovered_suburb_option))
+  })
   ################### Observers ##################
   # update hotel price range min and max value based on price class selection
   observeEvent(input$price_class_select, {
@@ -28,29 +57,84 @@ hotelServer <- function(input, output, session) {
     )
   })
 
+  # update tableau onclick suburb filter
+  observeEvent(input$suburb_select, {
+    suburbs <- input$suburb_select
+    script_body <- multi_select_filter_script("Suburb", suburbs)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau onclick price range filter
+  observeEvent(input$hotel_price, {
+    min <- input$hotel_price[1]
+    max <- input$hotel_price[2]
+    script_body <- range_filter_script_for_dashboard("Price", min, max)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on select rating range
+  observeEvent(input$rating_range, {
+    min <- input$rating_range[1]
+    max <- input$rating_range[2]
+    script_body <- range_filter_script_for_dashboard("Rating", min, max)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on enter minimum nights filter
+  observeEvent(input$min_nights, {
+    min_nights <- as.integer(input$min_nights)
+    script_body <- range_filter_script_for_dashboard("Minimum Nights", min_nights, max_min_nights)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau onclick suburb filter
+  observeEvent(input$price_class_select, {
+    price_class <- input$price_class_select
+    script_body <- multi_select_filter_script("Price Class", price_class)
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on select number of bathrooms
+  observeEvent(input$num_baths, {
+    if (input$num_baths == "All") {
+      script_body <- multi_select_filter_script("Number Of Baths", sort(unique(hotels$number_of_baths)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Baths", input$num_baths)
+    }
+    runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on select number of beds
+  observeEvent(input$num_beds, {
+    if (input$num_beds == "All") {
+      script_body <- multi_select_filter_script("Number Of Beds", sort(unique(hotels$number_of_beds)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Beds", input$num_beds)
+    }
+    runjs(create_filter_script(script_body))
+  })
+
+    # update tableau on select number of bedrooms
+    observeEvent(input$num_bedrooms, {
+      if (input$num_bedrooms == "All") {
+        script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
+      } else {
+        script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
+      }
+      runjs(create_filter_script(script_body))
+    })
+
   ############# reactive functions #############
   # get the geometry shape of selected suburbs
   getSelectedHotelsSuburbs <- reactive({
     selected_suburbs <- suburb_boundaries[suburb_boundaries$SA2_NAME %in% input$suburb_select, ]
     return(selected_suburbs)
   })
+
+  # get filtered hotels listings
   getFilteredHotels <- reactive({
     # Initialize an empty list to collect filtered hotels
-    filtered_hotels_list <- list()
-    selected_suburbs <- getSelectedHotelsSuburbs()
-    # Loop through each suburb
-    # reference: https://www.w3schools.com/r/r_for_loop.asp
-    for (i in 1:nrow(selected_suburbs)) {
-      single_suburb <- selected_suburbs[i, ]
-      # Filter hotels within the single suburb
-      # reference: https://cran.r-project.org/web/packages/sf/vignettes/sf3.html
-      hotels_in_suburb <- hotels[st_intersects(hotels, single_suburb, sparse = FALSE), ]
-      # Append to the list
-      filtered_hotels_list[[i]] <- hotels_in_suburb
-    }
-    # Combine all filtered hotels into one dataset
-    filtered_hotels <- do.call(rbind, filtered_hotels_list)
-    filtered_hotels <- na.omit(filtered_hotels)
+    filtered_hotels <- hotels[hotels$suburb %in% input$suburb_select, ]
 
     # filter price and ratings
     filtered_hotels <- filtered_hotels[
@@ -62,9 +146,8 @@ hotelServer <- function(input, output, session) {
         (filtered_hotels$rating >= input$rating_range[1] & filtered_hotels$rating <= input$rating_range[2]),
     ]
     # filter minimum nights range
-    if (!is.na(input$min_nights) && input$min_nights >= min_min_nights && input$min_nights <= max_min_nights) {
-      filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
-    }
+    filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= as.numeric(input$min_nights), ]
+
     # filter number of bedrooms
     if (input$num_bedrooms != "All") {
       filtered_hotels <- filtered_hotels[filtered_hotels$number_of_bedrooms == input$num_bedrooms, ]
@@ -107,19 +190,19 @@ hotelServer <- function(input, output, session) {
         icon = ~ dollar_icons[price_class],
         layerId = ~id,
         options = markerOptions(price = filtered_hotels$price),
-        popup = ~ paste0(
-          # listing name, can navigate to Airbnb listing site
-          "Name: <a href='https://www.airbnb.com.au/rooms/",
-          filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
-          # host name, can navigate to host site
-          "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
-          "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
-          "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
-          "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
-          "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
-          "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
-        ),
+        # popup = ~ paste0(
+        #   # listing name, can navigate to Airbnb listing site
+        #   "Name: <a href='https://www.airbnb.com.au/rooms/",
+        #   filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
+        #   # host name, can navigate to host site
+        #   "Host:  <a href='https://www.airbnb.com.au/users/show/",
+        #   filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
+        #   "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
+        #   "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
+        #   "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
+        #   "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
+        #   "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
+        # ),
         label = ~ paste(filtered_hotels$name),
         labelOptions = labelOptions(direction = "top")
       ) %>%
@@ -137,7 +220,6 @@ hotelServer <- function(input, output, session) {
       )
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
-    # note: custom js code is in www/js/onRenderAirbnb.js
     leaflet_map %>% onRender("
       function(el, x) {
         // data from constant defined earlier
@@ -186,6 +268,7 @@ hotelServer <- function(input, output, session) {
     ")
   })
 
+
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
   observe({
@@ -199,11 +282,27 @@ hotelServer <- function(input, output, session) {
     leafletProxy("hotel_map") %>%
       clearControls() %>%
       addControl(
+        # html = paste0(
+        #   "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
+        #   "<h5>", hotel_data$name, "</h5>",
+        #   "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
+        #   "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
+        #   "</div>"
+        # ),
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
-          "<h5>", hotel_data$name, "</h5>",
-          "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
-          "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
+          "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
+          # listing name, can navigate to Airbnb listing site
+          "<div style='font-size: 20px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+          hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
+          # host name, can navigate to host site
+          "Host:  <a href='https://www.airbnb.com.au/users/show/",
+          hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
+          "Price: <strong>$", hotel_data$price, "/night</strong><br>",
+          "Price class: <strong>", hotel_data$price_class, "</strong><br>",
+          "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
+          "Rating: <strong>", hotel_data$rating, "</strong><br>",
+          "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
           "</div>"
         ),
         position = "bottomleft"
@@ -249,7 +348,6 @@ hotelServer <- function(input, output, session) {
     valueBox(
       ifelse(is.na(avg_rating), DEFAULT_NA_HINT, avg_rating),
       "Average Rating",
-      width = 3,
       icon = icon("thumbs-up"),
       color = "yellow"
     )
@@ -262,7 +360,6 @@ hotelServer <- function(input, output, session) {
     valueBox(
       ifelse(is.na(avg_price), DEFAULT_NA_HINT, paste0("$", avg_price)),
       "Average Price/Night",
-      width = 3,
       icon = icon("dollar"),
       color = "green"
     )
