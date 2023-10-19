@@ -74,13 +74,12 @@ ui <- dashboardPage(
     # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
-    useShinyjs(),
+    tags$head(setUpTableauInShiny()),
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
       # bootstrap theme reference: https://bootswatch.com/3/
       tags$link(rel = "stylesheet", type = "text/css", href = "https://bootswatch.com/3/readable/bootstrap.min.css"),
     ),
-    tags$head(setUpTableauInShiny()[[2]]),
     tabItems(
       intro_tab,
       restaurant_tab,

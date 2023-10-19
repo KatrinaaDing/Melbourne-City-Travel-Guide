@@ -90,11 +90,9 @@ hotel_tab <- tabItem(
           min = 0, max = 5, value = c(0, 5),
           step = 0.1
         ),
-        numericInput(
+        selectInput(
           "min_nights", "Select minimum nights:",
-          min = min_min_nights, max = max_min_nights,
-          value = 1,
-          step = 1
+          choices = c(sort(unique(hotels$minimum_nights))),
         ),
         selectInput(
           "num_bedrooms", "Select number of bedrooms:",

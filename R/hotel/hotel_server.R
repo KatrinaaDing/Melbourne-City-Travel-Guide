@@ -1,5 +1,4 @@
-script_head <- paste0('let viz = document.getElementById("tableauAirbnb");
-      let sheet = viz.workbook.activeSheet; ')
+script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
 
 single_select_filter_script <- function(filter_name, filter_value) {
   sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
@@ -11,7 +10,13 @@ multi_select_filter_script <- function(filter_name, filter_values) {
 }
 
 range_filter_script <- function(filter_name, filter_min, filter_max) {
-  sprintf('sheet.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+  range_filter <- sprintf('.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+  loop_script <- paste0(
+    'sheet.worksheets.forEach(w => {',
+     'w', range_filter,
+    '})'
+  )
+  loop_script
 }
 
 create_filter_script <- function(script_body) {
@@ -63,8 +68,17 @@ hotelServer <- function(input, output, session) {
   observeEvent(input$hotel_price, {
       min <- input$hotel_price[1]
       max <- input$hotel_price[2]
-      script_body <- sprintf('sheet.applyRangeFilterAsync("Price", {min: %s, max: %s}, FilterUpdateType.Replace);', min, max)
+      script_body <- range_filter_script("Price", min, max)
+      print(script_body)
+
       runjs(create_filter_script(script_body))
+  })
+
+  # update tableau on enter minimum nights filter
+  observeEvent(input$min_nights, {
+    min_nights <- input$min_nights
+    script_body <- range_filter_script("Minimum Nights", min_nights, max_min_nights)
+    runjs(create_filter_script(script_body))
   })
 
   # update tableau onclick suburb filter
@@ -126,9 +140,8 @@ hotelServer <- function(input, output, session) {
         (filtered_hotels$rating >= input$rating_range[1] & filtered_hotels$rating <= input$rating_range[2]),
     ]
     # filter minimum nights range
-    if (!is.na(input$min_nights) && input$min_nights >= min_min_nights && input$min_nights <= max_min_nights) {
-      filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
-    }
+    filtered_hotels <- filtered_hotels[as.numeric(filtered_hotels$minimum_nights) >= input$min_nights, ]
+
     # filter number of bedrooms
     if (input$num_bedrooms != "All") {
       filtered_hotels <- filtered_hotels[filtered_hotels$number_of_bedrooms == input$num_bedrooms, ]
