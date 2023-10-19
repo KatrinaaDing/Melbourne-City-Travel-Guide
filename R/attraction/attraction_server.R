@@ -104,9 +104,6 @@ attractionServer <- function(input, output, session) {
       "<b> Name: </b>",
       attractions_data_map()$name,
       "<br>",
-      "<b> Operator: </b>",
-      attractions_data_map()$operator,
-      "<br>",
       "<b> Info: </b>",
       attractions_data_map()$info
     )
@@ -177,70 +174,12 @@ attractionServer <- function(input, output, session) {
       fillOpacity = 0.5,
     )
 
-    # Add attraction markers with different categories
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = artworks_content,
-    # )
-
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = music_venues_content,
-    # )
-
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = plaques_content,
-    # )
-
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = memorials_content,
-    # )
-
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = landmarks_content,
-    # )
-
-    # # Add attraction markers with different categories
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = drink_fountains_content
-    # )
-
-    # attraction_map <- addMarkers(
-    #   map=attraction_map,
-    #   ~longitude, ~latitude,
-    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-    #   icon = ~ attraction_icons[attractions_data_map()$category],
-    #   popup = toilets_content
-    # )
-
     attraction_map <- addMarkers(
       map=attraction_map,
       ~longitude, ~latitude,
       clusterOptions = markerClusterOptions(maxClusterRadius = 50),
       icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = ~ get_popup_content(attractions_data_map()$category)
+      popup = playgrounds_content
     )
   })
 

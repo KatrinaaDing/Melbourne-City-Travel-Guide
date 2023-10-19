@@ -9,10 +9,6 @@ attraction_tab <- tabItem(
       title = "Attraction Listings in Melbourne City",
       # The id lets us use input$tabset1 on the server to find the current tab
       id = "attraction_statistics_tabset",
-      # tabPanel(
-      #   "Chart",
-      #   "Tab content 2"
-      # ),
       tabPanel(
         "Map",
         leafletOutput("attraction_map", height = "calc(100vh - 240px)"), # 330
