@@ -137,7 +137,7 @@ attractionServer <- function(input, output, session) {
 
 
     # List of popup contents
-    popup_contents <- list2env(list(
+    popup_contents <- list(
       artworks = artworks_content,
       music_venues = music_venues_content,
       plaques = plaques_content,
@@ -146,12 +146,13 @@ attractionServer <- function(input, output, session) {
       drinking_fountains = drink_fountains_content,
       playgrounds = playgrounds_content,
       toilets = toilets_content
-    ))
+    )
 
 
-    get_popup_content <- function(category) {
-      return(popup_contents$category)
-    }
+    # get_popup_content <- function(category) {
+    #   if (category == "")
+    #   return(popup_contents$category)
+    # }
     # popup_contents["artworks"] <- artworks_content
     # popup_contents["music_venues"] <- music_venues_content
     # popup_contents["plaques"] <- plaques_content
@@ -179,7 +180,7 @@ attractionServer <- function(input, output, session) {
       ~longitude, ~latitude,
       clusterOptions = markerClusterOptions(maxClusterRadius = 50),
       icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = playgrounds_content
+      popup = ~ popup_contents[attractions_data_map()$category]
     )
   })
 
