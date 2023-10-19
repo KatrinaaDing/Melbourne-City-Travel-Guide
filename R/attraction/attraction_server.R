@@ -55,7 +55,9 @@ get_popup_content <- function(row_data) {
       row_data['type'],
       "<br>",
       "<b> Website: </b>",
-      "<a>",
+      "<a href=",
+      row_data['website'],
+      " target='_blank'>",
       row_data['website'],
       "</a>"
     ))
@@ -143,9 +145,7 @@ get_popup_content <- function(row_data) {
         row_data['baby_facil'],
         "<br>",
         "<b> Address: </b>",
-        "<a>",
-        row_data['address'],
-        "</a>"
+        row_data['address']
   ))
   } else {
     return('')
