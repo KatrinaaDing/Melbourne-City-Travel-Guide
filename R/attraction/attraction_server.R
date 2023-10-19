@@ -12,92 +12,157 @@ attractionServer <- function(input, output, session) {
   output$attraction_map <- renderLeaflet({
     # Popup contents for different categories
     artworks_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Attraction Category: </b>",
       attractions_data_map()$category,
       "<br>",
       "<b> Name: </b>",
       attractions_data_map()$name,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Classification: </b>",
+      attractions_data_map()$classification,
+      "<br>",
+      "<b> Organisation: </b>",
+      attractions_data_map()$organisation,
+      "<br>",
+      "<b> Created Date: </b>",
+      attractions_data_map()$created_date,
+      "<br>",
+      "<b> Address: </b>",
+      attractions_data_map()$address
     )
 
     music_venues_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Attraction Category: </b>",
       attractions_data_map()$category,
       "<br>",
       "<b> Name: </b>",
       attractions_data_map()$name,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Type: </b>",
+      attractions_data_map()$type,
+      "<br>",
+      "<b> Website: </b>",
+      "<a>",
+      attractions_data_map()$website,
+      "</a>"
     )
 
     plaques_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Attraction Category: </b>",
       attractions_data_map()$category,
       "<br>",
-      "<b> Name: </b>",
-      attractions_data_map()$name,
+      "<b> Tree Common Name: </b>",
+      attractions_data_map()$tree_common_name,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Tree Scientific Name: </b>",
+      attractions_data_map()$tree_scientific_name,
+      "<br>",
+      "<b> Planted Date: </b>",
+      attractions_data_map()$date_of_tree_planted,
+      "<br>",
+      "<b> Info: </b>",
+      attractions_data_map()$title
     )
 
     memorials_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Attraction Category: </b>",
       attractions_data_map()$category,
       "<br>",
-      "<b> Name: </b>",
-      attractions_data_map()$name,
-      "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Title: </b>",
+      attractions_data_map()$title
     )
 
     landmarks_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Attraction Category: </b>",
       attractions_data_map()$category,
       "<br>",
       "<b> Name: </b>",
       attractions_data_map()$name,
       "<br>",
       "<b> Theme: </b>",
-      attractions_data_map()$theme
+      attractions_data_map()$theme,
+      "<br>",
+      "<b> Sub Theme: </b>",
+      attractions_data_map()$sub_theme
     )
 
     drink_fountains_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Facility Category: </b>",
       attractions_data_map()$category,
       "<br>",
-      "<b> Name: </b>",
-      attractions_data_map()$name,
+      "<b> Type: </b>",
+      attractions_data_map()$type,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Info: </b>",
+      attractions_data_map()$info
     )
 
     playgrounds_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Facility Category: </b>",
       attractions_data_map()$category,
       "<br>",
       "<b> Name: </b>",
       attractions_data_map()$name,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Operator: </b>",
+      attractions_data_map()$operator,
+      "<br>",
+      "<b> Info: </b>",
+      attractions_data_map()$info
     )
 
     toilets_content <- paste0(
-      "<b> selected: </b>",
+      "<b> Facility Category: </b>",
       attractions_data_map()$category,
       "<br>",
-      "<b> Name: </b>",
-      attractions_data_map()$name,
+      "<b> Type: </b>",
+      attractions_data_map()$type,
       "<br>",
-      "<b> Theme: </b>",
-      attractions_data_map()$theme
+      "<b> Operator: </b>",
+      attractions_data_map()$operator,
+      "<br>",
+      "<b> Female: </b>",
+      attractions_data_map()$female,
+      "<br>",
+      "<b> Male: </b>",
+      attractions_data_map()$male,
+      "<br>",
+      "<b> Baby Facility: </b>",
+      attractions_data_map()$baby_facil,
+      "<br>",
+      "<b> Address: </b>",
+      "<a>",
+      attractions_data_map()$address,
+      "</a>"
     )
+
+
+
+
+    # List of popup contents
+    popup_contents <- list2env(list(
+      artworks = artworks_content,
+      music_venues = music_venues_content,
+      plaques = plaques_content,
+      memorials = memorials_content,
+      landmarks = landmarks_content,
+      drinking_fountains = drink_fountains_content,
+      playgrounds = playgrounds_content,
+      toilets = toilets_content
+    ))
+
+
+    get_popup_content <- function(category) {
+      return(popup_contents$category)
+    }
+    # popup_contents["artworks"] <- artworks_content
+    # popup_contents["music_venues"] <- music_venues_content
+    # popup_contents["plaques"] <- plaques_content
+    # popup_contents["memorials"] <- memorials_content
+    # popup_contents["landmarks"] <- landmarks_content
+    # popup_contents["drinking_fountains"] <- drink_fountains_content
+    # popup_contents["playgrounds"] <- plaques_content
+    # popup_contents["toilets"] <- toilets_content
 
     # Add components to attraction map
     attraction_map <- leaflet(attractions_data_map()) %>% 
@@ -113,69 +178,69 @@ attractionServer <- function(input, output, session) {
     )
 
     # Add attraction markers with different categories
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = artworks_content,
-    )
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = artworks_content,
+    # )
+
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = music_venues_content,
+    # )
+
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = plaques_content,
+    # )
+
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = memorials_content,
+    # )
+
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = landmarks_content,
+    # )
+
+    # # Add attraction markers with different categories
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = drink_fountains_content
+    # )
+
+    # attraction_map <- addMarkers(
+    #   map=attraction_map,
+    #   ~longitude, ~latitude,
+    #   clusterOptions = markerClusterOptions(maxClusterRadius = 50),
+    #   icon = ~ attraction_icons[attractions_data_map()$category],
+    #   popup = toilets_content
+    # )
 
     attraction_map <- addMarkers(
       map=attraction_map,
       ~longitude, ~latitude,
       clusterOptions = markerClusterOptions(maxClusterRadius = 50),
       icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = music_venues_content,
-    )
-
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = plaques_content,
-    )
-
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = memorials_content,
-    )
-
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = landmarks_content,
-    )
-
-    # Add attraction markers with different categories
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = drink_fountains_content
-    )
-
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = toilets_content
-    )
-
-    attraction_map <- addMarkers(
-      map=attraction_map,
-      ~longitude, ~latitude,
-      clusterOptions = markerClusterOptions(maxClusterRadius = 50),
-      icon = ~ attraction_icons[attractions_data_map()$category],
-      popup = playgrounds_content
+      popup = ~ get_popup_content(attractions_data_map()$category)
     )
   })
 
