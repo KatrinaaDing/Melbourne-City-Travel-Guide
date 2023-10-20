@@ -196,7 +196,7 @@ hotelServer <- function(input, output, session) {
   output$hotel_map <- renderLeaflet({
     filtered_hotels <- getFilteredHotels()
     leaflet_map <- leaflet() %>%
-      addProviderTiles(providers$CartoDB.Positron) %>%
+      addProviderTiles(ifelse(input$toggle_hotel_street_name, providers$CartoDB.PositronNoLabels, providers$CartoDB.Positron)) %>%
       addPolygons(
         data = city_boundary,
         fillColor = "transparent",
@@ -247,7 +247,6 @@ hotelServer <- function(input, output, session) {
         ),
         position = "bottomright"
       )
-    map_initialized(TRUE)
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
     leaflet_map %>% onRender("
@@ -380,6 +379,14 @@ hotelServer <- function(input, output, session) {
 
   # list tram stop buffer polygon from selected tram stop
   observeEvent(input$stop_nearby_hotel_id, {
+    leafletProxy("hotel_map") %>%
+      # remove the previous shown stop buffer
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
     if (is.null(input$stop_nearby_hotel_id)) {
       return()
     }
@@ -396,13 +403,10 @@ hotelServer <- function(input, output, session) {
 
     leafletProxy("hotel_map") %>%
       setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
-      # remove the previous shown stop buffer
-      removeShape(
-        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
-      ) %>%
-      removeMarker(
-        layerId = paste0("stop_point_", last_shown_stop_buffer())
-      ) %>%
+      # # remove the previous shown stop buffer
+      # removeShape(
+      #   layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      # ) %>%
       # show the new stop buffer
       addPolygons(
         data = stop_buffer,
@@ -422,6 +426,30 @@ hotelServer <- function(input, output, session) {
     # store the last shown stop buffer
     last_shown_stop_buffer(input$stop_nearby_hotel_id)
 
+  })
+
+  # toggle hiding street name on map
+  # use of proxy reference: https://rstudio.github.io/leaflet/shiny.html
+  observeEvent(input$toggle_hotel_street_name, {
+    if (input$toggle_hotel_street_name) {
+      leafletProxy("hotel_map") %>%
+        addProviderTiles(providers$CartoDB.PositronNoLabels)
+    } else {
+      leafletProxy("hotel_map") %>%
+        addProviderTiles(providers$CartoDB.Positron)
+    }
+  })
+
+  # onclick clear_hotel_radius button, clear the tram stop buffer and marker
+  observeEvent(input$clear_hotel_radius, {
+    leafletProxy("hotel_map") %>%
+      # remove the previous shown stop buffer
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
   })
 
   ################### value boxes ##################

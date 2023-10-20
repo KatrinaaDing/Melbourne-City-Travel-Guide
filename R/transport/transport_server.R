@@ -27,7 +27,7 @@ transportServer <- function(input, output, session) {
             "There are ", num_airbnb, " Airbnb near this tram stop.",
             "<button id='jump_to_Airbnb_Button' value='",
               this_nearby_airbnb$STOP_ID,
-            "' class='btn btn-primary btn-sm'>Click me!</button>")
+            "' class='btn btn-primary btn-sm' style='margin-left: 10px;'>View</button>")
           )
         )
       })

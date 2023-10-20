@@ -72,7 +72,8 @@ hotel_tab <- tabItem(
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
-        collapsible = TRUE,
+        actionButton("clear_hotel_radius", "Clear Circle Bounds", class = "btn btn-danger"),
+        checkboxInput("toggle_hotel_street_name", "Hide Street Name", value = FALSE),
         pickerInput(
           "suburb_select", "Select suburb:",
           choices = CITY_SUBURBS,
