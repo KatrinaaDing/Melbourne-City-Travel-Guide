@@ -1,14 +1,17 @@
 import pandas as pd
 import numpy as np
 import geopandas as gpd
-
+from shapely.geometry import Point
 pedestrain_Data = pd.read_csv('Tableau/Transport/data/PedestrianData.csv')
 sensor_geoData = gpd.read_file(
     'Tableau/Transport/data/pedestrian-counting-system-sensor-locations.geojson')
+tramStop_data_cleaned = gpd.read_file(
+    'Tableau/Transport/data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV/PTV_METRO_TRAM_STOP.shp')
 tramStop_data = gpd.read_file(
     'Tableau/Transport/data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV/PTV_METRO_TRAM_STOP.shp')
+hotel_data = pd.read_csv('R/data/airbnb/hotels_with_suburb.csv')
 
-
+RADIUS = 500
 
 # clean the sensor dataset
 sensors_geoData_cleaned = sensor_geoData.drop(['installation_date', 'note','location_type',
@@ -16,13 +19,23 @@ sensors_geoData_cleaned = sensor_geoData.drop(['installation_date', 'note','loca
 
 # to find the nearest sensor of each tram station
 sensors_geoData_cleaned = sensors_geoData_cleaned.to_crs("EPSG:28355")
+tramStop_data_cleaned = tramStop_data_cleaned.to_crs("EPSG:28355")
 tramStop_data = tramStop_data.to_crs("EPSG:28355")
 
+# create geo point of hotel data
+# Convert hotel_data to a GeoDataFrame
+hotel_data['geometry'] = [Point(xy) for xy in zip(
+    hotel_data.Longitude, hotel_data.Latitude)]
+hotel_data['id'] = hotel_data['id'].astype(int)
+hotel_geo = gpd.GeoDataFrame(hotel_data, geometry='geometry', crs="EPSG:4326")
+hotel_geo['id'] = hotel_geo['id'].astype(int)
+hotel_geo = hotel_geo.to_crs("EPSG:28355")  
 
 # calculate the nearest sensor of each tramStop
-def find_nearest_sensor(tramStop_data, sensors_geoData_cleaned):
-    distances = sensors_geoData_cleaned.geometry.distance(tramStop_data.geometry)
-    limitedRange = distances[distances <= 500]
+def find_nearest_sensor(tramStop_data_cleaned, sensors_geoData_cleaned):
+    distances = sensors_geoData_cleaned.geometry.distance(tramStop_data_cleaned.geometry)
+    limitedRange = distances[distances <= RADIUS]
+    
     if limitedRange.empty:
         return None
     closest_sensor_index = limitedRange.idxmin()
@@ -30,11 +43,33 @@ def find_nearest_sensor(tramStop_data, sensors_geoData_cleaned):
     closest_sensor_id = sensors_geoData_cleaned.loc[closest_sensor_index, 'location_id']
     return closest_sensor_id
 
-# put the closest sensor location id into the data
-tramStop_data['location_id'] = None
-tramStop_data['location_id'] = tramStop_data.apply(find_nearest_sensor, args=(sensors_geoData_cleaned,), axis=1)
 
-tramStop_data_merged_SensorLocation = pd.merge(tramStop_data, sensors_geoData_cleaned, on="location_id", how='left')
+# calculate the nearest airbnb of each tramstop
+def find_nearest_airbnb(tramStop_data, hotel_data):
+    # calculate the distance to all sensors
+    distances = hotel_data.geometry.distance(
+        tramStop_data.geometry)
+    indices_within_radius = distances[distances <= RADIUS].index
+    airbnb_ids = list(set(hotel_data.loc[indices_within_radius, "id"].values))
+    if len(airbnb_ids) == 0:
+        return None 
+    # return limitedRange
+    # closest_stop_name = tramStop_data_cleaned.loc[tramStop_data_cleaned, 'location_id']
+    # return closest_sensor_id
+    return ','.join(f'"{x}"' for x in airbnb_ids)
+
+# put the closest sensor location id into the data
+tramStop_data_cleaned['location_id'] = None
+tramStop_data_cleaned['location_id'] = tramStop_data_cleaned.apply(find_nearest_sensor, args=(sensors_geoData_cleaned,), axis=1)
+
+# put the closest range of airbnb into the data
+tramStop_data['airbnb_ids'] = None
+tramStop_data['airbnb_ids'] = tramStop_data_cleaned.apply(find_nearest_airbnb, args=(hotel_geo,), axis=1)
+tramStop_data['near_airbnb_polygon'] = None
+tramStop_data['near_airbnb_polygon'] = tramStop_data.buffer(RADIUS)
+
+
+tramStop_data_merged_SensorLocation = pd.merge(tramStop_data_cleaned, sensors_geoData_cleaned, on="location_id", how='left')
 tramStop_data_merged_SensorLocation.rename(columns={'latitude': 'sensor_latitude', 
                                                     'longitude': 'sensor_longitude',
                                                     'geometry_y': 'sensor_geometry',
@@ -70,9 +105,10 @@ average_pedestrian_per_Hour_withLocation["sensor_geometry"].to_crs("EPSG:4326")
 
 
 # Output the dataset as csv file
-average_pedestrian_per_Hour_withLocation.to_csv(
-    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
+#average_pedestrian_per_Hour_withLocation.to_csv(
+#    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
 
 
 
-
+tramStop_data.to_csv(
+    'Tableau/Transport/data/tramStop_airbnb_Data.csv')

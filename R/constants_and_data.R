@@ -34,6 +34,8 @@ hotel_nearby_buffer <- st_make_valid(hotel_nearby_buffer)
 # Reproject hotel_nearby_buffer to match city_boundary's CRS
 hotel_nearby_buffer <- st_transform(hotel_nearby_buffer, st_crs(city_boundary))
 
+
+
 ### city boundary
 city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
 ###  melbourne suburb boundaries
@@ -70,6 +72,12 @@ suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 attractions <- read_csv("data/poi/poi-clean.csv")
 facilities <- read_csv("data/poi/facility-clean.csv")
 attr_faci_data <- bind_rows(attractions, facilities)
+
+##################
+# TRANSPORT DATA #
+##################
+
+tram_stops_nearby_airbnb <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
 
 #########
 # ICONS #

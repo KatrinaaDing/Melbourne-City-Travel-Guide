@@ -22,11 +22,10 @@ hotel_tab <- tabItem(
         }, 150); // The animation duration in milliseconds
       });
       $(document).on('mouseover', '#suburb_select .bootstrap-select .dropdown-menu.inner li', function(){
-        console.log('sdfsdf');
         Shiny.setInputValue('hovered_suburb_option', this.value);
       });
       $(document).on('click', '#viewNearbyTramStopButton', function(){
-        console.log('sdfdsf')
+        Shiny.setInputValue('view_nearby_stops_id', this.value);
       });
     ")),
   ),

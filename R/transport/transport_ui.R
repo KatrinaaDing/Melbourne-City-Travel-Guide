@@ -26,6 +26,12 @@ transport_tab <- tabItem(
                        url = "https://public.tableau.com/views/ThePedestrianCountbyHours/EachSensorBarChart?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
                        height=paste0(chart_box_height, "px"),
       )
+    ),
+    box(
+      id = 'near_Airbnb_Box',
+      width = 12,
+      status = 'primary',
+      uiOutput("near_Airbnb_show"),
     )
   )
 )
