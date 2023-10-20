@@ -77,7 +77,20 @@ attr_faci_data <- bind_rows(attractions, facilities)
 # TRANSPORT DATA #
 ##################
 
-tram_stops_nearby_airbnb <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+# tramstop and buffer data
+tram_stops_buffer <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+tram_stops_buffer$near_airbnb_polygon <- st_as_sfc(tram_stops_buffer$near_airbnb_polygon)
+tram_stops_buffer <- st_as_sf(tram_stops_buffer)
+tram_stops_buffer <- st_set_crs(tram_stops_buffer, 28355)
+tram_stops_buffer <- st_make_valid(tram_stops_buffer)
+
+# trams stop point data
+tram_stops_point$geometry <- st_as_sfc(tram_stops_point$geometry)
+tram_stops_point <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+tram_stops_point <- st_as_sf(tram_stops_point)
+tram_stops_point <- st_set_crs(tram_stops_point, 28355)
+tram_stops_point <- st_make_valid(tram_stops_point)
+
 
 #########
 # ICONS #

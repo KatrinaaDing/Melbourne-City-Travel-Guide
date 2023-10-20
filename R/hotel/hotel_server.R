@@ -135,25 +135,26 @@ hotelServer <- function(input, output, session) {
     runjs(create_filter_script(script_body))
   })
 
-    # update tableau on select number of bedrooms
-    observeEvent(input$num_bedrooms, {
-      if (input$num_bedrooms == "All") {
-        script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
-      } else {
-        script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
-      }
-      runjs(create_filter_script(script_body))
-    })
-    # Listen the button in transport
-    observeEvent(input$jump_to_Airbnb_Button, {
-                updateTabItems(session, "tabs", "airbnb")
-                print("Button clicked!")
-            })
-
+  # update tableau on select number of bedrooms
+  observeEvent(input$num_bedrooms, {
+    if (input$num_bedrooms == "All") {
+      script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
+    }
+    runjs(create_filter_script(script_body))
+  })
+  
   ############# reactive functions #############
 
   # the previous clicked marker's id
   last_clicked_marker <- reactiveVal(NULL)
+
+  # the previous shown stop buffer's id
+  last_shown_stop_buffer <- reactiveVal(NULL)
+
+  # indicate if the map is initialized
+  map_initialized <- reactiveVal(FALSE)
 
   # get the geometry shape of selected suburbs
   getSelectedHotelsSuburbs <- reactive({
@@ -249,6 +250,7 @@ hotelServer <- function(input, output, session) {
         ),
         position = "bottomright"
       )
+    map_initialized(TRUE)
     # render custom clustered icons
     # reference: https://stackoverflow.com/questions/33600021/leaflet-for-r-how-to-customize-the-coloring-of-clusters
     leaflet_map %>% onRender("
@@ -298,7 +300,11 @@ hotelServer <- function(input, output, session) {
       }
     ")
   })
-
+  # set a request value to indicate the map is initialized
+  # onRender(
+  #   output$hotel_map,
+  #   'function(el, x) { Shiny.setInputValue("map_initialized", true); }'
+  # )
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
   observeEvent(input$hotel_map_marker_click, {
@@ -378,12 +384,42 @@ hotelServer <- function(input, output, session) {
       hotel_data$name
     })
   })
-  # # close control box when clicking the button
-  # observe({
-  #   if (isTRUE(input$closeControl)) {
-  #     leafletProxy("hotel_map") %>% clearControls()
-  #   }
-  # })
+
+  # list tram stop buffer polygon from selected tram stop
+  observeEvent(input$stop_nearby_hotel_id, {
+    updateTabItems(session, "tabs", "airbnb")
+    # get the id value before '-'
+    stop_nearby_hotel_id <- strsplit(input$stop_nearby_hotel_id, "-")[[1]][1]
+    # get buffer polygon from dateset
+    stop_buffer_info <- tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_nearby_hotel_id, 1, ]
+    stop_point_info <- tram_stops_point[tram_stops_point$STOP_ID == stop_nearby_hotel_id, 1, ]
+
+    # trasform the polygon to sf object
+    stop_buffer <- st_transform(stop_buffer_info$near_airbnb_polygon, 4326)
+    stop_point <- st_transform(stop_point_info$geometry, 4326)
+    
+    leafletProxy("hotel_map") %>%
+      setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
+      # remove the previous shown stop buffer
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      # show the new stop buffer
+      addPolygons(
+        data = stop_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 2,
+        color = "#33b1ff",
+        fillOpacity = 0.3,
+        layerId = paste0("stop_buffer_", input$stop_nearby_hotel_id)
+      )
+
+    # store the last shown stop buffer
+    last_shown_stop_buffer(input$stop_nearby_hotel_id)
+
+  })
+
   ################### value boxes ##################
 
   # value box that render total number of hotels

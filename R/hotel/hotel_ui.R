@@ -27,6 +27,10 @@ hotel_tab <- tabItem(
       $(document).on('click', '#viewNearbyTramStopButton', function(){
         Shiny.setInputValue('view_nearby_stops_id', this.value);
       });
+      $(document).on('click', '#jump_to_Airbnb_Button', function(){
+        let random_id = this.value + '-' + Math.random();
+        Shiny.setInputValue('stop_nearby_hotel_id', random_id)
+      });
     ")),
   ),
   h4("Airbnb"),
