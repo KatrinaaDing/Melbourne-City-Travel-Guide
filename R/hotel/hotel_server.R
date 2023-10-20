@@ -8,6 +8,16 @@ nearby_stop_hint <- function(number) {
   }
 }
 
+nearby_poi_hint <- function(number) {
+  if (number == 0) {
+    "There is no point of interest nearby"
+  } else if (number == 1) {
+    "There is <strong>1</strong> point of interest nearby"
+  } else {
+    paste0("There are <strong>", number, "</strong> points of interest nearby")
+  }
+}
+
 script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
 
 single_select_filter_script <- function(filter_name, filter_value) {
@@ -34,11 +44,12 @@ create_filter_script <- function(script_body) {
 }
 
 hotelServer <- function(input, output, session) {
+  ################### observers ##################
   observeEvent(input$hovered_suburb_option, {
     # Your code here
     print(paste("Hovered over option: ", input$hovered_suburb_option))
   })
-  ################### Observers ##################
+
   # update hotel price range min and max value based on price class selection
   observeEvent(input$price_class_select, {
     selected_classes <- input$price_class_select
@@ -124,17 +135,24 @@ hotelServer <- function(input, output, session) {
     runjs(create_filter_script(script_body))
   })
 
-    # update tableau on select number of bedrooms
-    observeEvent(input$num_bedrooms, {
-      if (input$num_bedrooms == "All") {
-        script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
-      } else {
-        script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
-      }
-      runjs(create_filter_script(script_body))
-    })
-
+  # update tableau on select number of bedrooms
+  observeEvent(input$num_bedrooms, {
+    if (input$num_bedrooms == "All") {
+      script_body <- multi_select_filter_script("Number Of Bedrooms", sort(unique(hotels$number_of_bedrooms)))
+    } else {
+      script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
+    }
+    runjs(create_filter_script(script_body))
+  })
+  
   ############# reactive functions #############
+
+  # the previous clicked marker's id
+  last_clicked_marker <- reactiveVal(NULL)
+
+  # the previous shown stop buffer's id
+  last_shown_stop_buffer <- reactiveVal(NULL)
+
   # get the geometry shape of selected suburbs
   getSelectedHotelsSuburbs <- reactive({
     selected_suburbs <- suburb_boundaries[suburb_boundaries$SA2_NAME %in% input$suburb_select, ]
@@ -172,12 +190,13 @@ hotelServer <- function(input, output, session) {
     }
     return(filtered_hotels)
   })
+
   ################### outputs ##################
   # map
   output$hotel_map <- renderLeaflet({
     filtered_hotels <- getFilteredHotels()
     leaflet_map <- leaflet() %>%
-      addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+      addProviderTiles(ifelse(input$toggle_hotel_street_name, providers$CartoDB.PositronNoLabels, providers$CartoDB.Positron)) %>%
       addPolygons(
         data = city_boundary,
         fillColor = "transparent",
@@ -278,14 +297,15 @@ hotelServer <- function(input, output, session) {
     ")
   })
 
-
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
-  observe({
+  observeEvent(input$hotel_map_marker_click, {
     click <- input$hotel_map_marker_click
     if (is.null(click)) {
       return()
     }
+
+    # get filtered hotels
     filtered_hotels <- getFilteredHotels()
     # get marker hotel data
     hotel_data <- filtered_hotels[as.numeric(filtered_hotels$id) == as.numeric(click$id), ]
@@ -293,22 +313,28 @@ hotelServer <- function(input, output, session) {
     nearby_stops_string <- hotel_nearby_tram_stops[hotel_nearby_tram_stops$id == hotel_data$id, ]$nearby_stops
     nearby_stops <- strsplit(nearby_stops_string, ",")
     num_stops <- length(unlist(nearby_stops))
+    # get buffer
+    hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_data$id, ]
+    num_pois <- get_num_poi_in_polygon(hotel_buffer$geometry, attractions)
 
+    # remove previous added control box and buffer polygon
     leafletProxy("hotel_map") %>%
-      clearControls() %>%
+      # remove previous hotel detail control box
+      removeControl(
+        layerId = paste0("hotel_detail_", last_clicked_marker())
+      ) %>%
+      # remove previous buffer polygon
+      removeShape(
+        layerId = paste0("hotel_buffer_", last_clicked_marker())
+      )
+    # add new control box and buffer polygon
+    leafletProxy("hotel_map") %>%
       addControl(
-        # html = paste0(
-        #   "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
-        #   "<h5>", hotel_data$name, "</h5>",
-        #   "<button type='button' id='closeButton' class='btn btn-secondary' style='position: absolute; top: 5px; right: 5px;' >x</button>",
-        #   "<a href='https://www.airbnb.com.au/rooms/'", hotel_data$id, "'>View Listing</a>",
-        #   "</div>"
-        # ),
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
           "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
           # listing name, can navigate to Airbnb listing site
-          "<div style='font-size: 20px; padding-bottom: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+          "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
           hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
           # host name, can navigate to host site
           "Host:  <a href='https://www.airbnb.com.au/users/show/",
@@ -318,36 +344,114 @@ hotelServer <- function(input, output, session) {
           "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
           "Rating: <strong>", hotel_data$rating, "</strong><br>",
           "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
-          "<div style='position: absolute; right: 10px; bottom: 10px;'>",
-            nearby_stop_hint(num_stops),
-            ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+          "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
+            "<div style='padding-bottom: 5px;'>",
+              nearby_stop_hint(num_stops),
+              ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+            "</div>",
+            "<div>",
+              nearby_poi_hint(num_pois),
+              ifelse(num_pois > 0,"<button id='viewNearbyPoiButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+            "</div>",
           "</div>",
           "</div>"
         ),
-        position = "bottomleft"
+        position = "bottomleft",
+        layerId = paste0("hotel_detail_", hotel_data$id)
       ) %>%
-      # add legend
-      addControl(
-        html = paste0(
-          "<div style='padding: 5px; background-color: white;'>",
-          "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
-          "</div>"
-        ),
-        position = "bottomright"
+      addPolygons(
+        data = hotel_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 1,
+        color = "black",
+        fillOpacity = 0.2,
+        layerId = paste0("hotel_buffer_", hotel_data$id)
       )
+
+    # store the last clicked marker
+    last_clicked_marker(click$id)
+
     output$Click_text <- renderText({
       hotel_data$name
     })
   })
-  # # close control box when clicking the button
-  # observe({
-  #   if (isTRUE(input$closeControl)) {
-  #     leafletProxy("hotel_map") %>% clearControls()
-  #   }
-  # })
+
+  # list tram stop buffer polygon from selected tram stop
+  observeEvent(input$stop_nearby_hotel_id, {
+    leafletProxy("hotel_map") %>%
+      # remove the previous shown stop buffer
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
+    if (is.null(input$stop_nearby_hotel_id)) {
+      return()
+    }
+    updateTabItems(session, "tabs", "airbnb")
+    # get the id value before '-'
+    stop_nearby_hotel_id <- strsplit(input$stop_nearby_hotel_id, "-")[[1]][1]
+    # get buffer polygon from dateset
+    stop_buffer_info <- tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_nearby_hotel_id, 1, ]
+    stop_point_info <- tram_stops_point[tram_stops_point$STOP_ID == stop_nearby_hotel_id, 1, ]
+    tram_stop_info <- tram_stops[tram_stops$STOP_ID == stop_nearby_hotel_id, ]
+    # trasform the polygon to sf object
+    stop_buffer <- st_transform(stop_buffer_info$near_airbnb_polygon, 4326)
+    stop_point <- st_transform(stop_point_info$geometry, 4326)
+
+    leafletProxy("hotel_map") %>%
+      setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
+      # # remove the previous shown stop buffer
+      # removeShape(
+      #   layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      # ) %>%
+      # show the new stop buffer
+      addPolygons(
+        data = stop_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 2,
+        color = "#33b1ff",
+        fillOpacity = 0.3,
+        layerId = paste0("stop_buffer_", input$stop_nearby_hotel_id)
+      ) %>%
+      addMarkers(
+        data = stop_point,
+        icon = tram_icon,
+        label = tram_stop_info$STOP_NAME,
+        layerId = paste0("stop_point_", input$stop_nearby_hotel_id)
+      )
+    # store the last shown stop buffer
+    last_shown_stop_buffer(input$stop_nearby_hotel_id)
+
+  })
+
+  # toggle hiding street name on map
+  # use of proxy reference: https://rstudio.github.io/leaflet/shiny.html
+  observeEvent(input$toggle_hotel_street_name, {
+    if (input$toggle_hotel_street_name) {
+      leafletProxy("hotel_map") %>%
+        addProviderTiles(providers$CartoDB.PositronNoLabels)
+    } else {
+      leafletProxy("hotel_map") %>%
+        addProviderTiles(providers$CartoDB.Positron)
+    }
+  })
+
+  # onclick clear_hotel_radius button, clear the tram stop buffer and marker
+  observeEvent(input$clear_hotel_radius, {
+    leafletProxy("hotel_map") %>%
+      # remove the previous shown stop buffer
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
+  })
+
   ################### value boxes ##################
 
   # value box that render total number of hotels

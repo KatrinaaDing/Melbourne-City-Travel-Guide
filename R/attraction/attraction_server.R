@@ -1,13 +1,20 @@
+# calculate the number of poi in given polygon
+get_num_poi_in_polygon <- function(polygon, poi_table) {
+  poi_geo <- st_as_sf(poi_table, coords = c("longitude", "latitude"), crs = 4326)
+  poi_geo <- st_intersection(poi_geo, polygon)
+  return(nrow(poi_geo))
+}
+
 render_map <- function(filtered_data) {
   map <- leaflet() %>% 
-         addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
-         addPolygons(
-          data = city_boundary,
-          fillColor = "transparent",
-          weight = 2,
-          color = "#000000",
-          fillOpacity = 0.5)
-  
+        addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+        addPolygons(
+        data = city_boundary,
+        fillColor = "transparent",
+        weight = 2,
+        color = "#000000",
+        fillOpacity = 0.5)
+
   if(nrow(filtered_data) != 0) {
     map <- map %>%
       addMarkers(
@@ -20,6 +27,7 @@ render_map <- function(filtered_data) {
         popup = ~ apply(filtered_data, 1, get_popup_content)
       )
   }
+
   return(map)
 }
 
@@ -155,7 +163,7 @@ get_popup_content <- function(row_data) {
 
 attraction_script_head <- paste0('let viz = document.getElementById("attraction_ped_chart"); let sheet = viz.workbook.activeSheet; ')
 
-create_filter_attraction_script <- function(script_body) {
+filter_attraction_script <- function(script_body) {
   paste0(attraction_script_head, script_body)
 }
 
@@ -170,19 +178,26 @@ attractionServer <- function(input, output, session) {
     } else {
       attraction_id <- attraction_clicked$id
       attraction_location_id <- strtoi(strsplit(attraction_id, " ")[[1]][1])
-      script_body <- multi_select_filter_script("Location Id", attraction_location_id)
-      runjs(create_filter_attraction_script(script_body))
+      script_body <- multi_select_filter_script(
+        "Location Id", attraction_location_id
+      )
+      runjs(filter_attraction_script(script_body))
     }
   })
+
 
   ################### reactive ##################
   # filter dynamically load data
   attractions_data_map <- reactive({
-    attr_faci_data %>% filter(category %in% c(input$attraction_selected, input$facility_selected))
+    attr_faci_data %>%
+      filter(
+        category %in%
+          c(input$attraction_selected, input$facility_selected)
+      )
   })
 
   ################### outputs ##################
-  # Leaflet map 
+  # Leaflet map
   output$attraction_map <- renderLeaflet({
     render_map(attractions_data_map())
   })
