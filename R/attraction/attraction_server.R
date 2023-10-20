@@ -1,12 +1,19 @@
+# calculate the number of poi in given polygon
+get_num_poi_in_polygon <- function(polygon, poi_table) {
+  poi_geo <- st_as_sf(poi_table, coords = c("longitude", "latitude"), crs = 4326)
+  poi_geo <- st_intersection(poi_geo, polygon)
+  return(nrow(poi_geo))
+}
+
 render_map <- function(filtered_data) {
   map <- leaflet() %>% 
-         addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
-         addPolygons(
-          data = city_boundary,
-          fillColor = "transparent",
-          weight = 2,
-          color = "#000000",
-          fillOpacity = 0.5)
+        addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+        addPolygons(
+        data = city_boundary,
+        fillColor = "transparent",
+        weight = 2,
+        color = "#000000",
+        fillOpacity = 0.5)
   
   if(nrow(filtered_data) != 0) {
     map <- map %>%
@@ -19,6 +26,7 @@ render_map <- function(filtered_data) {
         popup = ~ apply(filtered_data, 1, get_popup_content)
       )
   }
+    
   return(map)
 }
 
@@ -153,7 +161,7 @@ get_popup_content <- function(row_data) {
 }
 
 attractionServer <- function(input, output, session) {
-
+  
   ################### reactive ##################
   # filter dynamically load data
   attractions_data_map <- reactive({

@@ -117,7 +117,6 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
-
   # servers
   hotelServer(input, output, session)
   restaurantServer(input, output, session)
