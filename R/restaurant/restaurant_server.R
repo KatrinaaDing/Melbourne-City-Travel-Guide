@@ -69,11 +69,11 @@ restaurantServer <- function(input, output, session) {
   })
   
   output$res_total_amount <- renderInfoBox({
-    infoBox("Number of Restaurants", reactive_res_sum_data()[1], width = 4, color = "yellow", fill = TRUE, icon = icon("hashtag"))
+    infoBox("Number of Restaurants", reactive_res_sum_data()[1], width = 4, color = "light-blue", fill = TRUE, icon = icon("hashtag"))
   })
   
   output$res_best_cuisine <- renderInfoBox({
-    infoBox("Most Popular Cuisine", reactive_res_sum_data()[3], width = 4, color = "purple", fill = TRUE, icon = icon("utensils"))  
+    infoBox("Most Popular Cuisine", reactive_res_sum_data()[3], width = 4, color = "yellow", fill = TRUE, icon = icon("utensils"))  
   })
   
   output$res_best_restaurant <- renderInfoBox({

@@ -40,7 +40,7 @@ intro_tab <- tabItem(
         h5("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
         p("For user to check the locations of places of interest such as museum, playground, toilet, etc."),
         h5("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
-        p("To visualize the transport routes of bus and tram."),
+        p("To visualize the tram routes."),
         )),
   # actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
@@ -48,6 +48,30 @@ intro_tab <- tabItem(
 data_source_tab <- tabItem(
   tabName = "data_source",
   h4("Data Source"),
+  box(width = 12, height = '700px',
+      h5("Restaurant"),
+      p("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
+      p("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
+      h5("Airbnb"),
+      p("Melbourne Airbnb listings ", a("http://insideairbnb.com/get-the-data/")),
+      h5("Attraction"),
+      p("Artworks ", a("https://data.melbourne.vic.gov.au/explore/dataset/outdoor-artworks/information/")),
+      p("Places of Interest ", a("https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/information/")),
+      p("Fountain, Art, Monument ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-artworks-fountains-and-monuments/information/")),
+      p("Memorials and Sculptures ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-memorials-and-sculptures/information/")),
+      p("Plaques ", a("https://data.melbourne.vic.gov.au/explore/dataset/plaques-located-at-the-shrine-of-remembrance/information/")),
+      p("Music Venues ", a("https://data.melbourne.vic.gov.au/explore/dataset/live-music-venues/information/")),
+      p("Drinking fountains  ", a("https://data.melbourne.vic.gov.au/explore/dataset/drinking-fountains/information/")),
+      p("Public toilets ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-toilets/information/")),
+      p("Playgrounds ", a("https://data.melbourne.vic.gov.au/explore/dataset/playgrounds/information/")),
+      h5("Transport"),
+      p("Pedestrian Counting System per Hour", a("https://www.pedestrian.melbourne.vic.gov.au/#date=20-10-2023&time=14")),
+      p("Pedestrian Counting System Sensor Location", a("https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/information/")),
+      p("Tram Stop", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-stops")),
+      p("Tram Route", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-routes
+")),
+      
+  )
 )
 
 # create a shiny dashboard
