@@ -20,6 +20,9 @@ FACILITY_CHOICE_VALUES <- c("playgrounds", "toilets", "drinking_fountains")
 # HOTEL DATA #
 ##############
 
+### city boundary
+city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
+
 ### Hotels (Airbnb) - Import data
 # hotels <- read.csv("data/airbnb/listings-clean.csv")
 hotels <- read.csv("data/airbnb/hotels_with_suburb.csv")
@@ -34,10 +37,6 @@ hotel_nearby_buffer <- st_make_valid(hotel_nearby_buffer)
 # Reproject hotel_nearby_buffer to match city_boundary's CRS
 hotel_nearby_buffer <- st_transform(hotel_nearby_buffer, st_crs(city_boundary))
 
-
-
-### city boundary
-city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
 ###  melbourne suburb boundaries
 # reference: https://rdrr.io/cran/geojsonsf/man/geo_melbourne.html
 melbourne_surburbs_data <- geo_melbourne
@@ -79,6 +78,7 @@ attr_faci_data <- bind_rows(attractions, facilities)
 
 # tramstop data
 tram_stops <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+tram_stops_nearby_airbnb <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
 
 # tramstop buffer data
 tram_stops_buffer <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
