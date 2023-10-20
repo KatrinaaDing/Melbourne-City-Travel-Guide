@@ -57,9 +57,11 @@ suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 ####################
 
 # Attractions - Import Data
-attractions <- read_csv("data/poi/poi-clean.csv")
-facilities <- read_csv("data/poi/facility-clean.csv")
-attr_faci_data <- bind_rows(attractions, facilities)
+# attractions <- read_csv("data/poi/poi-clean.csv")
+# facilities <- read_csv("data/poi/facility-clean.csv")
+# attr_faci_data <- bind_rows(attractions, facilities)
+
+attr_faci_data <- read_csv("data/poi/poi-faci-clean.csv")
 
 #########
 # ICONS #
