@@ -15,6 +15,23 @@ transportServer <- function(input, output, session) {
     observeEvent(input$tramStop_Pedestrian_Map_mark_selection_changed, {
         print(input$tramStop_Pedestrian_Map_mark_selection_changed)
         sensor_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
+        stop_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"
+        if(length(stop_Name) == 1) {
+            this_nearby_airbnb <- tram_stops_nearby_airbnb[tram_stops_nearby_airbnb$"STOP_NAME" == stop_Name, ]
+            print(this_nearby_airbnb)
+
+            output$near_Airbnb_show <- renderUI({
+                list(
+                    # Show the descriptive text
+                    HTML(paste0("There are ", length(this_nearby_airbnb), " Airbnb near this tram stop.")),
+                    
+                    # Add a button
+                    actionButton(inputId = "jump_to_Airbnb_Button", label = "Click me!")
+                )
+            })
+
+            
+        }
         script_body <- multi_select_filter_script("Sensor Name", sensor_Name)
         runjs(create_filter_transport_script(script_body))
     })

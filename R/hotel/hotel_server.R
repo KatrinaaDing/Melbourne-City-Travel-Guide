@@ -133,6 +133,11 @@ hotelServer <- function(input, output, session) {
       }
       runjs(create_filter_script(script_body))
     })
+    # Listen the button in transport
+    observeEvent(input$jump_to_Airbnb_Button, {
+                updateTabItems(session, "tabs", "airbnb")
+                print("Button clicked!")
+            })
 
   ############# reactive functions #############
   # get the geometry shape of selected suburbs

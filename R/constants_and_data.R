@@ -24,6 +24,7 @@ FACILITY_CHOICE_VALUES <- c("playgrounds", "toilets", "drinking_fountains")
 # hotels <- read.csv("data/airbnb/listings-clean.csv")
 hotels <- read.csv("data/airbnb/hotels_with_suburb.csv")
 hotel_nearby_tram_stops <- read.csv("data/airbnb/hotels_nearby_stops.csv")
+tram_stops_nearby_airbnb <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
 ### city boundary
 city_boundary <- st_read("data/geographic/municipal-boundary.geojson")
 ###  melbourne suburb boundaries
