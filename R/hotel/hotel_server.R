@@ -153,9 +153,6 @@ hotelServer <- function(input, output, session) {
   # the previous shown stop buffer's id
   last_shown_stop_buffer <- reactiveVal(NULL)
 
-  # indicate if the map is initialized
-  map_initialized <- reactiveVal(FALSE)
-
   # get the geometry shape of selected suburbs
   getSelectedHotelsSuburbs <- reactive({
     selected_suburbs <- suburb_boundaries[suburb_boundaries$SA2_NAME %in% input$suburb_select, ]
@@ -300,11 +297,7 @@ hotelServer <- function(input, output, session) {
       }
     ")
   })
-  # set a request value to indicate the map is initialized
-  # onRender(
-  #   output$hotel_map,
-  #   'function(el, x) { Shiny.setInputValue("map_initialized", true); }'
-  # )
+
   # leaflet map marker click event observer
   # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
   observeEvent(input$hotel_map_marker_click, {
@@ -387,22 +380,28 @@ hotelServer <- function(input, output, session) {
 
   # list tram stop buffer polygon from selected tram stop
   observeEvent(input$stop_nearby_hotel_id, {
+    if (is.null(input$stop_nearby_hotel_id)) {
+      return()
+    }
     updateTabItems(session, "tabs", "airbnb")
     # get the id value before '-'
     stop_nearby_hotel_id <- strsplit(input$stop_nearby_hotel_id, "-")[[1]][1]
     # get buffer polygon from dateset
     stop_buffer_info <- tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_nearby_hotel_id, 1, ]
     stop_point_info <- tram_stops_point[tram_stops_point$STOP_ID == stop_nearby_hotel_id, 1, ]
-
+    tram_stop_info <- tram_stops[tram_stops$STOP_ID == stop_nearby_hotel_id, ]
     # trasform the polygon to sf object
     stop_buffer <- st_transform(stop_buffer_info$near_airbnb_polygon, 4326)
     stop_point <- st_transform(stop_point_info$geometry, 4326)
-    
+
     leafletProxy("hotel_map") %>%
       setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
       # remove the previous shown stop buffer
       removeShape(
         layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
       ) %>%
       # show the new stop buffer
       addPolygons(
@@ -413,8 +412,13 @@ hotelServer <- function(input, output, session) {
         color = "#33b1ff",
         fillOpacity = 0.3,
         layerId = paste0("stop_buffer_", input$stop_nearby_hotel_id)
+      ) %>%
+      addMarkers(
+        data = stop_point,
+        icon = tram_icon,
+        label = tram_stop_info$STOP_NAME,
+        layerId = paste0("stop_point_", input$stop_nearby_hotel_id)
       )
-
     # store the last shown stop buffer
     last_shown_stop_buffer(input$stop_nearby_hotel_id)
 

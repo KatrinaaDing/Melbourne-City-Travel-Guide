@@ -77,7 +77,10 @@ attr_faci_data <- bind_rows(attractions, facilities)
 # TRANSPORT DATA #
 ##################
 
-# tramstop and buffer data
+# tramstop data
+tram_stops <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+
+# tramstop buffer data
 tram_stops_buffer <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
 tram_stops_buffer$near_airbnb_polygon <- st_as_sfc(tram_stops_buffer$near_airbnb_polygon)
 tram_stops_buffer <- st_as_sf(tram_stops_buffer)
@@ -85,8 +88,8 @@ tram_stops_buffer <- st_set_crs(tram_stops_buffer, 28355)
 tram_stops_buffer <- st_make_valid(tram_stops_buffer)
 
 # trams stop point data
-tram_stops_point$geometry <- st_as_sfc(tram_stops_point$geometry)
 tram_stops_point <- read.csv("../Tableau/Transport/data/tramStop_airbnb_Data.csv")
+tram_stops_point$geometry <- st_as_sfc(tram_stops_point$geometry)
 tram_stops_point <- st_as_sf(tram_stops_point)
 tram_stops_point <- st_set_crs(tram_stops_point, 28355)
 tram_stops_point <- st_make_valid(tram_stops_point)
@@ -103,6 +106,8 @@ dollar_icons <- iconList(
   medium = makeIcon("www/icons/medium-price.svg", "www/icons/medium-price.svg", ICON_SIZE, ICON_SIZE),
   expensive = makeIcon("www/icons/expensive.svg", "www/icons/expensive.svg", ICON_SIZE, ICON_SIZE)
 )
+
+tram_icon <- makeIcon("www/icons/train-tram-solid.svg", "www/icons/train-tram-solid.svg", ICON_SIZE + 30, ICON_SIZE + 30)
 
 # attraction icons
 attraction_icons <- iconList(

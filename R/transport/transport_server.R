@@ -13,7 +13,6 @@ create_select_markers_script <- function(script_body) {
 
 transportServer <- function(input, output, session) {
   observeEvent(input$tramStop_Pedestrian_Map_mark_selection_changed, {
-    print(input$tramStop_Pedestrian_Map_mark_selection_changed)
     sensor_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
     stop_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"
     if (length(stop_Name) == 1) {
