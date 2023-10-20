@@ -22,11 +22,14 @@ hotel_tab <- tabItem(
         }, 150); // The animation duration in milliseconds
       });
       $(document).on('mouseover', '#suburb_select .bootstrap-select .dropdown-menu.inner li', function(){
-        console.log('sdfsdf');
         Shiny.setInputValue('hovered_suburb_option', this.value);
       });
       $(document).on('click', '#viewNearbyTramStopButton', function(){
-        console.log('sdfdsf')
+        Shiny.setInputValue('view_nearby_stops_id', this.value);
+      });
+      $(document).on('click', '#jump_to_Airbnb_Button', function(){
+        let random_id = this.value + '-' + Math.random();
+        Shiny.setInputValue('stop_nearby_hotel_id', random_id)
       });
     ")),
   ),
@@ -69,7 +72,8 @@ hotel_tab <- tabItem(
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
-        collapsible = TRUE,
+        actionButton("clear_hotel_radius", "Clear Circle Bounds", class = "btn btn-danger"),
+        checkboxInput("toggle_hotel_street_name", "Hide Street Name", value = FALSE),
         pickerInput(
           "suburb_select", "Select suburb:",
           choices = CITY_SUBURBS,
