@@ -32,7 +32,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='municipal-boundary' name='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez'>
-            <connection class='ogrdirect' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
+            <connection class='ogrdirect' directory='Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
           </named-connection>
         </named-connections>
         <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='ogrdirect.10sls3q1268p7f13z7tdf0vpbkez' name='municipal-boundary.geojson' table='[municipal-boundary.geojson]' type='table'>
@@ -387,13 +387,13 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='PTV_METRO_TRAM_ROUTE' name='ogrdirect.04lmo8k05g46z217ctwa01nkzgcl'>
-            <connection class='ogrdirect' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/Tableau/Transport/data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV' filename='PTV_METRO_TRAM_ROUTE.shp' password='' server='' tablename='' workgroup-auth-mode='as-is' />
+            <connection class='ogrdirect' directory='Data/Tableau/Transport/data/mga2020_55/esrishape/customised_delivery/MELB_METRO_VAR1-0/PTV' filename='PTV_METRO_TRAM_ROUTE.shp' password='' server='' tablename='' workgroup-auth-mode='as-is' />
           </named-connection>
           <named-connection caption='municipal-boundary' name='ogrdirect.0p3cpjs1a4k28o18btddx0dixdhk'>
-            <connection class='ogrdirect' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
+            <connection class='ogrdirect' directory='Data/geographic' filename='municipal-boundary.geojson' password='' server='' tablename='' workgroup-auth-mode='as-is' />
           </named-connection>
           <named-connection caption='average_pedestrian_per_Hour_WithLocation' name='textscan.0mosnof1m2yywd182tb6a1kjy9qa'>
-            <connection class='textscan' directory='/var/folders/cw/44r063551qg75l_hxs4hcqgr0000gn/T/tableau-temp/3273567380/Data/Tableau/Transport/data' filename='average_pedestrian_per_Hour_WithLocation.csv' password='' server='' workgroup-auth-mode='as-is' />
+            <connection class='textscan' directory='Data/Tableau/Transport/data' filename='average_pedestrian_per_Hour_WithLocation.csv' password='' server='' workgroup-auth-mode='as-is' />
           </named-connection>
         </named-connections>
         <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='ogrdirect.04lmo8k05g46z217ctwa01nkzgcl' name='PTV_METRO_TRAM_ROUTE.shp' table='[PTV_METRO_TRAM_ROUTE.shp]' type='table'>
@@ -870,6 +870,7 @@
       <column aggregation='Avg' datatype='real' name='[sensor_latitude]' role='measure' semantic-role='[Geographical].[Latitude]' type='quantitative' />
       <column aggregation='Avg' datatype='real' name='[sensor_longitude]' role='measure' semantic-role='[Geographical].[Longitude]' type='quantitative' />
       <column-instance column='[Value]' derivation='Avg' name='[avg:Value:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[ROUTESHTNM]' derivation='None' name='[none:ROUTESHTNM:nk]' pivot='key' type='nominal' />
       <column-instance column='[STOP_NAME]' derivation='None' name='[none:STOP_NAME:nk]' pivot='key' type='nominal' />
       <column-instance column='[Sensor Name]' derivation='None' name='[none:Sensor Name:nk]' pivot='key' type='nominal' />
       <column-instance column='[Hour]' derivation='Sum' name='[sum:Hour:qk]' pivot='key' type='quantitative' />
@@ -902,7 +903,7 @@
           <groupfilter function='level-members' level='[Sensor Name]' />
         </groupfilter>
       </group>
-      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' units='records'>
+      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='false' units='records'>
         <connection access_mode='readonly' authentication='auth-none' author-locale='en_GB' class='hyper' dbname='Data/Tram_Route_And_Stop_Map.twb Files/PTV_METRO_TRAM_ROUTE.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='' username='tableau_internal_user'>
           <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F' table='[Extract].[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]' type='table' />
           <_.fcp.ObjectModelEncapsulateLegacy.true...relation type='collection'>
@@ -1617,6 +1618,80 @@
               <bucket>&quot;11-City Square/Swanston St (Melbourne City)&quot;</bucket>
             </map>
           </encoding>
+          <encoding attr='color' field='[none:ROUTESHTNM:nk]' type='palette'>
+            <map to='#499894'>
+              <bucket>&quot;30&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;1&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;82&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;11&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;58&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;35&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;12&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;75&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;3/3a&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;86&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;70&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;16&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;59&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;64&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;72&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;78&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;48&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;19&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;5&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;96&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;67&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;57&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;109&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;6&quot;</bucket>
+            </map>
+          </encoding>
         </style-rule>
       </style>
       <semantic-values>
@@ -1887,8 +1962,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16139396.327750595' min='16132655.669439595' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4549452.673738094' min='-4554378.7490604967' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16143766.672787454' min='16132910.775099717' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4548308.7617472066' min='-4556242.2553667882' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='table'>
             <format attr='omit-on-special' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' value='false' />
@@ -2016,6 +2091,11 @@
           </strip>
           <strip size='2147483647'>
             <card type='rows' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card param='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[none:Sensor Name:nk]' type='filter' />
           </strip>
         </edge>
       </cards>

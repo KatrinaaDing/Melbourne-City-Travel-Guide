@@ -294,6 +294,7 @@ hotelServer <- function(input, output, session) {
     nearby_stops <- strsplit(nearby_stops_string, ",")
     num_stops <- length(unlist(nearby_stops))
 
+    print(nearby_stops)
     leafletProxy("hotel_map") %>%
       clearControls() %>%
       addControl(
@@ -320,7 +321,7 @@ hotelServer <- function(input, output, session) {
           "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
           "<div style='position: absolute; right: 10px; bottom: 10px;'>",
             nearby_stop_hint(num_stops),
-            ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+            ifelse(num_stops > 0, paste0("<button id='viewNearbyTramStopButton' value='", hotel_data$id,"' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>"), ""),
           "</div>",
           "</div>"
         ),
