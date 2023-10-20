@@ -40,7 +40,7 @@ intro_tab <- tabItem(
         h5("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
         p("For user to check the locations of places of interest such as museum, playground, toilet, etc."),
         h5("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
-        p("To visualize the transport routes of bus and tram."),
+        p("To visualize the tram routes."),
         )),
   # actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
