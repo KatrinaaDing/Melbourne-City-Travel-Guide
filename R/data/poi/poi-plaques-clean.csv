@@ -1,4 +1,4 @@
-tree common name,tree scientific name,planted date,latitude,longitude,title,category
+tree_common_name,tree_scientific_name,date_of_tree_planted,latitude,longitude,title,category
 Lemon Scented Gum,Corymbia citriodora,2010-08-27,-37.829281417041294,144.97392578211125,6th field ambulance,plaques
 Manchurian Pear,Pyrus ussuriensis,2011-09-06,-37.82846660030073,144.9728488289509,4th division signal company,plaques
 Golden Poplar,Populus x canadensis,1998-02-09,-37.83249707841591,144.97462749069217,hmas castlemaine,plaques

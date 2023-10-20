@@ -14,6 +14,7 @@ CITY_SUBURBS <- c(
 POI_CHOICE_NAMES <- c("Artworks", "Music Venues", "Plaques", "Memorials", "Landmarks")
 POI_CHOICE_VALUES <- c("artworks", "music_venues", "plaques", "memorials", "landmarks")
 FACILITY_CHOICE_NAMES <- c("Playgrounds", "Toilets", "Drinking Fountains")
+FACILITY_CHOICE_VALUES <- c("playgrounds", "toilets", "drinking_fountains")
 
 ##############
 # HOTEL DATA #
@@ -56,14 +57,9 @@ suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 ####################
 
 # Attractions - Import Data
-attraction_landmarks <- read_csv("data/poi/poi-landmarks-clean.csv")
-attraction_artworks <- read_csv("data/poi/poi-artworks-clean.csv")
-attraction_memorials <- read_csv("data/poi/poi-memorials-and-sculptures-clean.csv")
-attraction_music <- read_csv("data/poi/poi-music-venues-clean.csv")
-attraction_plaques <- read_csv("data/poi/poi-plaques-clean.csv")
-
 attractions <- read_csv("data/poi/poi-clean.csv")
-
+facilities <- read_csv("data/poi/facility-clean.csv")
+attr_faci_data <- bind_rows(attractions, facilities)
 
 #########
 # ICONS #
@@ -84,7 +80,8 @@ attraction_icons <- iconList(
   plaques = makeIcon("www/icons/plaque.svg", "www/icons/plaque.svg", ICON_SIZE, ICON_SIZE),
   memorials = makeIcon("www/icons/memorial.svg", "www/icons/memorial.svg", ICON_SIZE, ICON_SIZE),
   landmarks =  makeIcon("www/icons/landmark.svg", "www/icons/landmark.svg", ICON_SIZE, ICON_SIZE),
-  drink_fountains = makeIcon("www/icons/drink.svg", "www/icons/drink.svg", ICON_SIZE, ICON_SIZE),
+  drinking_fountains = makeIcon("www/icons/drink.svg", "www/icons/drink.svg", ICON_SIZE, ICON_SIZE),
   playgrounds = makeIcon("www/icons/playground.svg", "www/icons/playground.svg", ICON_SIZE, ICON_SIZE),
   toilets = makeIcon("www/icons/toilet.svg", "www/icons/toilet.svg", ICON_SIZE, ICON_SIZE)
 )
+
