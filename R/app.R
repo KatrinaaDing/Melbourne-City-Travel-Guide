@@ -48,6 +48,21 @@ intro_tab <- tabItem(
 data_source_tab <- tabItem(
   tabName = "data_source",
   h4("Data Source"),
+  box(width = 12, height = '550px',
+      h5("Restaurant"),
+      p("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
+      p("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
+      h5("Airbnb"),
+      p("Melbourne Airbnb listings ", a("http://insideairbnb.com/get-the-data/")),
+      h5("Attraction"),
+      h5("Transport"),
+      p("Pedestrian Counting System per Hour", a("https://www.pedestrian.melbourne.vic.gov.au/#date=20-10-2023&time=14")),
+      p("Pedestrian Counting System Sensor Location", a("https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/information/")),
+      p("Tram Stop", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-stops")),
+      p("Tram Route", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-routes
+")),
+      
+  )
 )
 
 # create a shiny dashboard
