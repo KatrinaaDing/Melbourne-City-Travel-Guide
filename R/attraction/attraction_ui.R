@@ -32,7 +32,7 @@ attraction_tab <- tabItem(
           choiceValues = FACILITY_CHOICE_VALUES,
           selected = FACILITY_CHOICE_VALUES,
         ),
-        style = "height: calc(100vh - 440px); overflow-y: scroll;",
+        style = "height: calc(100vh - 420px); overflow-y: scroll;",
       ),
       box(
         width = 3,
@@ -40,11 +40,11 @@ attraction_tab <- tabItem(
         status = "primary",
         solidHeader = TRUE,
         collapsible = TRUE,
-        style = "height: 300px",
+        style = "height: 270px",
         tableauPublicViz(
-          id = res_cuisine_chart_id,
-          url = "",
-          height = paste0(280, "px")
+          id = "attraction_ped_chart",
+          url = "https://public.tableau.com/views/attraction_ped_count/FacilitiesPedestrainCount?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+          height = paste0(250, "px")
         )
       )
     )
