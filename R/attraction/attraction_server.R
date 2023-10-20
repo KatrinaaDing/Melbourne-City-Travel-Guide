@@ -14,7 +14,7 @@ render_map <- function(filtered_data) {
         weight = 2,
         color = "#000000",
         fillOpacity = 0.5)
-  
+
   if(nrow(filtered_data) != 0) {
     map <- map %>%
       addMarkers(
@@ -26,7 +26,7 @@ render_map <- function(filtered_data) {
         popup = ~ apply(filtered_data, 1, get_popup_content)
       )
   }
-    
+
   return(map)
 }
 

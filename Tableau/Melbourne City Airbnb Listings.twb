@@ -19,7 +19,7 @@
     <VizInTooltipHideWorksheet />
     <WindowsPersistSimpleIdentifiers />
   </document-format-change-manifest>
-  <repository-location id='MelbourneCityAirbnbListings' path='/workbooks' revision='4.1' />
+  <repository-location id='MelbourneCityAirbnbListings' path='/workbooks' revision='4.2' />
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
     <preference name='ui.shelf.height' value='26' />
@@ -768,17 +768,6 @@
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' rowDisplayCount='100' show-structure='true' />
       <style>
         <style-rule element='mark'>
-          <encoding attr='color' field='[none:price_class:nk]' type='palette'>
-            <map to='#59a14f'>
-              <bucket>&quot;cheap&quot;</bucket>
-            </map>
-            <map to='#e15759'>
-              <bucket>&quot;expensive&quot;</bucket>
-            </map>
-            <map to='#edc948'>
-              <bucket>&quot;medium&quot;</bucket>
-            </map>
-          </encoding>
           <encoding attr='color' field='[none:room_type:nk]' palette='color_blind_10_0' type='palette'>
             <map to='#1170aa'>
               <bucket>&quot;Entire home/apt&quot;</bucket>
@@ -791,6 +780,17 @@
             </map>
             <map to='#fc7d0b'>
               <bucket>&quot;Hotel room&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[none:price_class:nk]' type='palette'>
+            <map to='#59a14f'>
+              <bucket>&quot;cheap&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;expensive&quot;</bucket>
+            </map>
+            <map to='#edc948'>
+              <bucket>&quot;medium&quot;</bucket>
             </map>
           </encoding>
         </style-rule>
@@ -1405,8 +1405,8 @@ Avg. $<[federated.14aji0k0zpqwpb190tq2p1280ca8].[avg:price:qk]>/night
         <devicelayout auto-generated='true' name='Phone'>
           <size maxheight='700' minheight='700' sizing-mode='vscroll' />
           <zones>
-            <zone h='100000' id='78' type-v2='layout-basic' w='100000' x='0' y='0'>
-              <zone h='97814' id='77' param='vert' type-v2='layout-flow' w='98438' x='781' y='1093'>
+            <zone h='100000' id='86' type-v2='layout-basic' w='100000' x='0' y='0'>
+              <zone h='97814' id='85' param='vert' type-v2='layout-flow' w='98438' x='781' y='1093'>
                 <zone fixed-size='280' h='57377' id='26' is-fixed='true' name='Average Price In Each Suburb' w='98438' x='781' y='1093'>
                   <zone-style>
                     <format attr='border-color' value='#000000' />
