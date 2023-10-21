@@ -5,15 +5,13 @@ attraction_tab <- tabItem(
   h4("Attraction"),
   fluidRow(
     box(
-      width = 9,
+      width = 8,
       title = "Distribution of Attractions and Facilities",
-      height = box_height,
-      leafletOutput("attraction_map", height = box_height - 85)
+      leafletOutput("attraction_map", height = "calc(100vh - 220px)")
     ),
-
     fluidRow(
       box(
-        width = 3,
+        width = 4,
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,
@@ -32,10 +30,15 @@ attraction_tab <- tabItem(
           choiceValues = FACILITY_CHOICE_VALUES,
           selected = FACILITY_CHOICE_VALUES,
         ),
-        style = "height: calc(100vh - 420px); overflow-y: scroll;",
+        style =
+          "
+            height: calc(100vh - 540px);
+            max-height: 320px;
+            overflow-y: scroll;
+          ",
       ),
       box(
-        width = 3,
+        width = 4,
         title = "Pedestrian Count",
         status = "primary",
         solidHeader = TRUE,
