@@ -326,9 +326,8 @@ hotelServer <- function(input, output, session) {
       # remove previous buffer polygon
       removeShape(
         layerId = paste0("hotel_buffer_", last_clicked_marker())
-      )
+      )  %>%
     # add new control box and buffer polygon
-    leafletProxy("hotel_map") %>%
       addControl(
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
