@@ -21,6 +21,11 @@ create_select_markers_script <- function(script_body) {
 }
 
 transportServer <- function(input, output, session) {
+  # go to transport page on click "view nearby stops" button
+  observeEvent(input$view_nearby_stops_id, {
+    updateTabItems(session, "tabs", "transport")
+  })
+
   observeEvent(input$tramStop_Pedestrian_Map_mark_selection_changed, {
     sensor_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
     stop_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"

@@ -299,6 +299,9 @@ hotelServer <- function(input, output, session) {
     # get nearby tram stops
     nearby_stops_string <- hotel_nearby_tram_stops[hotel_nearby_tram_stops$id == hotel_data$id, ]$nearby_stops
     nearby_stops <- strsplit(nearby_stops_string, ",")
+    # remove the double quote
+    nearby_stops_cleaned <- lapply(nearby_stops, function(stop) gsub("\"", "", stop))
+    # get number of stops
     num_stops <- length(unlist(nearby_stops))
     # get buffer
     hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_data$id, ]
@@ -314,39 +317,61 @@ hotelServer <- function(input, output, session) {
       addControl(
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
-          "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
-          # listing name, can navigate to Airbnb listing site
-          "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
-          hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
-          # host name, can navigate to host site
-          "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
-          "Price: <strong>$", hotel_data$price, "/night</strong><br>",
-          "Price class: <strong>", hotel_data$price_class, "</strong><br>",
-          "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
-          "Rating: <strong>", hotel_data$rating, "</strong><br>",
-          "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
-          "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
-            # nearby tram stop
-            "<div style='padding-bottom: 5px;'>",
-              nearby_stop_hint(num_stops),
-              ifelse(
-                num_stops > 0,
-                paste0("<button id='viewNearbyTramStopButton' value='",
-                  hotel_data$id,
-                  "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>"
-                ), 
-                ""
-              ),
+            "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
+            # listing name, can navigate to Airbnb listing site
+            "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+            hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
+            # host name, can navigate to host site
+            "Host:  <a href='https://www.airbnb.com.au/users/show/",
+            hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
+            "Price: <strong>$", hotel_data$price, "/night</strong><br>",
+            "Price class: <strong>", hotel_data$price_class, "</strong><br>",
+            "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
+            "Rating: <strong>", hotel_data$rating, "</strong><br>",
+            "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
+            "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
+              # nearby poi
+              "<div style='padding-bottom: 5px;'>",
+                nearby_poi_hint(num_pois),
+                "<button id='viewNearbyPoiButton' value='",
+                hotel_data$id,
+                "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>",
+              "</div>",
+              # nearby tram stop
+              "<div>",
+                nearby_stop_hint(num_stops),
+                ifelse(
+                  num_stops > 0,
+                  paste0(
+                    "<button type='button' class='btn-xs btn-primary' data-toggle='modal' data-target='#hotelDetailModal' data-backdrop='false' style='margin-left: 10px;'>",
+                    "  View",
+                    "</button>"
+                  ), 
+                  ""
+                ),
+              "</div>",
+              # dialogue 
+              "<div class='modal fade' id='hotelDetailModal' tabindex='-1' role='dialog' aria-labelledby='hotelModalLabel' aria-hidden='true'>",
+              "  <div class='modal-dialog' role='document' style='position: absolute; top: 10%; left: 30%; text-align: left;'>",
+              "    <div class='modal-content'>",
+              "      <div class='modal-header'>",
+              "        <h5 class='modal-title' id='hotelModalLabel' > Nearby Tram Stops for ", hotel_data$name,"</h5>",
+              "      </div>",
+              "      <div class='modal-body' style='font-size: 12pt;'>",
+              "        <ol><li>",
+                      paste(unlist(nearby_stops_cleaned), collapse = "</li><li>"),
+              "        </li></ol>",
+              "      </div>",
+              "      <div class='modal-footer'>",
+              "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>",
+              "        <button type='button' id='viewNearbyTramStopButton' class='btn btn-primary' value='",
+                          hotel_data$id,
+              "         '>Go to Transport</button>",
+              "      </div>",
+              "    </div>",
+              "  </div>",
+              "</div>",
             "</div>",
-            # nearby poi
-            "<div>",
-              nearby_poi_hint(num_pois),
-              "<button id='viewNearbyPoiButton' value='",
-              hotel_data$id,
-              "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>",
-            "</div>",
-          "</div>",
           "</div>"
         ),
         position = "bottomleft",

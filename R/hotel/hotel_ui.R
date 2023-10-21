@@ -12,6 +12,9 @@ hotel_tab <- tabItem(
       #shiny-tab-airbnb .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
       }
+      #shiny-tab-airbnb .modal-body li {
+        padding-bottom: 5px;
+      }
     ")),
     tags$script(HTML("
       $(document).on('click', '#closeButton', function(){
