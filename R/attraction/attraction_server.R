@@ -5,7 +5,7 @@ get_num_poi_in_polygon <- function(polygon, poi_table) {
   return(nrow(poi_geo))
 }
 
-render_map <- function(filtered_data) {
+render_map <- function(filtered_data, filtered_walk_data) {
   map <- leaflet() %>% 
         addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
         addPolygons(
@@ -27,6 +27,27 @@ render_map <- function(filtered_data) {
         popup = ~ apply(filtered_data, 1, get_popup_content)
       )
   }
+
+  if(nrow(filtered_walk_data) != 0) {
+    palette <- colorNumeric("viridis", NULL)
+    map <- map %>%
+      addPolylines(
+        data = filtered_walk_data,
+        color = ~ palette(distance),
+        popup = ~ paste0(
+          "<b> Walk Name: </b>",
+          filtered_walk_data$name,
+          "<br>",
+          "<b> Distance: </b>",
+          filtered_walk_data$distance,
+          " km",
+          "<br>",
+          "<b> Estimated Time Spent: </b>",
+          filtered_walk_data$time
+        )
+      )
+  }
+
 
   return(map)
 }
@@ -195,10 +216,17 @@ attractionServer <- function(input, output, session) {
           c(input$attraction_selected, input$facility_selected)
       )
   })
-
+  attractions_walk_map <- reactive({
+    attr_walks$distance <- as.numeric(attr_walks$distance)
+    attr_walks %>%
+      filter(
+        name %in%
+          input$walk_selected
+      )
+  })
   ################### outputs ##################
   # Leaflet map
   output$attraction_map <- renderLeaflet({
-    render_map(attractions_data_map())
+    render_map(attractions_data_map(), attractions_walk_map())
   })
 }

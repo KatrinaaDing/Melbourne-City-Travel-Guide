@@ -17,6 +17,11 @@ attraction_tab <- tabItem(
         solidHeader = TRUE,
         collapsible = TRUE,
         checkboxGroupInput(
+          "walk_selected", "Guide Routines",
+          choices = WALKS_CHOICES,
+          selected = WALKS_CHOICES,
+        ),
+        checkboxGroupInput(
           "attraction_selected",
           "Attractions",
           choiceNames = POI_CHOICE_NAMES,
