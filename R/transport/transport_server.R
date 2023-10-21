@@ -36,31 +36,19 @@ transportServer <- function(input, output, session) {
     runjs(create_filter_transport_script(script_body))
   })
 
-  # observeEvent(input$view_nearby_stops_id, {
-  #   updateTabItems(session, "tabs", "transport")
-  #     nearby_stops_string <- hotel_nearby_tram_stops[hotel_nearby_tram_stops$id ==input$view_nearby_stops_id, ]$nearby_stops
-  #     #script_body <- sprintf("sheet.selectMarksAsync('STOP_NAME', %s, tableau.SelectionUpdateType.REPLACE)", nearby_stops_string);
-  #     script_body <- "sheet.selectMarksAsync('STOP_NAME','5-Swanston St/Flinders St (Melbourne City)', tableau.SelectionUpdateType.REPLACE)"
-  #     js_code <- "
-  #      setTimeout(function() {
-  #      console.log('2222');
-  #       let viz = document.getElementById('tramStop_Pedestrian_Map'); let sheet = viz.workbook.activeSheet;
-  #       console.log(sheet);
-  #           sheet.selectMarksAsync('STOP_NAME','5-Swanston St/Flinders St (Melbourne City)', FilterUpdateType.Replace);
-  #      }, 5000);
-  #       "
-  #     runjs(js_code)
-  # })
-
-  #
   output$dynamic_title <- renderUI({
     tram_stop_name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"
+    sensor_name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
     if (!is.null(tram_stop_name)) {
-      if (length(tram_stop_name) > 1) {
-        title <- paste("Pedestrian Count per Hour on Multiple Tram Stops")
-      } else {
-        title <- paste("Pedestrian Count per Hour on ", tram_stop_name)
-      }
+        if (sensor_name == "%null%") {
+            title <- paste("There is no nearby sensor on ", tram_stop_name)
+            return(title)
+        } 
+        if (length(tram_stop_name) > 1) {
+            title <- paste("Pedestrian Count per Hour on Multiple Tram Stops")
+        } else {
+            title <- paste("Pedestrian Count per Hour on ", tram_stop_name)
+        }
     } else {
       title <- paste("Please select the point to see more details")
     }
