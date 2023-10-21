@@ -94,7 +94,6 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
     tags$head(setUpTableauInShiny()),
