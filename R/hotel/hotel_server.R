@@ -212,7 +212,7 @@ hotelServer <- function(input, output, session) {
         weight = 1,
         color = "#000000",
         fillOpacity = 0.15,
-        popup = ~SA2_NAME,
+        label = ~SA2_NAME,
       ) %>%
       addMarkers(
         data = filtered_hotels,
@@ -228,9 +228,9 @@ hotelServer <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium</div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive</div>",
           "</div>"
         ),
         position = "bottomright"
