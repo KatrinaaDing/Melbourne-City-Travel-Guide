@@ -57,12 +57,24 @@ hotel_tab <- tabItem(
       tabPanel(
         "Chart",
         style = "height: calc(100vh - 370px)",
-        tableauPublicViz(
-          id='tableauAirbnb',
-          url = "https://public.tableau.com/views/MelbourneCityAirbnbListings/MelbourneCityAirbnbPriceDistributionDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-          height = "inherit",
-          width = "100%"
+        fluidRow(
+          width = 12,
+          height = "calc((100vh - 370px)/2)",
+          tableauPublicViz(
+            id='tableauAirbnbTree',
+            url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsTreeMap/AveragePriceInEachSuburb?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+            style="height: calc((100vh - 370px)/2 + 10px); width: 100%;"
+          ),
         ),
+        fluidRow(
+          width = 12,
+          height = "calc((100vh - 370px)/2)",
+          tableauPublicViz(
+            id='tableauAirbnbScatter',
+            url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsScatterPlot/PriceDistribution?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+            style="height: calc((100vh - 370px)/2 - 10px); width: 100%;"
+          ),
+        )
       ),
     )
   ),
