@@ -55,6 +55,12 @@ max_hotel_price <- max(hotels$price, na.rm = TRUE)
 min_min_nights <- min(hotels$minimum_nights, na.rm = TRUE)
 max_min_nights <- max(hotels$minimum_nights, na.rm = TRUE)
 
+### calculate price quantiles
+# reference: https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/quantile
+quantiles <- quantile(hotels$price, probs = c(0.33, 0.66), na.rm = TRUE)
+cheap_threshold <- as.numeric(quantiles[1])
+medium_threshold <- as.numeric(quantiles[2])
+
 ###################
 # RESTAURANT DATA #
 ###################

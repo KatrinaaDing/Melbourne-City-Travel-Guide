@@ -219,19 +219,6 @@ hotelServer <- function(input, output, session) {
         icon = ~ dollar_icons[price_class],
         layerId = ~id,
         options = markerOptions(price = filtered_hotels$price),
-        # popup = ~ paste0(
-        #   # listing name, can navigate to Airbnb listing site
-        #   "Name: <a href='https://www.airbnb.com.au/rooms/",
-        #   filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
-        #   # host name, can navigate to host site
-        #   "Host:  <a href='https://www.airbnb.com.au/users/show/",
-        #   filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
-        #   "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
-        #   "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
-        #   "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
-        #   "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
-        #   "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
-        # ),
         label = ~ paste(filtered_hotels$name),
         labelOptions = labelOptions(direction = "top")
       ) %>%
