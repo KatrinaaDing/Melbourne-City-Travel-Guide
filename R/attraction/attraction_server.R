@@ -7,7 +7,7 @@ get_num_poi_in_polygon <- function(polygon, poi_table) {
 
 render_map <- function(filtered_data) {
   map <- leaflet() %>% 
-        addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+        addProviderTiles(providers$CartoDB.Positron) %>%
         addPolygons(
         data = city_boundary,
         fillColor = "transparent",
@@ -187,6 +187,13 @@ attractionServer <- function(input, output, session) {
 
 
   ################### reactive ##################
+
+  # the previous shown hotel buffer's id
+  last_shown_hotel_buffer <- reactiveVal(NULL)
+
+  # the previous shown tram stop buffer's id
+  last_shown_stop_buffer <- reactiveVal(NULL)
+
   # filter dynamically load data
   attractions_data_map <- reactive({
     attr_faci_data %>%
@@ -200,5 +207,111 @@ attractionServer <- function(input, output, session) {
   # Leaflet map
   output$attraction_map <- renderLeaflet({
     render_map(attractions_data_map())
+  })
+
+  # show hotel buffer on the attraction map
+  observeEvent(input$view_nearby_poi_id, {
+    leafletProxy("attraction_map") %>%
+      removeShape(
+        layerId = paste0("hotel_buffer_", last_shown_hotel_buffer())
+      ) %>% 
+      removeMarker(
+        layerId = paste0("hotel_point_", last_shown_hotel_buffer())
+      )
+    if (is.null(input$view_nearby_poi_id)) {
+      return()
+    }
+    # navigate to attraction tab 
+    updateTabItems(session, "tabs", "attraction")
+    # get the stop id
+    hotel_id <- strsplit(input$view_nearby_poi_id, "-")[[1]][1]
+    
+    # get buffer polygon and point from dataset
+    hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_id, ]
+    hotel_point <- hotels[hotels$id == hotel_id, ]
+    leafletProxy("attraction_map") %>% 
+      setView(lng = hotel_point$Longitude, lat = hotel_point$Latitude, zoom = 15) %>%
+      addPolygons(
+        data = hotel_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 2,
+        color = "#33b1ff",
+        fillOpacity = 0.3,
+        layerId = paste0("hotel_buffer_", input$view_nearby_poi_id)
+      ) %>%
+      addMarkers(
+        data = hotel_point,
+        icon = hotel_icon,
+        label = paste0(hotel_point$name, "hosted by ", hotel_point$host_name),
+        layerId = paste0("hotel_point_", input$view_nearby_poi_id)
+      )
+      
+    # update the last clicked hotel marker
+    last_shown_hotel_buffer(input$view_nearby_poi_id)
+  })
+
+  # show tram stop buffer on the attraction map
+  observeEvent(input$stop_nearby_poi_id, {
+    leafletProxy("attraction_map") %>%
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>% 
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
+    if (is.null(input$stop_nearby_poi_id)) {
+      return()
+    }
+    # navigate to attraction tab
+    updateTabItems(session, "tabs", "attraction")
+    # get the stop id
+    stop_id <- strsplit(input$stop_nearby_poi_id, "-")[[1]][1]
+    # get buffer polygon from dateset
+    stop_buffer_info <- tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_id, 1, ]
+    stop_point_info <- tram_stops_point[tram_stops_point$STOP_ID == stop_id, 1, ]
+    tram_stop_info <- tram_stops[tram_stops$STOP_ID == stop_id, ]
+    # trasform the polygon to sf object
+    stop_buffer <- st_transform(stop_buffer_info$near_airbnb_polygon, 4326)
+    stop_point <- st_transform(stop_point_info$geometry, 4326)
+
+    leafletProxy("attraction_map") %>% 
+      setView(lng =  stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
+      addPolygons(
+        data = stop_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 2,
+        color = "#33b1ff",
+        fillOpacity = 0.3,
+        layerId = paste0("stop_buffer_", input$stop_nearby_poi_id)
+      ) %>%
+      addMarkers(
+        data = stop_point,
+        icon = tram_icon,
+        label = tram_stop_info$STOP_NAME,
+        layerId = paste0("stop_point_", input$stop_nearby_poi_id)
+      )
+
+    # update the last clicked hotel marker
+    last_shown_stop_buffer(input$stop_nearby_poi_id)
+  })
+
+  # onclick clear_attraction_radius button, clear the all the buffer and marker
+  observeEvent(input$clear_attraction_radius, {
+    leafletProxy("attraction_map") %>%
+      removeShape(
+        layerId = paste0("hotel_buffer_", last_shown_hotel_buffer())
+      ) %>% 
+      removeMarker(
+        layerId = paste0("hotel_point_", last_shown_hotel_buffer())
+      ) %>% 
+      removeShape(
+        layerId = paste0("stop_buffer_", last_shown_stop_buffer())
+      ) %>%
+      removeMarker(
+        layerId = paste0("stop_point_", last_shown_stop_buffer())
+      )
+
   })
 }
