@@ -12,6 +12,9 @@ hotel_tab <- tabItem(
       #shiny-tab-airbnb .leaflet-bottom.leaflet-left .info.legend.leaflet-control {
         width: 100%;
       }
+      #shiny-tab-airbnb .modal-body li {
+        padding-bottom: 5px;
+      }
     ")),
     tags$script(HTML("
       $(document).on('click', '#closeButton', function(){
@@ -27,7 +30,7 @@ hotel_tab <- tabItem(
       $(document).on('click', '#viewNearbyTramStopButton', function(){
         Shiny.setInputValue('view_nearby_stops_id', this.value);
       });
-      $(document).on('click', '#jump_to_Airbnb_Button', function(){
+      $(document).on('click', '#tramStopToAirbnbButton', function(){
         let random_id = this.value + '-' + Math.random();
         Shiny.setInputValue('stop_nearby_hotel_id', random_id)
       });
@@ -54,12 +57,24 @@ hotel_tab <- tabItem(
       tabPanel(
         "Chart",
         style = "height: calc(100vh - 370px)",
-        tableauPublicViz(
-          id='tableauAirbnb',
-          url = "https://public.tableau.com/views/MelbourneCityAirbnbListings/MelbourneCityAirbnbPriceDistributionDashboard?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-          height = "inherit",
-          width = "100%"
+        fluidRow(
+          width = 12,
+          height = "calc((100vh - 370px)/2)",
+          tableauPublicViz(
+            id='tableauAirbnbTree',
+            url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsTreeMap/AveragePriceInEachSuburb?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+            style="height: calc((100vh - 370px)/2 + 10px); width: 100%;"
+          ),
         ),
+        fluidRow(
+          width = 12,
+          height = "calc((100vh - 370px)/2)",
+          tableauPublicViz(
+            id='tableauAirbnbScatter',
+            url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsScatterPlot/PriceDistribution?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+            style="height: calc((100vh - 370px)/2 - 10px); width: 100%;"
+          ),
+        )
       ),
     )
   ),
@@ -115,22 +130,5 @@ hotel_tab <- tabItem(
         ),
       ),
     ),
-
-    # tabBox(
-    #   title = "Statistics",
-    #   width = 4,
-    #   height = "250px",
-    #   # The id lets us use input$tabset1 on the server to find the current tab
-    #   id = "hotel_statistics_tabset",
-    #   tabPanel(
-    #     "Nearby",
-    #     HTML(paste0(
-    #       "Transport: There are 4 bus stops nearby. <br>",
-    #       "Restaurant: There are 3 restaurants nearby.",
-    #       verbatimTextOutput("Click_text")
-    #     ))
-    #   ),
-    #   tabPanel("Compare", "Tab content 2")
-    # ),
   )
 )

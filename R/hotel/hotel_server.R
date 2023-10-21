@@ -1,24 +1,26 @@
 nearby_stop_hint <- function(number) {
   if (number == 0) {
-    "There is no tram stop nearby"
+    "There is no tram stop nearby."
   } else if (number == 1) {
-    "There is <strong>1</strong> tram stop nearby"
+    "There is <strong>1</strong> tram stop nearby."
   } else {
-    paste0("There are <strong>", number, "</strong> tram stops nearby")
+    paste0("There are <strong>", number, "</strong> tram stops nearby.")
   }
 }
 
 nearby_poi_hint <- function(number) {
   if (number == 0) {
-    "There is no point of interest nearby"
+    "There is no attraction nearby."
   } else if (number == 1) {
-    "There is <strong>1</strong> point of interest nearby"
+    "There is <strong>1</strong> attraction nearby."
   } else {
-    paste0("There are <strong>", number, "</strong> points of interest nearby")
+    paste0("There are <strong>", number, "</strong> attractions nearby.")
   }
 }
 
-script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
+hotel_script_head <- function(name) {
+  paste0('let viz = document.getElementById("', name,'"); let sheet = viz.workbook.activeSheet; ')
+}
 
 single_select_filter_script <- function(filter_name, filter_value) {
   sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
@@ -29,19 +31,18 @@ multi_select_filter_script <- function(filter_name, filter_values) {
   sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', filter_name, filter_values_string)
 }
 
-range_filter_script_for_dashboard <- function(filter_name, filter_min, filter_max) {
-  range_filter <- sprintf('.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
-  loop_script <- paste0(
-    'sheet.worksheets.forEach(w => {',
-     'w', range_filter,
-    '})'
-  )
-  loop_script
+range_filter_script_hotel <- function(filter_name, filter_min, filter_max) {
+  script <- sprintf('sheet.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+  return(script)
 }
 
-create_filter_script <- function(script_body) {
-  paste0(script_head, script_body)
+run_hotel_filter_script <- function(script_body) {
+  tree_script <- paste0(hotel_script_head("tableauAirbnbTree"), script_body)
+  scatter_script <- paste0(hotel_script_head("tableauAirbnbScatter"), script_body)
+  runjs(tree_script)
+  runjs(scatter_script)
 }
+
 
 hotelServer <- function(input, output, session) {
   ################### observers ##################
@@ -82,37 +83,37 @@ hotelServer <- function(input, output, session) {
   observeEvent(input$suburb_select, {
     suburbs <- input$suburb_select
     script_body <- multi_select_filter_script("Suburb", suburbs)
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau onclick price range filter
   observeEvent(input$hotel_price, {
     min <- input$hotel_price[1]
     max <- input$hotel_price[2]
-    script_body <- range_filter_script_for_dashboard("Price", min, max)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Price", min, max)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select rating range
   observeEvent(input$rating_range, {
     min <- input$rating_range[1]
     max <- input$rating_range[2]
-    script_body <- range_filter_script_for_dashboard("Rating", min, max)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Rating", min, max)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on enter minimum nights filter
   observeEvent(input$min_nights, {
     min_nights <- as.integer(input$min_nights)
-    script_body <- range_filter_script_for_dashboard("Minimum Nights", min_nights, max_min_nights)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Minimum Nights", min_nights, max_min_nights)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau onclick suburb filter
   observeEvent(input$price_class_select, {
     price_class <- input$price_class_select
     script_body <- multi_select_filter_script("Price Class", price_class)
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of bathrooms
@@ -122,7 +123,7 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Baths", input$num_baths)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of beds
@@ -132,7 +133,7 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Beds", input$num_beds)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of bedrooms
@@ -142,13 +143,13 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
   
   ############# reactive functions #############
 
   # the previous clicked marker's id
-  last_clicked_marker <- reactiveVal(NULL)
+  last_clicked_hotel_marker <- reactiveVal(NULL)
 
   # the previous shown stop buffer's id
   last_shown_stop_buffer <- reactiveVal(NULL)
@@ -211,7 +212,7 @@ hotelServer <- function(input, output, session) {
         weight = 1,
         color = "#000000",
         fillOpacity = 0.15,
-        popup = ~SA2_NAME,
+        label = ~SA2_NAME,
       ) %>%
       addMarkers(
         data = filtered_hotels,
@@ -219,19 +220,6 @@ hotelServer <- function(input, output, session) {
         icon = ~ dollar_icons[price_class],
         layerId = ~id,
         options = markerOptions(price = filtered_hotels$price),
-        # popup = ~ paste0(
-        #   # listing name, can navigate to Airbnb listing site
-        #   "Name: <a href='https://www.airbnb.com.au/rooms/",
-        #   filtered_hotels$id, "'><strong>", filtered_hotels$name, "</strong></a><br>",
-        #   # host name, can navigate to host site
-        #   "Host:  <a href='https://www.airbnb.com.au/users/show/",
-        #   filtered_hotels$host_id, "'><strong>", filtered_hotels$host_name, "</strong></a><br>",
-        #   "Price: <strong>$", filtered_hotels$price, "/night</strong><br>",
-        #   "Price class: <strong>", filtered_hotels$price_class, "</strong><br>",
-        #   "Minimum nights: <strong>", filtered_hotels$minimum_nights, "</strong><br>",
-        #   "Rating: <strong>", filtered_hotels$rating, "</strong><br>",
-        #   "Last Review: <strong>", filtered_hotels$last_review, "</strong><br>"
-        # ),
         label = ~ paste(filtered_hotels$name),
         labelOptions = labelOptions(direction = "top")
       ) %>%
@@ -240,9 +228,9 @@ hotelServer <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium</div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive</div>",
           "</div>"
         ),
         position = "bottomright"
@@ -312,6 +300,9 @@ hotelServer <- function(input, output, session) {
     # get nearby tram stops
     nearby_stops_string <- hotel_nearby_tram_stops[hotel_nearby_tram_stops$id == hotel_data$id, ]$nearby_stops
     nearby_stops <- strsplit(nearby_stops_string, ",")
+    # remove the double quote
+    nearby_stops_cleaned <- lapply(nearby_stops, function(stop) gsub("\"", "", stop))
+    # get number of stops
     num_stops <- length(unlist(nearby_stops))
     # get buffer
     hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_data$id, ]
@@ -321,56 +312,75 @@ hotelServer <- function(input, output, session) {
     leafletProxy("hotel_map") %>%
       # remove previous hotel detail control box
       removeControl(
-        layerId = paste0("hotel_detail_", last_clicked_marker())
+        layerId = paste0("hotel_detail_", last_clicked_hotel_marker())
       ) %>%
-      # remove previous buffer polygon
-      removeShape(
-        layerId = paste0("hotel_buffer_", last_clicked_marker())
-      )
     # add new control box and buffer polygon
-    leafletProxy("hotel_map") %>%
       addControl(
         html = paste0(
           "<div id='hotel_info_popup' style='height: 160px; padding: 5px; background-color: white; width: 100%;'>",
-          "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
-          # listing name, can navigate to Airbnb listing site
-          "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
-          hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
-          # host name, can navigate to host site
-          "Host:  <a href='https://www.airbnb.com.au/users/show/",
-          hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
-          "Price: <strong>$", hotel_data$price, "/night</strong><br>",
-          "Price class: <strong>", hotel_data$price_class, "</strong><br>",
-          "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
-          "Rating: <strong>", hotel_data$rating, "</strong><br>",
-          "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
-          "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
-            "<div style='padding-bottom: 5px;'>",
-              nearby_stop_hint(num_stops),
-              ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+            "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
+            # listing name, can navigate to Airbnb listing site
+            "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
+            hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
+            # host name, can navigate to host site
+            "Host:  <a href='https://www.airbnb.com.au/users/show/",
+            hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
+            "Price: <strong>$", hotel_data$price, "/night</strong><br>",
+            "Price class: <strong>", hotel_data$price_class, "</strong><br>",
+            "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
+            "Rating: <strong>", hotel_data$rating, "</strong><br>",
+            "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
+            "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
+              # nearby poi
+              "<div style='padding-bottom: 5px;'>",
+                nearby_poi_hint(num_pois),
+                "<button id='viewNearbyPoiButton' value='",
+                hotel_data$id,
+                "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>",
+              "</div>",
+              # nearby tram stop
+              "<div>",
+                nearby_stop_hint(num_stops),
+                ifelse(
+                  num_stops > 0,
+                  paste0(
+                    "<button type='button' class='btn-xs btn-primary' data-toggle='modal' data-target='#hotelDetailModal' data-backdrop='false' style='margin-left: 10px;'>",
+                    "  View",
+                    "</button>"
+                  ), 
+                  ""
+                ),
+              "</div>",
+              # dialogue 
+              "<div class='modal fade' id='hotelDetailModal' tabindex='-1' role='dialog' aria-labelledby='hotelModalLabel' aria-hidden='true'>",
+              "  <div class='modal-dialog' role='document' style='position: absolute; top: 10%; left: 30%; text-align: left;'>",
+              "    <div class='modal-content'>",
+              "      <div class='modal-header'>",
+              "        <h5 class='modal-title' id='hotelModalLabel' > Nearby Tram Stops for ", hotel_data$name,"</h5>",
+              "      </div>",
+              "      <div class='modal-body' style='font-size: 12pt;'>",
+              "        <ol><li>",
+                      paste(unlist(nearby_stops_cleaned), collapse = "</li><li>"),
+              "        </li></ol>",
+              "      </div>",
+              "      <div class='modal-footer'>",
+              "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>",
+              "        <button type='button' id='viewNearbyTramStopButton' class='btn btn-primary' value='",
+                          hotel_data$id,
+              "         '>Go to Transport</button>",
+              "      </div>",
+              "    </div>",
+              "  </div>",
+              "</div>",
             "</div>",
-            "<div>",
-              nearby_poi_hint(num_pois),
-              ifelse(num_pois > 0,"<button id='viewNearbyPoiButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
-            "</div>",
-          "</div>",
           "</div>"
         ),
         position = "bottomleft",
-        layerId = paste0("hotel_detail_", hotel_data$id)
-      ) %>%
-      addPolygons(
-        data = hotel_buffer,
-        fillColor = "#d4eeff",
-        stroke = TRUE,
-        weight = 1,
-        color = "black",
-        fillOpacity = 0.2,
-        layerId = paste0("hotel_buffer_", hotel_data$id)
+        layerId = paste0("hotel_detail_", click$id)
       )
 
     # store the last clicked marker
-    last_clicked_marker(click$id)
+    last_clicked_hotel_marker(click$id)
 
     output$Click_text <- renderText({
       hotel_data$name
@@ -403,10 +413,6 @@ hotelServer <- function(input, output, session) {
 
     leafletProxy("hotel_map") %>%
       setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
-      # # remove the previous shown stop buffer
-      # removeShape(
-      #   layerId = paste0("stop_buffer_", last_shown_stop_buffer())
-      # ) %>%
       # show the new stop buffer
       addPolygons(
         data = stop_buffer,
@@ -425,7 +431,6 @@ hotelServer <- function(input, output, session) {
       )
     # store the last shown stop buffer
     last_shown_stop_buffer(input$stop_nearby_hotel_id)
-
   })
 
   # toggle hiding street name on map

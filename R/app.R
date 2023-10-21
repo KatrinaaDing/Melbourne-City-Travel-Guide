@@ -28,20 +28,24 @@ intro_tab <- tabItem(
   tabName = "intro",
   h4("Introduction"),
   fluidRow(
-    box(width = 6, height = "550px",
-        img(src='Melburnian_Skyline.jpg', width = "100%", height = "530px")),
-    box(width = 6, height = "550px", 
-        h4("Melbourne City Travel Guide"),
-        p("The tool provides 4 types of travel guide for tourists of City of Melbourne."),
-        h5("Restaurant",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
-        p("For users to look for the the best cuisine and restaurant filtered by suburb, price level, etc."),
-        h5("Airbnb", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
-        p("For users to have an overview of the distribution of airbnbs filtered by suburb, price, rating, etc."),
-        h5("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
-        p("For user to check the locations of places of interest such as museum, playground, toilet, etc."),
-        h5("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
-        p("To visualize the tram routes."),
+    box(width = 6, height = "650px",
+        img(src='Melburnian_Skyline.jpg', width = "100%", height = "630px")),
+    box(width = 6, height = "650px",
+        h3("Melbourne City Travel Guide"),
+        p("Welcome to Melbourne, a city full of tasty food, cool places, and fun things to do! Our app is here to help you discover the best of Melbourne. Here's what we have:"),
+        br(),
+        strong("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
+        p("There's so much to see in Melbourne! Find cool stuff like Artworks, Music Venues, and historic Plaques here. We also list fun places like Playgrounds and important spots like Toilets and Drinking Fountains. "),
+        strong("Restaurant",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
+        p("Hungry? Check out our 'Restaurant' tab. It has a map showing where you can find different kinds of food in Melbourne. Plus, we list the best-rated places to eat. "),
+        strong("Airbnb", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
+        p("Need a place to stay? We've got info on Airbnb places all over the city. With our map and charts, you can easily find a comfy spot."),
+        strong("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
+        p("Want to get around Melbourne? Learn about the city's tram routes and where the tram stops are."),
+        br(),
+        p("Hope you enjoy your time in Melbourne and our app helps you along the way! Safe travels!")
         )),
+
   # actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
 
@@ -49,6 +53,7 @@ data_source_tab <- tabItem(
   tabName = "data_source",
   h4("Data Source"),
   box(width = 12, height = '700px',
+      p("This page details the trusted sources behind our data, ensuring accurate and timely insights."),
       h5("Restaurant"),
       p("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
       p("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
@@ -86,15 +91,14 @@ ui <- dashboardPage(
     sidebarMenu(
       id = "tabs",
       menuItem("Introduction", tabName = "intro", icon = icon("info-circle")),
+      menuItem("Attraction", tabName = "attraction", icon = icon("map-marker")),
       menuItem("Restaurant", tabName = "restaurant", icon = icon("cutlery")),
       menuItem("Airbnb", tabName = "airbnb", icon = icon("bed")),
-      menuItem("Attraction", tabName = "attraction", icon = icon("map-marker")),
       menuItem("Transport", tabName = "transport", icon = icon("bus")),
       menuItem("Data Source", tabName = "data_source", icon = icon("database"))
     )
   ),
   dashboardBody(
-    # extendShinyjs("www/js/onRenderAirbnbMap.js", functions = c("onRenderAirbnbMap")),
     # add custom css
     # reference: https://rstudio.github.io/shinydashboard/appearance.html
     tags$head(setUpTableauInShiny()),
@@ -105,9 +109,9 @@ ui <- dashboardPage(
     ),
     tabItems(
       intro_tab,
+      attraction_tab,
       restaurant_tab,
       hotel_tab,
-      attraction_tab,
       transport_tab,
       data_source_tab
     )
@@ -141,6 +145,12 @@ server <- function(input, output, session) {
   observeEvent(input$explore_data_source, {
     updateTabItems(session, "tabs", "data_source")
   })
+
+  # resize tableau
+  observeEvent(input$hotel_statistics_tabset, {
+    runjs('dispatchEvent(new Event("resize"))')
+  })
+
   # servers
   hotelServer(input, output, session)
   restaurantServer(input, output, session)
