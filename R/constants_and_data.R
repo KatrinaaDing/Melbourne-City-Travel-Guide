@@ -15,7 +15,16 @@ POI_CHOICE_NAMES <- c("Artworks", "Music Venues", "Plaques", "Memorials", "Landm
 POI_CHOICE_VALUES <- c("artworks", "music_venues", "plaques", "memorials", "landmarks")
 FACILITY_CHOICE_NAMES <- c("Playgrounds", "Toilets", "Drinking Fountains")
 FACILITY_CHOICE_VALUES <- c("playgrounds", "toilets", "drinking_fountains")
-
+WALKS_CHOICES <- c(
+  "A Walk in the Park",
+  "Elegant Enclave",
+  "Sports & Entertainment",
+  "Melbourne Music Walk",
+  "The Cosmopolitan",
+  "On the Waterfront",
+  "Arcades & Lanes",
+  "Secret Gardens"
+)
 ##############
 # HOTEL DATA #
 ##############
@@ -77,6 +86,8 @@ suburb_boundary <- st_read("data/restaurant/suburbs_data.geojson")
 attractions <- read_csv("data/poi/poi-clean.csv")
 facilities <- read_csv("data/poi/facility-clean.csv")
 attr_faci_data <- bind_rows(attractions, facilities)
+
+attr_walks <- geojson_sf("data/poi/self-guided-walks.geojson")
 
 ##################
 # TRANSPORT DATA #

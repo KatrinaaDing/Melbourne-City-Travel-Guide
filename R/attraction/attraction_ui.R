@@ -30,6 +30,11 @@ attraction_tab <- tabItem(
         collapsible = TRUE,
         actionButton("clear_attraction_radius", "Clear Circle Bounds", class = "btn btn-danger"),
         checkboxGroupInput(
+          "walk_selected", "Guide Routines",
+          choices = WALKS_CHOICES,
+          selected = WALKS_CHOICES,
+        ),
+        checkboxGroupInput(
           "attraction_selected",
           "Attractions",
           choiceNames = POI_CHOICE_NAMES,
