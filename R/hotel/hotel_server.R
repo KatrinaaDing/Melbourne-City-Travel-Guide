@@ -1,20 +1,20 @@
 nearby_stop_hint <- function(number) {
   if (number == 0) {
-    "There is no tram stop nearby"
+    "There is no tram stop nearby."
   } else if (number == 1) {
-    "There is <strong>1</strong> tram stop nearby"
+    "There is <strong>1</strong> tram stop nearby."
   } else {
-    paste0("There are <strong>", number, "</strong> tram stops nearby")
+    paste0("There are <strong>", number, "</strong> tram stops nearby.")
   }
 }
 
 nearby_poi_hint <- function(number) {
   if (number == 0) {
-    "There is no point of interest nearby"
+    "There is no attraction nearby."
   } else if (number == 1) {
-    "There is <strong>1</strong> point of interest nearby"
+    "There is <strong>1</strong> attraction nearby."
   } else {
-    paste0("There are <strong>", number, "</strong> points of interest nearby")
+    paste0("There are <strong>", number, "</strong> attractions nearby.")
   }
 }
 
@@ -310,10 +310,6 @@ hotelServer <- function(input, output, session) {
       removeControl(
         layerId = paste0("hotel_detail_", last_clicked_hotel_marker())
       ) %>%
-      # # remove previous buffer polygon
-      # removeShape(
-      #   layerId = paste0("hotel_buffer_", last_clicked_hotel_marker())
-      # )  %>%
     # add new control box and buffer polygon
       addControl(
         html = paste0(
@@ -331,6 +327,7 @@ hotelServer <- function(input, output, session) {
           "Rating: <strong>", hotel_data$rating, "</strong><br>",
           "Last Review: <strong>", hotel_data$last_review, "</strong><br>",
           "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
+            # nearby tram stop
             "<div style='padding-bottom: 5px;'>",
               nearby_stop_hint(num_stops),
               ifelse(
@@ -342,16 +339,12 @@ hotelServer <- function(input, output, session) {
                 ""
               ),
             "</div>",
+            # nearby poi
             "<div>",
               nearby_poi_hint(num_pois),
-              ifelse(
-                num_pois > 0,
-                paste0("<button id='viewNearbyPoiButton' value='",
-                  hotel_data$id,
-                  "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>"
-                ), 
-                ""
-              ),
+              "<button id='viewNearbyPoiButton' value='",
+              hotel_data$id,
+              "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>",
             "</div>",
           "</div>",
           "</div>"
@@ -359,16 +352,6 @@ hotelServer <- function(input, output, session) {
         position = "bottomleft",
         layerId = paste0("hotel_detail_", click$id)
       )
-      # ) %>%
-      # addPolygons(
-      #   data = hotel_buffer,
-      #   fillColor = "#d4eeff",
-      #   stroke = TRUE,
-      #   weight = 1,
-      #   color = "black",
-      #   fillOpacity = 0.2,
-      #   layerId = paste0("hotel_buffer_", hotel_data$id)
-      # )
 
     # store the last clicked marker
     last_clicked_hotel_marker(click$id)
@@ -404,10 +387,6 @@ hotelServer <- function(input, output, session) {
 
     leafletProxy("hotel_map") %>%
       setView(lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
-      # # remove the previous shown stop buffer
-      # removeShape(
-      #   layerId = paste0("stop_buffer_", last_shown_stop_buffer())
-      # ) %>%
       # show the new stop buffer
       addPolygons(
         data = stop_buffer,

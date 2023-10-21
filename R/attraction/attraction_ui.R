@@ -5,9 +5,12 @@ attraction_tab <- tabItem(
   tags$head(
     tags$script(HTML("
       $(document).on('click', '#viewNearbyPoiButton', function() {
-        console.log(this.value)
         let random_id = this.value + '-' + Math.random();
         Shiny.setInputValue('view_nearby_poi_id', random_id);
+      })   
+      $(document).on('click', '#tramStopToPoiButton', function() {
+        let random_id = this.value + '-' + Math.random();
+        Shiny.setInputValue('stop_nearby_poi_id', random_id);
       })    
     "))
   ),
@@ -49,7 +52,7 @@ attraction_tab <- tabItem(
       ),
       box(
         width = 4,
-        title = "Pedestrian Count",
+        title = "Popularity",
         status = "primary",
         solidHeader = TRUE,
         collapsible = TRUE,
