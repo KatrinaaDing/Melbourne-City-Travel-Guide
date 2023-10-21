@@ -7,7 +7,7 @@ get_num_poi_in_polygon <- function(polygon, poi_table) {
 
 render_map <- function(filtered_data) {
   map <- leaflet() %>% 
-        addProviderTiles(providers$CartoDB.PositronNoLabels) %>%
+        addProviderTiles(providers$CartoDB.Positron) %>%
         addPolygons(
         data = city_boundary,
         fillColor = "transparent",
@@ -187,8 +187,6 @@ attractionServer <- function(input, output, session) {
 
 
   ################### reactive ##################
-  # the previous clicked hotel marker's id
-  last_clicked_hotel_marker <- reactiveVal(NULL)
 
   # the previous shown hotel buffer's id
   last_shown_hotel_buffer <- reactiveVal(NULL)
@@ -237,16 +235,27 @@ attractionServer <- function(input, output, session) {
         weight = 2,
         color = "#33b1ff",
         fillOpacity = 0.3,
-        layerId = paste0("hotel_buffer_", input$stop_nearby_hotel_id)
+        layerId = paste0("hotel_buffer_", input$view_nearby_poi_id)
       ) %>%
       addMarkers(
         data = hotel_point,
         icon = hotel_icon,
         label = hotel_point$name,
-        layerId = paste0("hotel_point_", input$stop_nearby_hotel_id)
+        layerId = paste0("hotel_point_", input$view_nearby_poi_id)
       )
       
     # update the last clicked hotel marker
     last_shown_hotel_buffer(input$view_nearby_poi_id)
+  })
+
+  # onclick clear_attraction_radius button, clear the hotel buffer and marker
+  observeEvent(input$clear_attraction_radius, {
+    leafletProxy("attraction_map") %>%
+      removeShape(
+        layerId = paste0("hotel_buffer_", last_shown_hotel_buffer())
+      ) %>% 
+      removeMarker(
+        layerId = paste0("hotel_point_", last_shown_hotel_buffer())
+      )
   })
 }

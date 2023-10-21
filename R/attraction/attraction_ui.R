@@ -25,6 +25,7 @@ attraction_tab <- tabItem(
         status = "primary",
         solidHeader = TRUE,
         collapsible = TRUE,
+        actionButton("clear_attraction_radius", "Clear Circle Bounds", class = "btn btn-danger"),
         checkboxGroupInput(
           "attraction_selected",
           "Attractions",
