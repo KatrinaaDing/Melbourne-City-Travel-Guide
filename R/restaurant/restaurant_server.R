@@ -82,7 +82,9 @@ restaurantServer <- function(input, output, session) {
   
   reactive_values <- reactiveValues(res_suburb = 'All', old_special_options = NULL)
   output[[res_suburb_filter_id]] <-  renderLeaflet({render_res_suburb_filter_unselected()})
-  
+
+
+
   observeEvent(input[[suburb_filter_click_event]], {
     suburb_filter_shape_click_info <- input[[suburb_filter_shape_click_event]]
     suburb_filter_click_info <- input[[suburb_filter_click_event]]

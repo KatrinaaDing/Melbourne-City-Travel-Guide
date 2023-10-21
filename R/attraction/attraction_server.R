@@ -19,8 +19,9 @@ render_map <- function(filtered_data) {
     map <- map %>%
       addMarkers(
         data = filtered_data,
-        ~ longitude,
-        ~ latitude,
+        lng = ~ longitude,
+        lat = ~ latitude,
+        layerId = ~ paste(location_id, latitude, longitude, category),
         clusterOptions = markerClusterOptions(maxClusterRadius = 50),
         icon = ~ attraction_icons[category],
         popup = ~ apply(filtered_data, 1, get_popup_content)
@@ -160,18 +161,44 @@ get_popup_content <- function(row_data) {
   }
 }
 
+attraction_script_head <- paste0('let viz = document.getElementById("attraction_ped_chart"); let sheet = viz.workbook.activeSheet; ')
+
+filter_attraction_script <- function(script_body) {
+  paste0(attraction_script_head, script_body)
+}
+
 attractionServer <- function(input, output, session) {
-  
+  ################### observer ##################
+  # leaflet map marker click event observer
+  # reference: https://stackoverflow.com/questions/28938642/marker-mouse-click-event-in-r-leaflet-for-shiny
+  observe({
+    attraction_clicked <- input$attraction_map_marker_click
+    if (is.null(attraction_clicked)) {
+      return()
+    } else {
+      attraction_id <- attraction_clicked$id
+      attraction_location_id <- strtoi(strsplit(attraction_id, " ")[[1]][1])
+      script_body <- multi_select_filter_script(
+        "Location Id", attraction_location_id
+      )
+      runjs(filter_attraction_script(script_body))
+    }
+  })
+
+
   ################### reactive ##################
   # filter dynamically load data
   attractions_data_map <- reactive({
-    attr_faci_data %>% filter(category %in% c(input$attraction_selected, input$facility_selected))
+    attr_faci_data %>%
+      filter(
+        category %in%
+          c(input$attraction_selected, input$facility_selected)
+      )
   })
 
   ################### outputs ##################
-  # Leaflet map 
+  # Leaflet map
   output$attraction_map <- renderLeaflet({
     render_map(attractions_data_map())
   })
-
 }
