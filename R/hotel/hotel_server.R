@@ -18,7 +18,9 @@ nearby_poi_hint <- function(number) {
   }
 }
 
-script_head <- paste0('let viz = document.getElementById("tableauAirbnb"); let sheet = viz.workbook.activeSheet; ')
+hotel_script_head <- function(name) {
+  paste0('let viz = document.getElementById("', name,'"); let sheet = viz.workbook.activeSheet; ')
+}
 
 single_select_filter_script <- function(filter_name, filter_value) {
   sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
@@ -29,19 +31,18 @@ multi_select_filter_script <- function(filter_name, filter_values) {
   sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', filter_name, filter_values_string)
 }
 
-range_filter_script_for_dashboard <- function(filter_name, filter_min, filter_max) {
-  range_filter <- sprintf('.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
-  loop_script <- paste0(
-    'sheet.worksheets.forEach(w => {',
-     'w', range_filter,
-    '})'
-  )
-  loop_script
+range_filter_script_hotel <- function(filter_name, filter_min, filter_max) {
+  script <- sprintf('sheet.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
+  return(script)
 }
 
-create_filter_script <- function(script_body) {
-  paste0(script_head, script_body)
+run_hotel_filter_script <- function(script_body) {
+  tree_script <- paste0(hotel_script_head("tableauAirbnbTree"), script_body)
+  scatter_script <- paste0(hotel_script_head("tableauAirbnbScatter"), script_body)
+  runjs(tree_script)
+  runjs(scatter_script)
 }
+
 
 hotelServer <- function(input, output, session) {
   ################### observers ##################
@@ -82,37 +83,37 @@ hotelServer <- function(input, output, session) {
   observeEvent(input$suburb_select, {
     suburbs <- input$suburb_select
     script_body <- multi_select_filter_script("Suburb", suburbs)
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau onclick price range filter
   observeEvent(input$hotel_price, {
     min <- input$hotel_price[1]
     max <- input$hotel_price[2]
-    script_body <- range_filter_script_for_dashboard("Price", min, max)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Price", min, max)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select rating range
   observeEvent(input$rating_range, {
     min <- input$rating_range[1]
     max <- input$rating_range[2]
-    script_body <- range_filter_script_for_dashboard("Rating", min, max)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Rating", min, max)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on enter minimum nights filter
   observeEvent(input$min_nights, {
     min_nights <- as.integer(input$min_nights)
-    script_body <- range_filter_script_for_dashboard("Minimum Nights", min_nights, max_min_nights)
-    runjs(create_filter_script(script_body))
+    script_body <- range_filter_script_hotel("Minimum Nights", min_nights, max_min_nights)
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau onclick suburb filter
   observeEvent(input$price_class_select, {
     price_class <- input$price_class_select
     script_body <- multi_select_filter_script("Price Class", price_class)
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of bathrooms
@@ -122,7 +123,7 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Baths", input$num_baths)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of beds
@@ -132,7 +133,7 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Beds", input$num_beds)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
 
   # update tableau on select number of bedrooms
@@ -142,7 +143,7 @@ hotelServer <- function(input, output, session) {
     } else {
       script_body <- single_select_filter_script("Number Of Bedrooms", input$num_bedrooms)
     }
-    runjs(create_filter_script(script_body))
+    run_hotel_filter_script(script_body)
   })
   
   ############# reactive functions #############
@@ -211,7 +212,7 @@ hotelServer <- function(input, output, session) {
         weight = 1,
         color = "#000000",
         fillOpacity = 0.15,
-        popup = ~SA2_NAME,
+        label = ~SA2_NAME,
       ) %>%
       addMarkers(
         data = filtered_hotels,
@@ -227,9 +228,9 @@ hotelServer <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%) </div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive (66%-100%) </div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium</div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive</div>",
           "</div>"
         ),
         position = "bottomright"

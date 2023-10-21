@@ -46,7 +46,7 @@ attraction_tab <- tabItem(
         style =
           "
             height: calc(100vh - 540px);
-            max-height: 320px;
+            max-height: 400px;
             overflow-y: scroll;
           ",
       ),
