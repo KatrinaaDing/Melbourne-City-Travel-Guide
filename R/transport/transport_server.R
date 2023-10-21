@@ -25,7 +25,7 @@ transportServer <- function(input, output, session) {
           # Show the descriptive text
           HTML(paste0(
             "There are ", num_airbnb, " Airbnb near this tram stop.",
-            "<button id='jump_to_Airbnb_Button' value='",
+            "<button id='tramStopToAirbnbButton' value='",
               this_nearby_airbnb$STOP_ID,
             "' class='btn btn-primary btn-sm' style='margin-left: 10px;'>View</button>")
           )
