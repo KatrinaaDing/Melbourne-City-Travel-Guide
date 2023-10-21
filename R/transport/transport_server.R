@@ -45,7 +45,6 @@ transportServer <- function(input, output, session) {
         tagList(
           # Show the descriptive text
           HTML(paste0(
-              
               nearby_airbnb_hint(num_airbnb),
               "<button id='tramStopToAirbnbButton' value='",
                 this_nearby_airbnb$STOP_ID,
