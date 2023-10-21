@@ -34,11 +34,11 @@ intro_tab <- tabItem(
         h3("Melbourne City Travel Guide"),
         p("Welcome to Melbourne, a city full of tasty food, cool places, and fun things to do! Our app is here to help you discover the best of Melbourne. Here's what we have:"),
         br(),
-        strong("Attraction",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
+        strong("Attractions",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
         p("There's so much to see in Melbourne! Find cool stuff like Artworks, Music Venues, and historic Plaques here. We also list fun places like Playgrounds and important spots like Toilets and Drinking Fountains. "),
-        strong("Restaurant",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
+        strong("Restaurants",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
         p("Hungry? Check out our 'Restaurant' tab. It has a map showing where you can find different kinds of food in Melbourne. Plus, we list the best-rated places to eat. "),
-        strong("Airbnb", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
+        strong("Airbnb Listings", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
         p("Need a place to stay? We've got info on Airbnb places all over the city. With our map and charts, you can easily find a comfy spot."),
         strong("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
         p("Want to get around Melbourne? Learn about the city's tram routes and where the tram stops are."),
@@ -54,12 +54,12 @@ data_source_tab <- tabItem(
   h4("Data Source"),
   box(width = 12, height = '700px',
       p("This page details the trusted sources behind our data, ensuring accurate and timely insights."),
-      h5("Restaurant"),
+      h5("Restaurants"),
       p("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
       p("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
-      h5("Airbnb"),
+      h5("Airbnb Listings"),
       p("Melbourne Airbnb listings ", a("http://insideairbnb.com/get-the-data/")),
-      h5("Attraction"),
+      h5("Attractions"),
       p("Artworks ", a("https://data.melbourne.vic.gov.au/explore/dataset/outdoor-artworks/information/")),
       p("Places of Interest ", a("https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/information/")),
       p("Fountain, Art, Monument ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-artworks-fountains-and-monuments/information/")),
@@ -91,9 +91,9 @@ ui <- dashboardPage(
     sidebarMenu(
       id = "tabs",
       menuItem("Introduction", tabName = "intro", icon = icon("info-circle")),
-      menuItem("Attraction", tabName = "attraction", icon = icon("map-marker")),
-      menuItem("Restaurant", tabName = "restaurant", icon = icon("cutlery")),
-      menuItem("Airbnb", tabName = "airbnb", icon = icon("bed")),
+      menuItem("Attractions", tabName = "attraction", icon = icon("map-marker")),
+      menuItem("Restaurants", tabName = "restaurant", icon = icon("cutlery")),
+      menuItem("Airbnb Listings", tabName = "airbnb", icon = icon("bed")),
       menuItem("Transport", tabName = "transport", icon = icon("bus")),
       menuItem("Data Source", tabName = "data_source", icon = icon("database"))
     )
@@ -148,6 +148,11 @@ server <- function(input, output, session) {
 
   # resize tableau
   observeEvent(input$hotel_statistics_tabset, {
+    runjs('dispatchEvent(new Event("resize"))')
+  })
+
+  # resize map view
+  observeEvent(input$tabs, {
     runjs('dispatchEvent(new Event("resize"))')
   })
 
