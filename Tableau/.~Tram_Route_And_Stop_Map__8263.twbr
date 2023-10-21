@@ -17,7 +17,7 @@
     <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
     <WindowsPersistSimpleIdentifiers />
   </document-format-change-manifest>
-  <repository-location id='ThePedestrianCountbyHours' path='/workbooks' revision='1.3' />
+  <repository-location id='TramMapwithPedestrianCount' path='/workbooks' revision='1.4' />
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
     <preference name='ui.shelf.height' value='26' />
@@ -924,7 +924,6 @@
               <approx-count>115</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTE_ID</remote-name>
@@ -939,7 +938,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTESHTNM</remote-name>
@@ -954,7 +952,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>TRIPHDSIGN</remote-name>
@@ -969,7 +966,6 @@
               <approx-count>48</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTE_KM</remote-name>
@@ -983,7 +979,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>105</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTELONGN</remote-name>
@@ -998,7 +993,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>FIRSTSTNAM</remote-name>
@@ -1013,7 +1007,6 @@
               <approx-count>67</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LASTSPNAME</remote-name>
@@ -1028,7 +1021,6 @@
               <approx-count>59</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>FIRSTSPID</remote-name>
@@ -1043,7 +1035,6 @@
               <approx-count>68</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LASTSTID</remote-name>
@@ -1058,7 +1049,6 @@
               <approx-count>62</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>NUMOFSTOPS</remote-name>
@@ -1072,7 +1062,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>51</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>OPERATOR</remote-name>
@@ -1087,7 +1076,6 @@
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Geometry</remote-name>
@@ -1101,7 +1089,6 @@
               <aggregation>Collect</aggregation>
               <approx-count>115</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[PTV_METRO_TRAM_ROUTE.shp_46E7F45D4DC34FA1B7C93B009E16FC0F]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>F1</remote-name>
@@ -1115,7 +1102,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>12640</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>STOP_ID</remote-name>
@@ -1129,7 +1115,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>738</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LATITUDE</remote-name>
@@ -1143,7 +1128,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>737</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>STOP_NAME</remote-name>
@@ -1158,7 +1142,6 @@
               <approx-count>635</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>LONGITUDE</remote-name>
@@ -1172,7 +1155,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>737</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>TICKETZONE</remote-name>
@@ -1187,7 +1169,6 @@
               <approx-count>2</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ROUTEUSSP</remote-name>
@@ -1202,7 +1183,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>geometry_x</remote-name>
@@ -1217,7 +1197,6 @@
               <approx-count>738</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>location_id</remote-name>
@@ -1231,7 +1210,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Sensor Name</remote-name>
@@ -1246,7 +1224,6 @@
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_latitude</remote-name>
@@ -1260,7 +1237,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_longitude</remote-name>
@@ -1274,7 +1250,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>sensor_geometry</remote-name>
@@ -1289,7 +1264,6 @@
               <approx-count>87</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='LZH_RCN' />
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Hour</remote-name>
@@ -1303,7 +1277,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>25</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>Value</remote-name>
@@ -1317,7 +1290,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>1261</approx-count>
               <contains-null>true</contains-null>
-              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[average_pedestrian_per_Hour_WithLocation.csv_9FB0168C07CF40D59596FB20C18518DF]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
             </metadata-record>
           </metadata-records>
         </connection>
@@ -1990,16 +1962,47 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16143766.672787454' min='16132910.775099717' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4548308.7617472066' min='-4556242.2553667882' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' field-type='quantitative' max='16144137.956551461' min='16131667.317331968' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Latitude (generated)]' field-type='quantitative' max='-4548597.9214067115' min='-4557711.4686715929' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='table'>
             <format attr='omit-on-special' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' value='false' />
             <format attr='break-on-special' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' value='false' />
             <format attr='show-null-value-warning' field='[federated.0vowws40obuv7y1bj5ht91ynd3dy].[Longitude (generated)]' value='false' />
           </style-rule>
+          <style-rule element='map-layer'>
+            <format attr='enabled' id='b01002_001e' value='false' />
+            <format attr='enabled' id='b01002_002e' value='false' />
+            <format attr='enabled' id='b01002_003e' value='false' />
+            <format attr='enabled' id='dp02_0001e' value='false' />
+            <format attr='enabled' id='dp02_0015e' value='false' />
+            <format attr='enabled' id='dp03_0027e_plus_dp03_0029e' value='false' />
+            <format attr='enabled' id='dp03_0028e' value='false' />
+            <format attr='enabled' id='dp03_0030e_plus_dp03_0031e' value='false' />
+            <format attr='enabled' id='dp03_0062e' value='false' />
+            <format attr='enabled' id='dp03_0088e' value='false' />
+            <format attr='enabled' id='dp04_0001e' value='false' />
+            <format attr='enabled' id='dp04_0046e' value='false' />
+            <format attr='enabled' id='dp04_0047e' value='false' />
+            <format attr='enabled' id='dp04_0089e' value='false' />
+            <format attr='enabled' id='dp05_0001e' value='false' />
+            <format attr='enabled' id='dp05_0002e_div_dp05_0003e' value='false' />
+            <format attr='enabled' id='dp05_0032e' value='false' />
+            <format attr='enabled' id='dp05_0033e' value='false' />
+            <format attr='enabled' id='dp05_0034e' value='false' />
+            <format attr='enabled' id='dp05_0039e' value='false' />
+            <format attr='enabled' id='dp05_0047e' value='false' />
+            <format attr='enabled' id='dp05_0053e' value='false' />
+            <format attr='enabled' id='dp05_0066e' value='false' />
+            <format attr='enabled' id='dp05_0077e' value='false' />
+          </style-rule>
           <style-rule element='map'>
-            <format attr='washout' value='0.0' />
+            <format attr='washout' value='0' />
+            <format attr='map-style' value='normal' />
+          </style-rule>
+          <style-rule element='map-data-layer'>
+            <format attr='palette' value='tableau-map-blue-green-light' />
+            <format attr='geo-area-type' value='State' />
           </style-rule>
         </style>
         <panes _.fcp.Layers.true...customization-axis='layer'>
@@ -2100,7 +2103,7 @@
         </edge>
       </cards>
       <viewpoint>
-        <default-map-tool-selection tool='2' />
+        <default-map-tool-selection tool='1' />
       </viewpoint>
       <simple-id uuid='{C968520E-FC22-4A88-8951-A35890B4A75A}' />
     </window>
