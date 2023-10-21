@@ -114,6 +114,7 @@ dollar_icons <- iconList(
 )
 
 tram_icon <- makeIcon("www/icons/train-tram-solid.svg", "www/icons/train-tram-solid.svg", ICON_SIZE + 30, ICON_SIZE + 30)
+hotel_icon <- makeIcon("www/icons/bed-solid.svg", "www/icons/bed-solid.svg", ICON_SIZE + 30, ICON_SIZE + 30)
 
 # attraction icons
 attraction_icons <- iconList(

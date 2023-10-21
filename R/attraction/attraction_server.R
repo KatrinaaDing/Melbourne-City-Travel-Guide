@@ -187,6 +187,12 @@ attractionServer <- function(input, output, session) {
 
 
   ################### reactive ##################
+  # the previous clicked hotel marker's id
+  last_clicked_hotel_marker <- reactiveVal(NULL)
+
+  # the previous shown hotel buffer's id
+  last_shown_hotel_buffer <- reactiveVal(NULL)
+
   # filter dynamically load data
   attractions_data_map <- reactive({
     attr_faci_data %>%
@@ -200,5 +206,47 @@ attractionServer <- function(input, output, session) {
   # Leaflet map
   output$attraction_map <- renderLeaflet({
     render_map(attractions_data_map())
+  })
+
+  # show hotel buffer on the attraction map
+  observeEvent(input$view_nearby_poi_id, {
+    leafletProxy("attraction_map") %>%
+      removeShape(
+        layerId = paste0("hotel_buffer_", last_shown_hotel_buffer())
+      ) %>% 
+      removeMarker(
+        layerId = paste0("hotel_point_", last_shown_hotel_buffer())
+      )
+    if (is.null(input$view_nearby_poi_id)) {
+      return()
+    }
+    # navigate to attraction tab 
+    updateTabItems(session, "tabs", "attraction")
+    # get the stop id
+    hotel_id <- strsplit(input$view_nearby_poi_id, "-")[[1]][1]
+    
+    # get buffer polygon and point from dataset
+    hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_id, ]
+    hotel_point <- hotels[hotels$id == hotel_id, ]
+    leafletProxy("attraction_map") %>% 
+      setView(lng = hotel_point$Longitude, lat = hotel_point$Latitude, zoom = 15) %>%
+      addPolygons(
+        data = hotel_buffer,
+        fillColor = "#d4eeff",
+        stroke = TRUE,
+        weight = 2,
+        color = "#33b1ff",
+        fillOpacity = 0.3,
+        layerId = paste0("hotel_buffer_", input$stop_nearby_hotel_id)
+      ) %>%
+      addMarkers(
+        data = hotel_point,
+        icon = hotel_icon,
+        label = hotel_point$name,
+        layerId = paste0("hotel_point_", input$stop_nearby_hotel_id)
+      )
+      
+    # update the last clicked hotel marker
+    last_shown_hotel_buffer(input$view_nearby_poi_id)
   })
 }

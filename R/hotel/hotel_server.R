@@ -148,7 +148,7 @@ hotelServer <- function(input, output, session) {
   ############# reactive functions #############
 
   # the previous clicked marker's id
-  last_clicked_marker <- reactiveVal(NULL)
+  last_clicked_hotel_marker <- reactiveVal(NULL)
 
   # the previous shown stop buffer's id
   last_shown_stop_buffer <- reactiveVal(NULL)
@@ -308,12 +308,12 @@ hotelServer <- function(input, output, session) {
     leafletProxy("hotel_map") %>%
       # remove previous hotel detail control box
       removeControl(
-        layerId = paste0("hotel_detail_", last_clicked_marker())
+        layerId = paste0("hotel_detail_", last_clicked_hotel_marker())
       ) %>%
-      # remove previous buffer polygon
-      removeShape(
-        layerId = paste0("hotel_buffer_", last_clicked_marker())
-      )  %>%
+      # # remove previous buffer polygon
+      # removeShape(
+      #   layerId = paste0("hotel_buffer_", last_clicked_hotel_marker())
+      # )  %>%
     # add new control box and buffer polygon
       addControl(
         html = paste0(
@@ -333,30 +333,45 @@ hotelServer <- function(input, output, session) {
           "<div style='position: absolute; right: 10px; bottom: 10px; text-align: right'>",
             "<div style='padding-bottom: 5px;'>",
               nearby_stop_hint(num_stops),
-              ifelse(num_stops > 0,"<button id='viewNearbyTramStopButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+              ifelse(
+                num_stops > 0,
+                paste0("<button id='viewNearbyTramStopButton' value='",
+                  hotel_data$id,
+                  "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>"
+                ), 
+                ""
+              ),
             "</div>",
             "<div>",
               nearby_poi_hint(num_pois),
-              ifelse(num_pois > 0,"<button id='viewNearbyPoiButton' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>", ""),
+              ifelse(
+                num_pois > 0,
+                paste0("<button id='viewNearbyPoiButton' value='",
+                  hotel_data$id,
+                  "' class='btn-xs btn-primary' style='margin-left: 10px;'>View</button>"
+                ), 
+                ""
+              ),
             "</div>",
           "</div>",
           "</div>"
         ),
         position = "bottomleft",
-        layerId = paste0("hotel_detail_", hotel_data$id)
-      ) %>%
-      addPolygons(
-        data = hotel_buffer,
-        fillColor = "#d4eeff",
-        stroke = TRUE,
-        weight = 1,
-        color = "black",
-        fillOpacity = 0.2,
-        layerId = paste0("hotel_buffer_", hotel_data$id)
+        layerId = paste0("hotel_detail_", click$id)
       )
+      # ) %>%
+      # addPolygons(
+      #   data = hotel_buffer,
+      #   fillColor = "#d4eeff",
+      #   stroke = TRUE,
+      #   weight = 1,
+      #   color = "black",
+      #   fillOpacity = 0.2,
+      #   layerId = paste0("hotel_buffer_", hotel_data$id)
+      # )
 
     # store the last clicked marker
-    last_clicked_marker(click$id)
+    last_clicked_hotel_marker(click$id)
 
     output$Click_text <- renderText({
       hotel_data$name
@@ -411,7 +426,6 @@ hotelServer <- function(input, output, session) {
       )
     # store the last shown stop buffer
     last_shown_stop_buffer(input$stop_nearby_hotel_id)
-
   })
 
   # toggle hiding street name on map

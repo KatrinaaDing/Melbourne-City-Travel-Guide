@@ -2,6 +2,15 @@ box_height <- 650
 
 attraction_tab <- tabItem(
   tabName = "attraction",
+  tags$head(
+    tags$script(HTML("
+      $(document).on('click', '#viewNearbyPoiButton', function() {
+        console.log(this.value)
+        let random_id = this.value + '-' + Math.random();
+        Shiny.setInputValue('view_nearby_poi_id', random_id);
+      })    
+    "))
+  ),
   h4("Attraction"),
   fluidRow(
     box(
