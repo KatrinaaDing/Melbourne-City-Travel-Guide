@@ -57,8 +57,8 @@ root
 
 ##### Restaurants
 
-- Locations of Melbourne restaurants: Google Place API https://developers.google.com/maps/documentation/places/web-service/overview
-- Restaurant ratings: Tripadvisor API https://www.tripadvisor.com/developers
+- Locations and details of Melbourne restaurants: Google Place API https://developers.google.com/maps/documentation/places/web-service/overview
+- Cuisine of restaurants: Tripadvisor API https://www.tripadvisor.com/developers
 
 ##### Airbnb Listings
 
