@@ -1,21 +1,26 @@
 # calculate the number of poi in given polygon
 get_num_poi_in_polygon <- function(polygon, poi_table) {
-  poi_geo <- st_as_sf(poi_table, coords = c("longitude", "latitude"), crs = 4326)
+  poi_geo <- st_as_sf(
+    poi_table, coords = c("longitude", "latitude"), crs = 4326
+  )
   poi_geo <- st_intersection(poi_geo, polygon)
   return(nrow(poi_geo))
 }
 
+# Render markers and poly lines to attraction map with input datasets
 render_map <- function(filtered_data, filtered_walk_data) {
   map <- leaflet() %>% 
-        addProviderTiles(providers$CartoDB.Positron) %>%
-        addPolygons(
-        data = city_boundary,
-        fillColor = "transparent",
-        weight = 2,
-        color = "#000000",
-        fillOpacity = 0.5)
+    addProviderTiles(providers$CartoDB.Positron) %>%
+    addPolygons(
+      data = city_boundary,
+      fillColor = "transparent",
+      weight = 2,
+      color = "#000000",
+      fillOpacity = 0.5
+    )
 
-  if(nrow(filtered_data) != 0) {
+  if (nrow(filtered_data) != 0) {
+    # Add attraction markers to map
     map <- map %>%
       addMarkers(
         data = filtered_data,
@@ -28,8 +33,11 @@ render_map <- function(filtered_data, filtered_walk_data) {
       )
   }
 
-  if(nrow(filtered_walk_data) != 0) {
+  if (nrow(filtered_walk_data) != 0) {
+    # Palette function to map colors based on distance of the walk
     palette <- colorNumeric("viridis", NULL)
+
+    # Add walk poly lines to attraction map
     map <- map %>%
       addPolylines(
         data = filtered_walk_data,
@@ -52,6 +60,7 @@ render_map <- function(filtered_data, filtered_walk_data) {
   return(map)
 }
 
+# Get popup content based on the input attraction data
 get_popup_content <- function(row_data) {
   if(row_data[['category']] == 'artworks') {
     return(paste0(
@@ -176,12 +185,14 @@ get_popup_content <- function(row_data) {
         "<br>",
         "<b> Address: </b>",
         row_data['address']
-  ))
+      )
+    )
   } else {
     return('')
   }
 }
 
+# Generate scripts to embed Tableau chart into Shiny app
 attraction_script_head <- paste0('let viz = document.getElementById("attraction_ped_chart"); let sheet = viz.workbook.activeSheet; ')
 
 filter_attraction_script <- function(script_body) {
@@ -253,12 +264,14 @@ attractionServer <- function(input, output, session) {
     updateTabItems(session, "tabs", "attraction")
     # get the stop id
     hotel_id <- strsplit(input$view_nearby_poi_id, "-")[[1]][1]
-    
+
     # get buffer polygon and point from dataset
     hotel_buffer <- hotel_nearby_buffer[hotel_nearby_buffer$id == hotel_id, ]
     hotel_point <- hotels[hotels$id == hotel_id, ]
-    leafletProxy("attraction_map") %>% 
-      setView(lng = hotel_point$Longitude, lat = hotel_point$Latitude, zoom = 15) %>%
+    leafletProxy("attraction_map") %>%
+      setView(
+        lng = hotel_point$Longitude, lat = hotel_point$Latitude, zoom = 15
+      ) %>%
       addPolygons(
         data = hotel_buffer,
         fillColor = "#d4eeff",
@@ -274,7 +287,7 @@ attractionServer <- function(input, output, session) {
         label = paste0(hotel_point$name, "hosted by ", hotel_point$host_name),
         layerId = paste0("hotel_point_", input$view_nearby_poi_id)
       )
-      
+
     # update the last clicked hotel marker
     last_shown_hotel_buffer(input$view_nearby_poi_id)
   })
@@ -284,7 +297,7 @@ attractionServer <- function(input, output, session) {
     leafletProxy("attraction_map") %>%
       removeShape(
         layerId = paste0("stop_buffer_", last_shown_stop_buffer())
-      ) %>% 
+      ) %>%
       removeMarker(
         layerId = paste0("stop_point_", last_shown_stop_buffer())
       )
@@ -296,15 +309,19 @@ attractionServer <- function(input, output, session) {
     # get the stop id
     stop_id <- strsplit(input$stop_nearby_poi_id, "-")[[1]][1]
     # get buffer polygon from dateset
-    stop_buffer_info <- tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_id, 1, ]
-    stop_point_info <- tram_stops_point[tram_stops_point$STOP_ID == stop_id, 1, ]
+    stop_buffer_info <-
+      tram_stops_buffer[tram_stops_buffer$STOP_ID == stop_id, 1, ]
+    stop_point_info <-
+      tram_stops_point[tram_stops_point$STOP_ID == stop_id, 1, ]
     tram_stop_info <- tram_stops[tram_stops$STOP_ID == stop_id, ]
-    # trasform the polygon to sf object
+    # transform the polygon to sf object
     stop_buffer <- st_transform(stop_buffer_info$near_airbnb_polygon, 4326)
     stop_point <- st_transform(stop_point_info$geometry, 4326)
 
-    leafletProxy("attraction_map") %>% 
-      setView(lng =  stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15) %>%
+    leafletProxy("attraction_map") %>%
+      setView(
+        lng = stop_point[[1]][[1]], lat = stop_point[[1]][[2]], zoom = 15
+      ) %>%
       addPolygons(
         data = stop_buffer,
         fillColor = "#d4eeff",
@@ -325,21 +342,21 @@ attractionServer <- function(input, output, session) {
     last_shown_stop_buffer(input$stop_nearby_poi_id)
   })
 
-  # onclick clear_attraction_radius button, clear the all the buffer and marker
+  # When clear_attraction_radius button is clicked,
+  # clear the all the buffer and marker.
   observeEvent(input$clear_attraction_radius, {
     leafletProxy("attraction_map") %>%
       removeShape(
         layerId = paste0("hotel_buffer_", last_shown_hotel_buffer())
-      ) %>% 
+      ) %>%
       removeMarker(
         layerId = paste0("hotel_point_", last_shown_hotel_buffer())
-      ) %>% 
+      ) %>%
       removeShape(
         layerId = paste0("stop_buffer_", last_shown_stop_buffer())
       ) %>%
       removeMarker(
         layerId = paste0("stop_point_", last_shown_stop_buffer())
       )
-
   })
 }
