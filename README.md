@@ -31,26 +31,26 @@ R -e "shiny::runApp('./R/app.R')"
 ```shell
 root
 ├── R
-│   ├──	R.Rproj					# project file
-│   ├── app.R					# R script for Shiny app
+│   ├──	R.Rproj					        # project file
+│   ├── app.R					          # R script for Shiny app
 │   ├── constants_and_data.R    # R script for constants and data import
-│   ├── libraries.R				# R script for libraries import
-│   ├── attraction				# server and ui for attraction tab
-│   ├── hotel					# server and ui for hotel(Airbnb) tab
-│   ├── restaurant				# server and ui for restaurant tab
-│   ├── transport				# server and ui for transport tab
-│   ├── www						# custom icons and css files
-│   └── data					# datasets
+│   ├── libraries.R				      # R script for libraries import
+│   ├── attraction				      # server and ui for attraction tab
+│   ├── hotel					          # server and ui for hotel(Airbnb) tab
+│   ├── restaurant				      # server and ui for restaurant tab
+│   ├── transport			          # server and ui for transport tab
+│   ├── www						          # custom icons and css files
+│   └── data					          # datasets
 │       ├── airbnb
 │       ├── geographic
 │       ├── poi
 │       └── restaurant
-└── Tableau						# Tableau workbooks
+└── Tableau						          # Tableau workbooks
     ├── Airbnb
     ├── Attraction
     ├── Restaurant
     └── Transport
-    	└── data				# transport datasets
+    	└── data				          # transport datasets
 ```
 
 ## Datasets Used
