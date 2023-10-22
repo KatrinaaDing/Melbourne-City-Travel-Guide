@@ -1,3 +1,4 @@
+# To handle the show message of different numbers of nearby airbnb
 nearby_airbnb_hint <- function(number) {
   if (number == 0) {
     return("There is no Airbnb listing nearby.")
@@ -7,18 +8,20 @@ nearby_airbnb_hint <- function(number) {
     return(paste("There are<strong>", number, "</strong>Airbnb listings nearby."))
   }
 }
-
+# 
 transport_script_head <- paste0('let viz = document.getElementById("pedestrian_Count_per_Hour"); let sheet = viz.workbook.activeSheet; ')
 
 transport_map_script_head <- paste0('let viz = document.getElementById("tramStop_Pedestrian_Map"); let sheet = viz.workbook.activeSheet; ')
 
+# Create script for filter the tram stop
 create_filter_transport_script <- function(script_body) {
   paste0(transport_script_head, script_body)
 }
-
+# Create script to select tram stop
 create_select_markers_script <- function(script_body) {
   paste0(transport_map_script_head, script_body)
 }
+
 
 transportServer <- function(input, output, session) {
   # go to transport page on click "view nearby stops" button
@@ -26,6 +29,7 @@ transportServer <- function(input, output, session) {
     updateTabItems(session, "tabs", "transport")
   })
 
+  #Listen the changes of selection of tram stops in the map, and shows the corresponding message and graphs   
   observeEvent(input$tramStop_Pedestrian_Map_mark_selection_changed, {
     sensor_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
     stop_Name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"
@@ -65,6 +69,7 @@ transportServer <- function(input, output, session) {
     runjs(create_filter_transport_script(script_body))
   })
 
+  # To shows different title by selected Tram stop 
   output$dynamic_title <- renderUI({
     tram_stop_name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"STOP_NAME"
     sensor_name <- input$tramStop_Pedestrian_Map_mark_selection_changed$"Sensor Name"
