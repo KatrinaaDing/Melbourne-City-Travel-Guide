@@ -1,3 +1,4 @@
+# produce hint text for numbers of nearby tram stops
 nearby_stop_hint <- function(number) {
   if (number == 0) {
     "There is no tram stop in 500m."
@@ -8,6 +9,7 @@ nearby_stop_hint <- function(number) {
   }
 }
 
+# produce hint text for numbers of nearby attractions
 nearby_poi_hint <- function(number) {
   if (number == 0) {
     "There is no attraction in 500m."
@@ -18,31 +20,35 @@ nearby_poi_hint <- function(number) {
   }
 }
 
+# create script head for referencing tableau sheet
 hotel_script_head <- function(name) {
   paste0('let viz = document.getElementById("', name,'"); let sheet = viz.workbook.activeSheet; ')
 }
 
+# create script for single select filter
 single_select_filter_script <- function(filter_name, filter_value) {
   sprintf('sheet.applyFilterAsync("%s", ["%s"], FilterUpdateType.Replace);', filter_name, filter_value)
 }
 
+# create script for multi select filter
 multi_select_filter_script <- function(filter_name, filter_values) {
   filter_values_string <- paste(sprintf('"%s"', filter_values), collapse = ", ")
   sprintf('sheet.applyFilterAsync("%s", [%s], FilterUpdateType.Replace);', filter_name, filter_values_string)
 }
 
+# create script for range filter
 range_filter_script_hotel <- function(filter_name, filter_min, filter_max) {
   script <- sprintf('sheet.applyRangeFilterAsync("%s", {min: %s, max: %s}, FilterUpdateType.Replace);', filter_name, filter_min, filter_max)
   return(script)
 }
 
+# apply filters on two tableau charts on Airbnb Listing page
 run_hotel_filter_script <- function(script_body) {
   tree_script <- paste0(hotel_script_head("tableauAirbnbTree"), script_body)
   scatter_script <- paste0(hotel_script_head("tableauAirbnbScatter"), script_body)
   runjs(tree_script)
   runjs(scatter_script)
 }
-
 
 hotelServer <- function(input, output, session) {
   ################### observers ##################
