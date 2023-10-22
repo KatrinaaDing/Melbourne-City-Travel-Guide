@@ -1,7 +1,8 @@
-# Events
+# Events name
 suburb_filter_click_event <- paste0(res_suburb_filter_id, "_click")
 suburb_filter_shape_click_event <- paste0(res_suburb_filter_id, "_shape_click")
 
+# Generate javascript code to work with Tableau graphs
 generate_filtering_script <- function(type, value, action) {
   if(type == 'suburb'){
     if(value == 'All') {
@@ -35,6 +36,7 @@ generate_filtering_script <- function(type, value, action) {
   return(script)
 }
 
+# Trigger script to update Tableau charts
 update_tableau_charts <- function(filter_type, filter_value, filter_action = NULl) {
   filter_script <- generate_filtering_script(filter_type, filter_value, filter_action)
   # Update Cuisine Pie Chart
@@ -43,6 +45,7 @@ update_tableau_charts <- function(filter_type, filter_value, filter_action = NUL
   runjs(sprintf('let viz = document.getElementById("%s");let sheet = viz.workbook.activeSheet;%s', res_topn_chart_id, filter_script))
 }
 
+# Apply filters to original data to be used for stigmatization value boxes
 apply_filter_to_data <- function(res_data, sub, p_level, num_reviews_range, special_options) {
   if(sub != 'All') res_data <- res_data %>% filter(suburb == sub)
   if(p_level != 'All') {
@@ -63,6 +66,7 @@ apply_filter_to_data <- function(res_data, sub, p_level, num_reviews_range, spec
   return(c(amount, best_res, best_cuisine))
 }
 
+# Restaurant related server functions
 restaurantServer <- function(input, output, session) {
   reactive_res_sum_data <- reactive({
     return(apply_filter_to_data(restaurants, reactive_values$res_suburb, input$res_price_level, input$res_num_review, input$res_special_options))
@@ -82,9 +86,8 @@ restaurantServer <- function(input, output, session) {
   
   reactive_values <- reactiveValues(res_suburb = 'All', old_special_options = NULL)
   output[[res_suburb_filter_id]] <-  renderLeaflet({render_res_suburb_filter_unselected()})
-
-
-
+  
+  # Track event of suburb filter to update the UI correspondingly
   observeEvent(input[[suburb_filter_click_event]], {
     suburb_filter_shape_click_info <- input[[suburb_filter_shape_click_event]]
     suburb_filter_click_info <- input[[suburb_filter_click_event]]
@@ -116,6 +119,5 @@ restaurantServer <- function(input, output, session) {
       update_tableau_charts('special_options', setdiff(reactive_values$old_special_options, input$res_special_options), "remove")
     }
     reactive_values$old_special_options <- isolate(input$res_special_options)
-  },ignoreNULL = FALSE, ignoreInit = TRUE)
+  }, ignoreNULL = FALSE, ignoreInit = TRUE)
 }
-
