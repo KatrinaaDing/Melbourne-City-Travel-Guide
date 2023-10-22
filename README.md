@@ -1,7 +1,9 @@
 # Melbourne-City-Travel-Guide
 
----
 ## Introduction
+
+The app allows tourists to delve into Melbourne's dynamic culture, breathtaking attractions, and diverse culinary offerings. The app offers a well-designed interface, starting with an introduction page that outlines its features, which separates user needs into four specialised tabs: Restaurants, discovering top-notch restaurants; Airbnb Listings, listed cosy hotels; Attraction, outlines iconic landmarks; and Transport, provides convenient tram options. The app integrates with sophisticated filters that maximise flexibility on filtering the data. 
+
 
 ##### Course Name: GEOM90007 Information Visualisation @UniMelb
 
