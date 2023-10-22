@@ -1,5 +1,4 @@
-box_height <- 650
-
+# Attraction Tab UI
 attraction_tab <- tabItem(
   tabName = "attraction",
   tags$head(
@@ -28,7 +27,11 @@ attraction_tab <- tabItem(
         status = "primary",
         solidHeader = TRUE,
         collapsible = TRUE,
-        actionButton("clear_attraction_radius", "Clear Circle Bounds", class = "btn btn-danger"),
+        actionButton(
+          "clear_attraction_radius",
+          "Clear Circle Bounds",
+          class = "btn btn-danger"
+        ),
         checkboxGroupInput(
           "walk_selected", "Guide Routines",
           choices = WALKS_CHOICES,
