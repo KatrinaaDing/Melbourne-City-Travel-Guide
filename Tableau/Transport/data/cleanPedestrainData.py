@@ -53,9 +53,6 @@ def find_nearest_airbnb(tramStop_data, hotel_data):
     airbnb_ids = list(set(hotel_data.loc[indices_within_radius, "id"].values))
     if len(airbnb_ids) == 0:
         return None 
-    # return limitedRange
-    # closest_stop_name = tramStop_data_cleaned.loc[tramStop_data_cleaned, 'location_id']
-    # return closest_sensor_id
     return ','.join(f'"{x}"' for x in airbnb_ids)
 
 # put the closest sensor location id into the data
