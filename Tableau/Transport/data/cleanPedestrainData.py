@@ -105,10 +105,8 @@ average_pedestrian_per_Hour_withLocation["sensor_geometry"].to_crs("EPSG:4326")
 
 
 # Output the dataset as csv file
-#average_pedestrian_per_Hour_withLocation.to_csv(
-#    'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
-
-
+average_pedestrian_per_Hour_withLocation.to_csv(
+   'Tableau/Transport/data/average_pedestrian_per_Hour_WithLocation.csv')
 
 tramStop_data.to_csv(
     'Tableau/Transport/data/tramStop_airbnb_Data.csv')
