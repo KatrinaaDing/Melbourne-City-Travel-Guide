@@ -37,7 +37,6 @@ restaurant_tab <- tabItem(
                                                                   height = paste0(chart_box_height + 34, "px"))),
              box(width = 6, status = 'primary',
                  height = chart_box_height + 20, tableauPublicViz(id = res_topn_chart_id, 
-                                                                  # url = "https://public.tableau.com/views/Top10RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
                                                                   url = "https://public.tableau.com/views/Top20RatedRestaurants/TopN?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link", 
                                                                   height = paste0(chart_box_height + 34, "px"))  
              )
@@ -54,6 +53,7 @@ restaurant_tab <- tabItem(
     )
   ))
 
+# Render suburb map filter
 render_res_suburb_filter_unselected <- function() {
   base_map <- leaflet(options = leafletOptions(zoomControl = FALSE, dragging = FALSE, minZoom = 12, maxZoom = 12, doubleClickZoom= FALSE, attributionControl=FALSE))  %>%
     addProviderTiles(providers$CartoDB.Positron) %>%
@@ -63,6 +63,7 @@ render_res_suburb_filter_unselected <- function() {
   return(base_map)
 }
 
+# Render suburb map filter when a suburb selected
 render_res_suburb_filter_selected <- function(selected_suburb = NULL) {
   unselected_polygon <- leafletProxy(res_suburb_filter_id) %>% 
     addPolygons(data = suburb_boundary, label = ~featurenam, group = "original", weight = 2, color = "#000000",

@@ -1,6 +1,7 @@
 trip_data <- read_rds('trip_data_all.rds')
 trip_location <- read_csv('trip_location.csv')
 
+# Combine data from Google Places and Tripadvisor
 df <- data.frame()
 list <- list(list())
 for(key in names(trip_data)) {

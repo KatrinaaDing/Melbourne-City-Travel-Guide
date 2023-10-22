@@ -1,5 +1,6 @@
 library("dplyr") 
 library(tidyverse)
+
 # Global data
 api_key <- "XXXXXX"
 suburbs <- c(
@@ -34,14 +35,9 @@ get_service_in_surburb_data <- function(suburb, service = "restaurant") {
   message(suburb, " ", service, " is saved successfully.")
 }
 
-# for(suburb in suburbs) {
-#   get_service_in_surburb_data(suburb = suburb)  
-# }
 get_service_in_surburb_data(suburb = suburbs[[1]])  
-################################################################################
-# Get Details #
-################################################################################
 
+# Get Details
 process_details <- function(detail) {
   for(key in names(detail)) {
     if(is.character(detail[[key]])) {
@@ -74,9 +70,7 @@ for(i in 2:length(suburbs)) {
 
 get_and_save_details(suburbs[[11]])
 
-
-### Combine Data
-
+# Combine Data
 all_places <- data.frame()
 all_details <- data.frame()
 
@@ -104,9 +98,7 @@ all_places <- all_places[!duplicated(all_places$place_id), ]
 all_data <- inner_join(all_places, all_details, by ='place_id')
 all_data <- all_data[!duplicated(all_data$place_id), ]
 
-# Trip Ad
-
-# all_data <- read_csv(file.path(getwd(), 'google-data', 'all-data.csv'))
+# Fetch Tripadvisor data
 
 trip_key <- 'xxxxxx'
 
@@ -137,11 +129,6 @@ for(i in 1:nrow(all_data)) {
   }
 }
 
-# write_csv(trip_location, 'trip_location.csv')
-# 
-# 
-# jsonlite::fromJSON(content(response, "text"))
-
 trip_data_all <- list()
 trip_data <- data.frame()
 for(i in 1:nrow(trip_location)) {
@@ -166,4 +153,3 @@ all_data_with_cusine <- left_join(all_data, trip_data_all[, c('place_id', 'cuisi
 saveRDS(trip_data_all, "trip_data_all.rds")
 
 write_csv(all_data_with_cusine, 'all_with_cuisine.csv')
-
