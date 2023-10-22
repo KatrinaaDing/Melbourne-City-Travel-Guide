@@ -1,20 +1,20 @@
 nearby_stop_hint <- function(number) {
   if (number == 0) {
-    "There is no tram stop nearby."
+    "There is no tram stop in 500m."
   } else if (number == 1) {
-    "There is <strong>1</strong> tram stop nearby."
+    "There is <strong>1</strong> tram stop in 500m."
   } else {
-    paste0("There are <strong>", number, "</strong> tram stops nearby.")
+    paste0("There are <strong>", number, "</strong> tram stops in 500m.")
   }
 }
 
 nearby_poi_hint <- function(number) {
   if (number == 0) {
-    "There is no attraction nearby."
+    "There is no attraction in 500m."
   } else if (number == 1) {
-    "There is <strong>1</strong> attraction nearby."
+    "There is <strong>1</strong> attraction in 500m."
   } else {
-    paste0("There are <strong>", number, "</strong> attractions nearby.")
+    paste0("There are <strong>", number, "</strong> attractions in 500m.")
   }
 }
 
@@ -196,6 +196,9 @@ hotelServer <- function(input, output, session) {
   # map
   output$hotel_map <- renderLeaflet({
     filtered_hotels <- getFilteredHotels()
+    if (nrow(filtered_hotels) == 0) {
+      return()
+    }
     leaflet_map <- leaflet() %>%
       addProviderTiles(ifelse(input$toggle_hotel_street_name, providers$CartoDB.PositronNoLabels, providers$CartoDB.Positron)) %>%
       addPolygons(
@@ -228,9 +231,9 @@ hotelServer <- function(input, output, session) {
         html = paste0(
           "<div style='padding: 5px; background-color: white;'>",
           "<h5>Price Level</h5>",
-          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap</div>",
-          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium</div>",
-          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive</div>",
+          "<div style='padding: 5px;'><img src='icons/cheap.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Cheap (0-33%)</div>",
+          "<div style='padding: 5px;'><img src='icons/medium-price.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Medium (33%-66%)</div>",
+          "<div style='padding: 5px;'><img src='icons/expensive.svg' width='", ICON_SIZE, "' height='", ICON_SIZE, "' /> Expensive（66%-100%)</div>",
           "</div>"
         ),
         position = "bottomright"
@@ -321,10 +324,10 @@ hotelServer <- function(input, output, session) {
             "<button type='button' id='closeButton' class='btn btn-secondary' style='width: 30px; height: 30px; padding: 0; position: absolute; top: 5px; right: 5px;' >x</button>",
             # listing name, can navigate to Airbnb listing site
             "<div style='font-size: 20px; padding-bottom: 10px; padding-top: 10px;'><strong>Name: <a href='https://www.airbnb.com.au/rooms/",
-            hotel_data$id, "'>", hotel_data$name, "</a></strong></div>",
+            hotel_data$id, "' target='_blank'>", hotel_data$name, "</a></strong></div>",
             # host name, can navigate to host site
             "Host:  <a href='https://www.airbnb.com.au/users/show/",
-            hotel_data$host_id, "'><strong>", hotel_data$host_name, "</strong></a><br>",
+            hotel_data$host_id, "' target='_blank'><strong>", hotel_data$host_name, "</strong></a><br>",
             "Price: <strong>$", hotel_data$price, "/night</strong><br>",
             "Price class: <strong>", hotel_data$price_class, "</strong><br>",
             "Minimum nights: <strong>", hotel_data$minimum_nights, "</strong><br>",
@@ -365,7 +368,7 @@ hotelServer <- function(input, output, session) {
               "      </div>",
               "      <div class='modal-footer'>",
               "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>",
-              "        <button type='button' id='viewNearbyTramStopButton' class='btn btn-primary' value='",
+              "        <button type='button' id='viewNearbyTramStopButton' class='btn btn-primary' data-dismiss='modal' value='",
                           hotel_data$id,
               "         '>Go to Transport</button>",
               "      </div>",

@@ -33,7 +33,7 @@ attraction_tab <- tabItem(
           class = "btn btn-danger"
         ),
         checkboxGroupInput(
-          "walk_selected", "Guide Routines",
+          "walk_selected", "Guided Walks",
           choices = WALKS_CHOICES,
           selected = WALKS_CHOICES,
         ),
