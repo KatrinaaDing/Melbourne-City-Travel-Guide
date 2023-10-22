@@ -79,9 +79,9 @@ transportServer <- function(input, output, session) {
             return(title)
         } 
         if (length(tram_stop_name) > 1) {
-            title <- paste("Busyness per Hour on Multiple Tram Stops")
+            title <- paste("Business per Hour on Multiple Tram Stops")
         } else {
-            title <- paste("Busyness per Hour on ", tram_stop_name)
+            title <- paste("Business per Hour on ", tram_stop_name)
         }
     } else {
       title <- paste("Please select the point to see more details")
