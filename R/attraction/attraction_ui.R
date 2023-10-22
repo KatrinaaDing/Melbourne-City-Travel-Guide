@@ -30,7 +30,7 @@ attraction_tab <- tabItem(
         collapsible = TRUE,
         actionButton("clear_attraction_radius", "Clear Circle Bounds", class = "btn btn-danger"),
         checkboxGroupInput(
-          "walk_selected", "Guide Routines",
+          "walk_selected", "Guided Walks",
           choices = WALKS_CHOICES,
           selected = WALKS_CHOICES,
         ),
@@ -64,7 +64,7 @@ attraction_tab <- tabItem(
         style = "height: 270px",
         tableauPublicViz(
           id = "attraction_ped_chart",
-          url = "https://public.tableau.com/views/attraction_ped_count/FacilitiesPedestrainCount?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+          url = "https://public.tableau.com/views/attraction_ped_count/Sheet1?:language=en-US&:display_count=n&:origin=viz_share_link",
           height = paste0(250, "px")
         )
       )

@@ -1,10 +1,10 @@
 nearby_airbnb_hint <- function(number) {
   if (number == 0) {
-    return("There is no Airbnb listing nearby.")
+    return("There is no Airbnb listing in 500m.")
   } else if (number == 1) {
-    return("There is <strong>1</strong> Airbnb listing nearby.")
+    return("There is <strong>1</strong> Airbnb listing in 500m.")
   } else {
-    return(paste("There are<strong>", number, "</strong>Airbnb listings nearby."))
+    return(paste("There are<strong>", number, "</strong>Airbnb listings in 500m."))
   }
 }
 

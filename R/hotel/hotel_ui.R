@@ -36,7 +36,7 @@ hotel_tab <- tabItem(
       });
     ")),
   ),
-  h4("Airbnb"),
+  h4("Airbnb Listings"),
   column(
     width = 9,
       fluidRow(
@@ -52,27 +52,27 @@ hotel_tab <- tabItem(
       id = "hotel_statistics_tabset",
       tabPanel(
         "Map",
-        leafletOutput("hotel_map", height = "calc(100vh - 370px)"), # 330
+        leafletOutput("hotel_map", height = "calc(100vh - 340px)"), # 330
       ),
       tabPanel(
         "Chart",
-        style = "height: calc(100vh - 370px)",
+        style = "height: calc(100vh - 340px)",
         fluidRow(
           width = 12,
-          height = "calc((100vh - 370px)/2)",
+          height = "calc((100vh - 340px)/2)",
           tableauPublicViz(
             id='tableauAirbnbTree',
             url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsTreeMap/AveragePriceInEachSuburb?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-            style="height: calc((100vh - 370px)/2 + 10px); width: 100%;"
+            style="height: calc((100vh - 340px)/2 + 10px); width: 100%;"
           ),
         ),
         fluidRow(
           width = 12,
-          height = "calc((100vh - 370px)/2)",
+          height = "calc((100vh - 340px)/2)",
           tableauPublicViz(
             id='tableauAirbnbScatter',
             url = "https://public.tableau.com/views/MelbourneCityAirbnbListingsScatterPlot/PriceDistribution?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
-            style="height: calc((100vh - 370px)/2 - 10px); width: 100%;"
+            style="height: calc((100vh - 340px)/2 - 10px); width: 100%;"
           ),
         )
       ),
@@ -83,7 +83,7 @@ hotel_tab <- tabItem(
     div(
       box(
         width = 12,
-        style = "height: calc(100vh - 220px); overflow-y: scroll;",
+        style = "height: calc(100vh - 200px); overflow-y: scroll;",
         title = "Filter",
         status = "primary",
         solidHeader = TRUE,

@@ -28,23 +28,27 @@ intro_tab <- tabItem(
   tabName = "intro",
   h4("Introduction"),
   fluidRow(
-    box(width = 6, height = "650px",
-        img(src='Melburnian_Skyline.jpg', width = "100%", height = "630px")),
-    box(width = 6, height = "650px",
-        h3("Melbourne City Travel Guide"),
-        p("Welcome to Melbourne, a city full of tasty food, cool places, and fun things to do! Our app is here to help you discover the best of Melbourne. Here's what we have:"),
-        br(),
-        strong("Attractions",  actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
-        p("There's so much to see in Melbourne! Find cool stuff like Artworks, Music Venues, and historic Plaques here. We also list fun places like Playgrounds and important spots like Toilets and Drinking Fountains. "),
-        strong("Restaurants",actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
-        p("Hungry? Check out our 'Restaurant' tab. It has a map showing where you can find different kinds of food in Melbourne. Plus, we list the best-rated places to eat. "),
-        strong("Airbnb Listings", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
-        p("Need a place to stay? We've got info on Airbnb places all over the city. With our map and charts, you can easily find a comfy spot."),
-        strong("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
-        p("Want to get around Melbourne? Learn about the city's tram routes and where the tram stops are."),
-        br(),
-        p("Hope you enjoy your time in Melbourne and our app helps you along the way! Safe travels!")
-        )),
+    box(
+      width = 6, height = "650px",
+      img(src = "Melburnian_Skyline.jpg", width = "100%", height = "630px")
+    ),
+    box(
+      width = 6, height = "650px",
+      h3("Melbourne City Travel Guide"),
+      p("Welcome to Melbourne, a city full of tasty food, cool places, and fun things to do! Our app is here to help you discover the best of Melbourne. Here's what we have:"),
+      br(),
+      strong("Attractions", actionButton("explore_attraction", "Explore >>", class = "btn btn-link")),
+      p("There's so much to see in Melbourne! Find cool stuff like Artworks, Music Venues, and historic Plaques here. We also list fun places like Playgrounds and important spots like Toilets and Drinking Fountains. "),
+      strong("Restaurants", actionButton(inputId = "explore_restaurant", label = "Explore >>", class = "btn btn-link")),
+      p("Hungry? Check out our 'Restaurant' tab. It has a map showing where you can find different kinds of food in Melbourne. Plus, we list the best-rated places to eat. "),
+      strong("Airbnb Listings", actionButton("explor_airbnb", "Explore >>", class = "btn btn-link")),
+      p("Need a place to stay? We've got info on Airbnb places all over the city. With our map and charts, you can easily find a comfy spot."),
+      strong("Transport", actionButton("explore_transport", "Explore >>", class = "btn btn-link")),
+      p("Want to get around Melbourne? Learn about the city's tram routes and where the tram stops are."),
+      br(),
+      p("Hope you enjoy your time in Melbourne and our app helps you along the way! Safe travels!")
+    )
+  ),
 
   # actionButton("explore_data_source", "View Data Source ->", class = "btn btn-primary"),
 )
@@ -52,30 +56,44 @@ intro_tab <- tabItem(
 data_source_tab <- tabItem(
   tabName = "data_source",
   h4("Data Source"),
-  box(width = 12, height = '700px',
-      p("This page details the trusted sources behind our data, ensuring accurate and timely insights."),
-      h5("Restaurants"),
-      p("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
-      p("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
-      h5("Airbnb Listings"),
-      p("Melbourne Airbnb listings ", a("http://insideairbnb.com/get-the-data/")),
-      h5("Attractions"),
-      p("Artworks ", a("https://data.melbourne.vic.gov.au/explore/dataset/outdoor-artworks/information/")),
-      p("Places of Interest ", a("https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/information/")),
-      p("Fountain, Art, Monument ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-artworks-fountains-and-monuments/information/")),
-      p("Memorials and Sculptures ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-memorials-and-sculptures/information/")),
-      p("Plaques ", a("https://data.melbourne.vic.gov.au/explore/dataset/plaques-located-at-the-shrine-of-remembrance/information/")),
-      p("Music Venues ", a("https://data.melbourne.vic.gov.au/explore/dataset/live-music-venues/information/")),
-      p("Drinking fountains  ", a("https://data.melbourne.vic.gov.au/explore/dataset/drinking-fountains/information/")),
-      p("Public toilets ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-toilets/information/")),
-      p("Playgrounds ", a("https://data.melbourne.vic.gov.au/explore/dataset/playgrounds/information/")),
-      h5("Transport"),
-      p("Pedestrian Counting System per Hour", a("https://www.pedestrian.melbourne.vic.gov.au/#date=20-10-2023&time=14")),
-      p("Pedestrian Counting System Sensor Location", a("https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/information/")),
-      p("Tram Stop", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-stops")),
-      p("Tram Route", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-routes
-")),
-      
+  box(
+    width = 12,
+    p("This page details the trusted sources behind our data, ensuring accurate and timely insights.Download the data from the links below."),
+    h5("Restaurants"),
+    tags$ul(
+      tags$li("Google Place API ", a("https://developers.google.com/maps/documentation/places/web-service/overview")),
+      tags$li("Tripadvisor API ", a("https://www.tripadvisor.com/developers")),
+    ),
+    h5("Airbnb Listings"),
+    tags$ul(
+      tags$li("Melbourne Airbnb listings ", a("http://insideairbnb.com/get-the-data/"))
+    ),
+    h5("Attractions"),
+    tags$ul(
+      tags$li("Artworks ", a("https://data.melbourne.vic.gov.au/explore/dataset/outdoor-artworks/information/")),
+      tags$li("Places of Interest ", a("https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/information/")),
+      tags$li("Fountain, Art, Monument ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-artworks-fountains-and-monuments/information/")),
+      tags$li("Memorials and Sculptures ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-memorials-and-sculptures/information/")),
+      tags$li("Plaques ", a("https://data.melbourne.vic.gov.au/explore/dataset/plaques-located-at-the-shrine-of-remembrance/information/")),
+      tags$li("Music Venues ", a("https://data.melbourne.vic.gov.au/explore/dataset/live-music-venues/information/")),
+      tags$li("Drinking fountains ", a("https://data.melbourne.vic.gov.au/explore/dataset/drinking-fountains/information/")),
+      tags$li("Public toilets ", a("https://data.melbourne.vic.gov.au/explore/dataset/public-toilets/information/")),
+      tags$li("Playgrounds ", a("https://data.melbourne.vic.gov.au/explore/dataset/playgrounds/information/")),
+      tags$li("Guided Walks ", a("https://data.melbourne.vic.gov.au/explore/dataset/self-guided-walks/information/"))
+    ),
+    h5("Transport"),
+    tags$ul(
+      tags$li("Pedestrian Counting System per Hour ", a("https://www.pedestrian.melbourne.vic.gov.au/#date=20-10-2023&time=14")),
+      tags$li("Pedestrian Counting System Sensor Location ", a("https://data.melbourne.vic.gov.au/explore/dataset/pedestrian-counting-system-sensor-locations/information/")),
+      tags$li("Tram Stop ", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-stops")),
+      tags$li("Tram Route ", a("https://discover.data.vic.gov.au/dataset/ptv-metro-tram-routes"))
+    )
+  ),
+  h4("About Us"),
+  box(
+    width = 12,
+    p("This app is developed by a group of students from the University of Melbourne. Last updated: 22 Oct 2023."),
+    p("Group members: Shiyi Xie, Xubin Zou, Yiyun Mao, Ziqi Ding")
   )
 )
 

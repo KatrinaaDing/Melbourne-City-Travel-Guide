@@ -27,7 +27,7 @@ transport_tab <- tabItem(
     ),
     box(
       id = 'near_Airbnb_Box',
-      title="Nearby Facilities (in 500m)",
+      title="Nearby Facilities",
       width = 12,
       status = 'primary',
       uiOutput("near_Airbnb_show"),
