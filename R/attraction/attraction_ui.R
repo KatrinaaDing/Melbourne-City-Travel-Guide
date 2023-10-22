@@ -64,7 +64,7 @@ attraction_tab <- tabItem(
         style = "height: 270px",
         tableauPublicViz(
           id = "attraction_ped_chart",
-          url = "https://public.tableau.com/views/attraction_ped_count/FacilitiesPedestrainCount?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
+          url = "https://public.tableau.com/views/attraction_ped_count/Sheet1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link",
           height = paste0(250, "px")
         )
       )
