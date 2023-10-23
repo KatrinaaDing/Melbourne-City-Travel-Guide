@@ -24,14 +24,11 @@ get_service_in_surburb_data <- function(suburb, service = "restaurant") {
     Sys.sleep(5)
     next_response <- httr::GET(url, query = list(pagetoken = next_page_token, key = api_key))
     next_content <- jsonlite::fromJSON(httr::content(next_response, as = "text"))
-    # browser()
     # write_csv(next_content$results, file_name, append =  TRUE, quote = TRUE)
     df <- bind_rows(df, next_content$results)
-    browser()
     next_page_token <- next_content$next_page_token
     print(next_page_token)
   }
-  browser()
   message(suburb, " ", service, " is saved successfully.")
 }
 

@@ -26,11 +26,9 @@ get_service_in_surburb_data <- function(suburb, service = "restaurant") {
     # browser()
     # write_csv(next_content$results, file_name, append =  TRUE, quote = TRUE)
     df <- bind_rows(df, next_content$results)
-    browser()
     next_page_token <- next_content$next_page_token
     print(next_page_token)
   }
-  browser()
   message(suburb, " ", service, " is saved successfully.")
 }
 

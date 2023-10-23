@@ -13,7 +13,6 @@ for(key in names(trip_data)) {
                 cuisine = ifelse(length(trip_data[[key]]$cuisine) == 0, 'Other', str_to_title(trip_data[[key]]$cuisine$name[1])))
     df <- bind_rows(df,  data.frame(row))
     }, error = function(cond) {
-      browser()
     }
   )
 }
