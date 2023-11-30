@@ -5,17 +5,17 @@
 The app allows tourists to delve into Melbourne's dynamic culture, breathtaking attractions, and diverse culinary offerings. The app offers a well-designed interface, starting with an introduction page that outlines its features, which separates user needs into four specialised tabs: Restaurants, discovering top-notch restaurants; Airbnb Listings, listed cosy hotels; Attraction, outlines iconic landmarks; and Transport, provides convenient tram options. The app integrates with sophisticated filters that maximise flexibility on filtering the data. 
 
 
-##### Course Name: GEOM90007 Information Visualisation @UniMelb
+## Authors
 
-###### Group - 123
-###### Group Members:
-
+  - Ziqi Ding (1335237)
+  - Yiyun Mao (1304932)
   - Shiyi Xie (704597)
   - Xubin Zou (1059403)
-  - Yiyun Mao (1304932)
-  - Ziqi Ding (1335237)
 
-Video demo is available at: [https://www.youtube.com/](https://www.youtube.com/)
+
+## Demo
+  * [Live demo](https://katrina-ziqi-ding.shinyapps.io/Melbourne-City-Travel-Guide/)
+  * [10min video demo](https://youtu.be/4zpIQ06QSKI)
 
 ## Run App
 
